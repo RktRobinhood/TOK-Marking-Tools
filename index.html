@@ -467,15 +467,6 @@ button:active { transform: translateY(1px); }
                         <li>Select "Predicted Grade Band".</li>
                     </ul>
                 </li>
-                <li><strong>Automated Grade:</strong> Reference only. Hover for calculation (total score / max possible, band thresholds).</li>
-                <li><strong>Generate File for ChatGPT:</strong> Downloads a .txt file with data and embedded instructions for ChatGPT.</li>
-                 <li><strong>Using ChatGPT Output File:</strong>
-                    <ul>
-                        <li>Upload .txt to ChatGPT (if supported) or copy-paste all text.</li>
-                        <li>Use prompt: "Process the uploaded/pasted text. It contains TOK feedback and embedded instructions. Follow all 'MANDATORY PROCESSING INSTRUCTIONS' and output the complete, formatted feedback document."</li>
-                        <li>ChatGPT should provide well-formatted Markdown output.</li>
-                    </ul>
-                </li>
                 <li><strong>Export Comments Only:</strong> Downloads a .txt of student info, IA prompt, and all written comments.</li>
                 <li><strong>Local Storage:</strong> Work auto-saves. Restore prompt appears on reload if data exists.</li>
                 <li><strong>Reset Form:</strong> Clears all fields, local storage, and scrolls to top.</li>
@@ -809,11 +800,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         output += `\nSummative Comments:\n${summativeCommentsInput.value.trim() || "No summative comments."}\n`;
-
-        // Optionally include the automated reasoning as a final appendix for transparency
-        output += `\n============================================================\n`;
-        output += `AUTOMATED GRADE REASONING (Reference Only)\n`;
-        output += `${auto.reasoning || "N/A"}\n`;
 
         const filenameBase = studentName !== "Not Provided" ? studentName.replace(/\s+/g, '_') : 'TOK_Exhibition';
         const filename = `${filenameBase}_Detailed_Comments_NoPrompt.txt`;
