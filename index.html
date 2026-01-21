@@ -432,7 +432,7 @@ button:active { transform: translateY(1px); }
 
         <section id="actions-section" class="input-section">
             <h2>Actions</h2>
-                        <button id="export-comments-btn">Export Grading and Comments (.txt)</button>
+                        <button id="export-comments-btn">Export Comments Only (.txt)</button>
             <button id="reset-form-btn">Reset Form</button>
         </section>
 
@@ -814,7 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const filename = `${filenameBase}_Detailed_Comments_NoPrompt.txt`;
         const blob = new Blob([output], { type: 'text/plain;charset=utf-8' });
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob); link.download c= filename;
+        link.href = URL.createObjectURL(blob); link.download = filename;
         document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href);
     }
     if(exportCommentsBtn) exportCommentsBtn.addEventListener('click', generateRawCommentsOutput);
