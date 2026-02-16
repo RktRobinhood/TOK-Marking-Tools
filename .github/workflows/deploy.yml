@@ -1,4 +1,4 @@
-name: Deploy Stylized Tok Hub
+name: Deploy IBO Style Hub
 
 on:
   push:
@@ -17,157 +17,129 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Generate Stylized Landing Page
+      - name: Generate IBO Landing Page
         run: |
-          # 1. Start creating the index.html with advanced CSS
           cat <<EOF > index.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Tok Tools | Terminal</title>
-              <link rel="preconnect" href="https://fonts.googleapis.com">
-              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-              <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+              <title>TOK TERMINAL | IBO</title>
               <style>
                   :root {
-                      --bg: #0a0a0c;
-                      --card-bg: rgba(255, 255, 255, 0.03);
-                      --border: rgba(255, 255, 255, 0.1);
-                      --accent-cyan: #00f2ea;
-                      --accent-pink: #ff0050;
-                      --text: #ffffff;
-                      --text-dim: #94a3b8;
+                      --ib-blue: #0066b3;
+                      --ib-dark: #050a0e;
+                      --ib-border: #1e293b;
+                      --ib-text: #f8fafc;
+                      --ib-gray: #64748b;
                   }
                   body {
+                      background-color: var(--ib-dark);
+                      color: var(--ib-text);
+                      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
                       margin: 0;
-                      padding: 0;
-                      background-color: var(--bg);
-                      background-image: 
-                          radial-gradient(circle at 20% 30%, rgba(0, 242, 234, 0.05) 0%, transparent 40%),
-                          radial-gradient(circle at 80% 70%, rgba(255, 0, 80, 0.05) 0%, transparent 40%);
-                      color: var(--text);
-                      font-family: 'Inter', sans-serif;
                       display: flex;
                       flex-direction: column;
                       align-items: center;
                       min-height: 100vh;
                   }
-                  header {
-                      margin-top: 80px;
-                      text-align: center;
-                  }
-                  h1 {
-                      font-size: 2.5rem;
-                      font-weight: 600;
-                      letter-spacing: -1px;
-                      margin-bottom: 8px;
-                      background: linear-gradient(to right, #fff, #94a3b8);
-                      -webkit-background-clip: text;
-                      -webkit-text-fill-color: transparent;
-                  }
-                  .status-bar {
-                      font-size: 0.8rem;
-                      color: var(--accent-cyan);
-                      text-transform: uppercase;
-                      letter-spacing: 2px;
-                      margin-bottom: 40px;
-                  }
-                  .container {
-                      display: grid;
-                      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                      gap: 20px;
-                      width: 90%;
-                      max-width: 1000px;
-                  }
-                  .card {
-                      background: var(--card-bg);
-                      border: 1px solid var(--border);
-                      backdrop-filter: blur(12px);
-                      border-radius: 16px;
-                      padding: 30px;
-                      text-decoration: none;
-                      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                  /* Top Navigation Bar Style */
+                  nav {
+                      width: 100%;
+                      padding: 15px 40px;
+                      border-bottom: 1px solid var(--ib-border);
                       display: flex;
-                      flex-direction: column;
-                      position: relative;
-                      overflow: hidden;
-                  }
-                  .card::before {
-                      content: '';
-                      position: absolute;
-                      top: 0; left: 0; width: 100%; height: 2px;
-                      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-pink));
-                      opacity: 0;
-                      transition: 0.3s;
-                  }
-                  .card:hover {
-                      transform: translateY(-5px);
-                      background: rgba(255, 255, 255, 0.06);
-                      border-color: rgba(255, 255, 255, 0.2);
-                  }
-                  .card:hover::before {
-                      opacity: 1;
-                  }
-                  .card h3 {
-                      color: var(--text);
-                      margin: 0 0 10px 0;
-                      font-size: 1.25rem;
-                  }
-                  .card p {
-                      color: var(--text-dim);
-                      font-size: 0.9rem;
-                      margin: 0;
-                      line-height: 1.5;
-                  }
-                  .icon {
-                      margin-bottom: 20px;
-                      width: 40px;
-                      height: 40px;
-                      background: rgba(255, 255, 255, 0.05);
-                      border-radius: 8px;
-                      display: flex;
+                      justify-content: space-between;
                       align-items: center;
-                      justify-content: center;
-                      color: var(--accent-cyan);
+                      box-sizing: border-box;
+                      background: #000;
+                  }
+                  .logo {
+                      font-weight: 800;
+                      letter-spacing: 2px;
+                      font-size: 14px;
+                      color: #fff;
+                  }
+                  .system-status {
+                      font-size: 11px;
+                      color: #00ff00;
+                      font-family: monospace;
+                  }
+                  /* Main Dashboard Grid */
+                  .dashboard {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                      gap: 1px; /* Creates the IBO grid line look */
+                      background-color: var(--ib-border);
+                      width: 100%;
+                      max-width: 1200px;
+                      border: 1px solid var(--ib-border);
+                      margin-top: 50px;
+                  }
+                  .tool-link {
+                      background-color: var(--ib-dark);
+                      padding: 40px 30px;
+                      text-decoration: none;
+                      color: var(--ib-text);
+                      transition: all 0.2s;
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                  }
+                  .tool-link:hover {
+                      background-color: #0f172a;
+                  }
+                  .tool-link:hover .tool-name {
+                      color: var(--ib-blue);
+                  }
+                  .tool-name {
+                      font-size: 18px;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 1px;
+                  }
+                  .arrow {
+                      font-size: 20px;
+                      color: var(--ib-gray);
                   }
                   footer {
                       margin-top: auto;
-                      padding: 40px;
-                      font-size: 0.75rem;
-                      color: #444;
+                      padding: 20px;
+                      font-size: 10px;
+                      color: var(--ib-gray);
+                      font-family: monospace;
+                      text-transform: uppercase;
                   }
               </style>
           </head>
           <body>
-              <header>
-                  <div class="status-bar">● System Operational</div>
-                  <h1>Tok Tool Terminal</h1>
-              </header>
-              <div class="container">
+              <nav>
+                  <div class="logo">TOK // INSTITUTIONAL</div>
+                  <div class="system-status">PORT: 443 // SECURE</div>
+              </nav>
+
+              <div class="dashboard">
           EOF
 
-          # 2. LOOP through folders and generate cards
+          # Automatically find folders and add to the grid
           for dir in tools/*/; do
               foldername=$(basename "$dir")
               if [ -f "tools/$foldername/index.html" ]; then
-                # Clean up name for display (e.g. "my-tool" -> "My Tool")
-                displayname=$(echo $foldername | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++){$i=toupper(substr($i,1,1)) substr($i,2)}}1')
+                # Formatting the name: e.g. "tok-scraper" -> "TOK SCRAPER"
+                displayname=$(echo $foldername | tr '[:lower:]' '[:upper:]' | sed 's/-/ /g')
                 
-                echo "      <a class='card' href='tools/$foldername/index.html'>" >> index.html
-                echo "          <div class='icon'>⚡</div>" >> index.html
-                echo "          <h3>$displayname</h3>" >> index.html
-                echo "          <p>Access the $displayname automated tool module.</p>" >> index.html
+                echo "      <a class='tool-link' href='tools/$foldername/index.html'>" >> index.html
+                echo "          <span class='tool-name'>$displayname</span>" >> index.html
+                echo "          <span class='arrow'>→</span>" >> index.html
                 echo "      </a>" >> index.html
               fi
           done
 
-          # 3. Close the HTML tags
           cat <<EOF >> index.html
               </div>
+
               <footer>
-                  &copy; $(date +%Y) TOK-HUB TERMINAL. POWERED BY GITHUB ACTIONS.
+                  Terminal Session: $(date +'%Y-%m-%d %H:%M:%S') UTC
               </footer>
           </body>
           </html>
