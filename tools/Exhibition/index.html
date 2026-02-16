@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOK Exhibition Marking Tool - Final</title>
+<style>
+/* CSS Styling - Final Version */
+:root {
+    --nav-width: 220px;
+    --sticky-section-height: 80px;
+    --primary-color: #3498db; /* IB Blue */
+    --dark-blue: #2c3e50;
+    --light-grey: #f4f6f8;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+}
+
+html {
+    scroll-padding-top: calc(var(--sticky-section-height) + 20px);
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.6; margin: 0; padding: 20px;
+    background-color: var(--light-grey); color: var(--text-color);
+    padding-left: calc(var(--nav-width) + 30px);
+}
+
+#side-nav {
+    position: fixed; left: 0; top: 0; width: var(--nav-width); height: 100vh;
+    background-color: var(--dark-blue); padding-top: 15px; overflow-y: auto;
+    z-index: 1000; border-right: 1px solid #1a2531;
+}
+#side-nav h3 {
+    color: #ecf0f1; text-align: center; font-size: 1.2em; margin-bottom: 15px;
+    padding-bottom: 10px; border-bottom: 1px solid #4a6785;
+}
+#side-nav ul { list-style-type: none; padding: 0; margin: 0; }
+#side-nav li a {
+    display: block; padding: 12px 20px; color: #bdc3c7; text-decoration: none;
+    font-size: 0.95em; border-bottom: 1px solid #34495e;
+    transition: background-color 0.2s ease, color 0.2s ease; cursor: pointer;
+}
+#side-nav li a:hover, #side-nav li a.active {
+    background-color: var(--primary-color); color: #ffffff;
+}
+
+.container {
+    max-width: 950px; margin-left: 0; background-color: #fff;
+    padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 { text-align: center; color: var(--dark-blue); margin-bottom: 35px; font-size: 2em; }
+h2 {
+    color: var(--primary-color); border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px; margin-top: 35px; margin-bottom: 25px; font-size: 1.6em;
+}
+
+.input-section {
+    margin-bottom: 35px; padding: 25px; border: 1px solid var(--border-color);
+    border-radius: 6px; background-color: #ffffff;
+}
+
+label { display: block; margin-bottom: 6px; font-weight: 600; color: #495057; font-size: 0.9em; }
+
+input[type="text"], select, textarea {
+    width: 100%; padding: 12px; margin-bottom: 18px; border: 1px solid #ced4da;
+    border-radius: 4px; box-sizing: border-box; font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input[type="text"]:focus, select:focus, textarea:focus {
+    border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+textarea { resize: vertical; min-height: 100px; }
+
+.rubric-criterion label, .object-evaluation-flags label {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Vertically align items */
+    font-weight: normal;
+    margin-bottom: 4px; /* Spacing between radio options */
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+.rubric-criterion input[type="radio"], .object-evaluation-flags input[type="radio"] {
+    margin-right: 8px; /* Space between radio and text */
+    vertical-align: middle; /* Fallback, flexbox should handle it */
+    transform: scale(1.1);
+    flex-shrink: 0; /* Prevent radio from shrinking */
+}
+
+#possible-characteristics-checklist label { /* Checkboxes might not need flex if simple */
+    font-weight: normal; margin-bottom: 4px; color: var(--text-color); font-size: 0.95rem;
+}
+#possible-characteristics-checklist input[type="checkbox"] {
+     margin-right: 8px; vertical-align: middle; transform: scale(1.1);
+}
+
+
+fieldset {
+    border: 1px solid var(--border-color); padding: 20px; margin-bottom: 25px; border-radius: 5px;
+}
+legend { padding: 0 12px; font-weight: 600; color: var(--dark-blue); font-size: 1.1em; }
+
+.rubric-criterion, .object-evaluation-flags { margin-bottom: 18px; }
+.rubric-criterion p, .object-evaluation-flags p {
+    margin-top: 0; margin-bottom: 8px;
+    color: var(--text-color); font-weight: 500;
+}
+
+#possible-characteristics-checklist div { margin-bottom: 6px; }
+
+.grade-section {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 25px; padding-top: 20px; border-top: 1px dashed #d0d0d0;
+}
+.grade-section > div { width: 48%; }
+
+#automated-grade-display {
+    font-weight: bold; font-size: 1.1em; color: #27ae60; padding: 10px 12px;
+    border: 1px solid #ccc; border-radius: 4px; background-color: #f9f9f9;
+    display: inline-block; min-width: 60px; text-align: center; position: relative;
+}
+#automated-grade-display:hover .tooltip-text { visibility: visible; opacity: 1; }
+.tooltip-text {
+    visibility: hidden; width: 320px;
+    background-color: #333; color: #fff; text-align: left; font-weight: normal;
+    font-size: 0.85em; border-radius: 6px; padding: 12px; position: absolute;
+    z-index: 1001; bottom: 130%; left: 50%; margin-left: -160px;
+    opacity: 0; transition: opacity 0.3s ease; white-space: pre-line;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.tooltip-text::after {
+    content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px;
+    border-width: 6px; border-style: solid; border-color: #333 transparent transparent transparent;
+}
+
+button {
+    background-color: var(--primary-color); color: white; padding: 12px 22px;
+    border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease; margin-right: 12px;
+}
+button:hover { background-color: #2980b9; }
+button:active { transform: translateY(1px); }
+#reset-form-btn { background-color: #e74c3c; }
+#reset-form-btn:hover { background-color: #c0392b; }
+#export-comments-btn { background-color: #16a085; }
+#export-comments-btn:hover { background-color: #117a65; }
+
+#restore-prompt-wrapper { margin-bottom: 20px; }
+#restore-prompt {
+    display: none; padding: 18px; background-color: #e0f7fa;
+    border: 1px solid var(--primary-color); border-radius: 5px; text-align: center;
+}
+#restore-prompt p { margin-top: 0; margin-bottom: 12px; font-size: 1.05em; color: #004085; }
+#restore-prompt button { background-color: #28a745; margin: 5px; }
+#restore-prompt button:hover { background-color: #218838; }
+#restore-prompt button#restore-no-btn { background-color: #6c757d; }
+#restore-prompt button#restore-no-btn:hover { background-color: #5a6268; }
+
+.object-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+}
+.object-header h2 { margin: 0; border-bottom: none; font-size: 1.4em; }
+.object-header label { margin-bottom: 0; margin-right: 10px; font-size: 0.85em; }
+.object-header input[type="text"] {
+    width: auto; flex-grow: 1; max-width: 320px; margin-bottom: 0; padding: 8px;
+}
+
+#ia-prompt-section {
+    position: -webkit-sticky; position: sticky; top: 0;
+    background-color: rgba(255, 255, 255, 0.97); backdrop-filter: blur(4px);
+    z-index: 990; padding-top: 15px; padding-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08); border-bottom: 1px solid var(--border-color);
+}
+#ia-prompt-section h2 { margin-top: 0; }
+
+.modal {
+    display: none; position: fixed; z-index: 1050; left: 0; top: 0;
+    width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);
+}
+.modal-content {
+    background-color: #fefefe; margin: 5% auto; padding: 25px;
+    border: 1px solid #888; width: 80%; max-width: 700px; border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative;
+}
+.modal-content h3 { margin-top: 0; color: var(--dark-blue); }
+.modal-content h4 { color: var(--primary-color); margin-top: 20px; margin-bottom: 5px; }
+.modal-content p, .modal-content li { font-size: 0.95em; line-height: 1.5; }
+.modal-content ul { padding-left: 20px; }
+.close-modal-btn {
+    color: #aaa; float: right; font-size: 28px; font-weight: bold;
+    position: absolute; top: 10px; right: 20px;
+}
+.close-modal-btn:hover, .close-modal-btn:focus {
+    color: black; text-decoration: none; cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    body { padding-left: 20px; }
+    #side-nav { display: none; }
+    .container { margin: 0 auto; }
+}
+@media (max-width: 768px) {
+    .grade-section { flex-direction: column; }
+    .grade-section > div { width: 100%; margin-bottom: 15px; }
+    .object-header { flex-direction: column; align-items: flex-start; }
+    .object-header input[type="text"] { width: 100%; max-width: none; margin-top: 8px; }
+    #ia-prompt-section { top: -1px; }
+    .modal-content { width: 90%; margin: 10% auto; }
+}
+</style>
+</head>
+<body>
+
+    <nav id="side-nav">
+        <h3>Navigation</h3>
+        <ul>
+            <li><a href="#student-info-section">Student Info</a></li>
+            <li><a href="#ia-prompt-section">IA Prompt</a></li>
+            <li><a href="#object1-section">Object 1</a></li>
+            <li><a href="#object2-section">Object 2</a></li>
+            <li><a href="#object3-section">Object 3</a></li>
+            <li><a href="#summative-section">Summative</a></li>
+            <li><a href="#actions-section">Actions</a></li>
+            <li><a id="help-guide-link" href="#">Help / Guide</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <div id="restore-prompt-wrapper">
+            <div id="restore-prompt">
+                <p>Unsaved work from a previous session found. Would you like to restore it?</p>
+                <button id="restore-yes-btn">Yes, Restore</button>
+                <button id="restore-no-btn">No, Start Fresh</button>
+            </div>
+        </div>
+
+        <h1>TOK Exhibition Marking Tool</h1>
+
+        <section id="student-info-section" class="input-section">
+            <h2>Student Information</h2>
+            <label for="student-name">Student Name:</label>
+            <input type="text" id="student-name" name="student-name" placeholder="Enter student's full name">
+        </section>
+
+        <section id="ia-prompt-section" class="input-section">
+            <h2>IA Prompt</h2>
+            <label for="ia-prompt-select">Select the student's IA Prompt:</label>
+            <select id="ia-prompt-select" name="ia-prompt">
+                <option value="">-- Select an IA Prompt --</option>
+            </select>
+        </section>
+
+        <div id="objects-container">
+            <!-- Object 1 -->
+            <section id="object1-section" class="object-section input-section">
+                <div class="object-header">
+                    <h2>Object 1</h2>
+                    <label for="object1-name">Optional Name/Description:</label>
+                    <input type="text" id="object1-name" name="object1-name" placeholder="e.g., The Henrietta Lacks' Cells">
+                </div>
+                <div class="object-evaluation-flags">
+                    <p><strong>Object Evaluation:</strong></p>
+                    <label><input type="radio" name="obj1-eval-flag" value="Object is Specific & Appropriate"> Object is Specific & Appropriate</label>
+                    <label><input type="radio" name="obj1-eval-flag" value="Object is Somewhat Generic"> Object is Somewhat Generic</label>
+                    <label><input type="radio" name="obj1-eval-flag" value="Object is Too Generic / Lacks Clear Context"> Object is Too Generic / Lacks Clear Context</label>
+                    <!-- Removed "No Specific Evaluation Issue (Default)" option -->
+                </div>
+                <fieldset>
+                    <legend>Rubric Assessment - Object 1 Commentary</legend>
+                    <div class="rubric-criterion">
+                        <p><strong>1. Object's Real-World Context:</strong></p>
+                        <label><input type="radio" name="obj1-context" value="Clearly & specifically identified" data-score="5"> Clearly &amp; specifically identified</label>
+                        <label><input type="radio" name="obj1-context" value="Identified" data-score="4"> Identified</label>
+                        <label><input type="radio" name="obj1-context" value="Vaguely or imprecisely stated" data-score="3"> Vaguely or imprecisely stated</label>
+                        <label><input type="radio" name="obj1-context" value="Implied" data-score="2"> Implied</label>
+                        <label><input type="radio" name="obj1-context" value="Unstated" data-score="1"> Unstated</label>
+                    </div>
+                    <div class="rubric-criterion">
+                        <p><strong>2. Links Between Object & IA Prompt:</strong></p>
+                        <label><input type="radio" name="obj1-links" value="Clearly made & well explained" data-score="5"> Clearly made &amp; well explained</label>
+                        <label><input type="radio" name="obj1-links" value="Explained but lacking precision/clarity" data-score="4"> Explained but lacking precision/clarity</label>
+                        <label><input type="radio" name="obj1-links" value="Some explanation provided" data-score="3"> Some explanation provided</label>
+                        <label><input type="radio" name="obj1-links" value="Basic links/unconvincing" data-score="2"> Basic links/unconvincing</label>
+                        <label><input type="radio" name="obj1-links" value="Minimal links/unclear" data-score="1"> Minimal links/unclear</label>
+                    </div>
+                    <div class="rubric-criterion">
+                        <p><strong>3. Justification for Object Inclusion:</strong></p>
+                        <label><input type="radio" name="obj1-justification" value="Strong" data-score="5"> Strong</label>
+                        <label><input type="radio" name="obj1-justification" value="Present" data-score="4"> Present</label>
+                        <label><input type="radio" name="obj1-justification" value="Some" data-score="3"> Some</label>
+                        <label><input type="radio" name="obj1-justification" value="Superficial" data-score="2"> Superficial</label>
+                        <label><input type="radio" name="obj1-justification" value="Little offered" data-score="1"> Little offered</label>
+                    </div>
+                </fieldset>
+                <label for="object1-comments">Comments on Object 1:</label>
+                <textarea id="object1-comments" name="object1-comments" rows="6" placeholder="Enter your detailed comments for Object 1..."></textarea>
+            </section>
+
+            <!-- Object 2 -->
+            <section id="object2-section" class="object-section input-section">
+                <div class="object-header">
+                    <h2>Object 2</h2>
+                    <label for="object2-name">Optional Name/Description:</label>
+                    <input type="text" id="object2-name" name="object2-name" placeholder="e.g., A specific political cartoon">
+                </div>
+                <div class="object-evaluation-flags">
+                    <p><strong>Object Evaluation:</strong></p>
+                    <label><input type="radio" name="obj2-eval-flag" value="Object is Specific & Appropriate"> Object is Specific & Appropriate</label>
+                    <label><input type="radio" name="obj2-eval-flag" value="Object is Somewhat Generic"> Object is Somewhat Generic</label>
+                    <label><input type="radio" name="obj2-eval-flag" value="Object is Too Generic / Lacks Clear Context"> Object is Too Generic / Lacks Clear Context</label>
+                </div>
+                <fieldset>
+                    <legend>Rubric Assessment - Object 2 Commentary</legend>
+                     <div class="rubric-criterion">
+                        <p><strong>1. Object's Real-World Context:</strong></p>
+                        <label><input type="radio" name="obj2-context" value="Clearly & specifically identified" data-score="5"> Clearly &amp; specifically identified</label>
+                        <label><input type="radio" name="obj2-context" value="Identified" data-score="4"> Identified</label>
+                        <label><input type="radio" name="obj2-context" value="Vaguely or imprecisely stated" data-score="3"> Vaguely or imprecisely stated</label>
+                        <label><input type="radio" name="obj2-context" value="Implied" data-score="2"> Implied</label>
+                        <label><input type="radio" name="obj2-context" value="Unstated" data-score="1"> Unstated</label>
+                    </div>
+                    <div class="rubric-criterion">
+                        <p><strong>2. Links Between Object & IA Prompt:</strong></p>
+                        <label><input type="radio" name="obj2-links" value="Clearly made & well explained" data-score="5"> Clearly made &amp; well explained</label>
+                        <label><input type="radio" name="obj2-links" value="Explained but lacking precision/clarity" data-score="4"> Explained but lacking precision/clarity</label>
+                        <label><input type="radio" name="obj2-links" value="Some explanation provided" data-score="3"> Some explanation provided</label>
+                        <label><input type="radio" name="obj2-links" value="Basic links/unconvincing" data-score="2"> Basic links/unconvincing</label>
+                        <label><input type="radio" name="obj2-links" value="Minimal links/unclear" data-score="1"> Minimal links/unclear</label>
+                    </div>
+                    <div class="rubric-criterion">
+                        <p><strong>3. Justification for Object Inclusion:</strong></p>
+                        <label><input type="radio" name="obj2-justification" value="Strong" data-score="5"> Strong</label>
+                        <label><input type="radio" name="obj2-justification" value="Present" data-score="4"> Present</label>
+                        <label><input type="radio" name="obj2-justification" value="Some" data-score="3"> Some</label>
+                        <label><input type="radio" name="obj2-justification" value="Superficial" data-score="2"> Superficial</label>
+                        <label><input type="radio" name="obj2-justification" value="Little offered" data-score="1"> Little offered</label>
+                    </div>
+                </fieldset>
+                <label for="object2-comments">Comments on Object 2:</label>
+                <textarea id="object2-comments" name="object2-comments" rows="6" placeholder="Enter your detailed comments for Object 2..."></textarea>
+            </section>
+
+            <!-- Object 3 -->
+            <section id="object3-section" class="object-section input-section">
+                <div class="object-header">
+                    <h2>Object 3</h2>
+                    <label for="object3-name">Optional Name/Description:</label>
+                    <input type="text" id="object3-name" name="object3-name" placeholder="e.g., A family heirloom">
+                </div>
+                <div class="object-evaluation-flags">
+                    <p><strong>Object Evaluation:</strong></p>
+                    <label><input type="radio" name="obj3-eval-flag" value="Object is Specific & Appropriate"> Object is Specific & Appropriate</label>
+                    <label><input type="radio" name="obj3-eval-flag" value="Object is Somewhat Generic"> Object is Somewhat Generic</label>
+                    <label><input type="radio" name="obj3-eval-flag" value="Object is Too Generic / Lacks Clear Context"> Object is Too Generic / Lacks Clear Context</label>
+                </div>
+                <fieldset>
+                    <legend>Rubric Assessment - Object 3 Commentary</legend>
+                     <div class="rubric-criterion">
+                        <p><strong>1. Object's Real-World Context:</strong></p>
+                        <label><input type="radio" name="obj3-context" value="Clearly & specifically identified" data-score="5"> Clearly &amp; specifically identified</label>
+                        <label><input type="radio" name="obj3-context" value="Identified" data-score="4"> Identified</label>
+                        <label><input type="radio" name="obj3-context" value="Vaguely or imprecisely stated" data-score="3"> Vaguely or imprecisely stated</label>
+                        <label><input type="radio" name="obj3-context" value="Implied" data-score="2"> Implied</label>
+                        <label><input type="radio" name="obj3-context" value="Unstated" data-score="1"> Unstated</label>
+                    </div>
+                    <div class="rubric-criterion">
+                        <p><strong>2. Links Between Object & IA Prompt:</strong></p>
+                        <label><input type="radio" name="obj3-links" value="Clearly made & well explained" data-score="5"> Clearly made &amp; well explained</label>
+                        <label><input type="radio" name="obj3-links" value="Explained but lacking precision/clarity" data-score="4"> Explained but lacking precision/clarity</label>
+                        <label><input type="radio" name="obj3-links" value="Some explanation provided" data-score="3"> Some explanation provided</label>
+                        <label><input type="radio" name="obj3-links" value="Basic links/unconvincing" data-score="2"> Basic links/unconvincing</label>
+                        <label><input type="radio" name="obj3-links" value="Minimal links/unclear" data-score="1"> Minimal links/unclear</label>
+                    </div>
+                    <div class="rubric-criterion">
+                        <p><strong>3. Justification for Object Inclusion:</strong></p>
+                        <label><input type="radio" name="obj3-justification" value="Strong" data-score="5"> Strong</label>
+                        <label><input type="radio" name="obj3-justification" value="Present" data-score="4"> Present</label>
+                        <label><input type="radio" name="obj3-justification" value="Some" data-score="3"> Some</label>
+                        <label><input type="radio" name="obj3-justification" value="Superficial" data-score="2"> Superficial</label>
+                        <label><input type="radio" name="obj3-justification" value="Little offered" data-score="1"> Little offered</label>
+                    </div>
+                </fieldset>
+                <label for="object3-comments">Comments on Object 3:</label>
+                <textarea id="object3-comments" name="object3-comments" rows="6" placeholder="Enter your detailed comments for Object 3..."></textarea>
+            </section>
+        </div> <!-- Closing objects-container -->
+
+        <section id="summative-section" class="input-section">
+            <h2>Summative Assessment</h2>
+            <fieldset>
+                <legend>Overall Exhibition Assessment</legend>
+                 <div class="rubric-criterion">
+                    <p><strong>Overall Support & Evidence (for the entire exhibition):</strong></p>
+                    <label><input type="radio" name="summative-evidence" value="All/nearly all points supported by appropriate/explicit evidence and explicit references to the selected IA prompt." data-score="5"> All/nearly all points supported by appropriate/explicit evidence and explicit references to the selected IA prompt.</label>
+                    <label><input type="radio" name="summative-evidence" value="Many of the points are supported by appropriate evidence and reference to the selected IA prompt." data-score="4"> Many of the points are supported by appropriate evidence and reference to the selected IA prompt.</label>
+                    <label><input type="radio" name="summative-evidence" value="Some of the points are supported by evidence and references to the selected IA prompt." data-score="3"> Some of the points are supported by evidence and references to the selected IA prompt.</label>
+                    <label><input type="radio" name="summative-evidence" value="Not supported by appropriate evidence; significant repetition across justifications; links to IA prompt are superficial." data-score="2"> Not supported by appropriate evidence; significant repetition across justifications; links to IA prompt are superficial.</label>
+                    <label><input type="radio" name="summative-evidence" value="Assertions are unsupported or mainly descriptive; commentary is highly descriptive or consists only of unsupported assertions." data-score="1"> Assertions are unsupported or mainly descriptive; commentary is highly descriptive or consists only of unsupported assertions.</label>
+                </div>
+                <div id="possible-characteristics-checklist" style="margin-top: 20px;">
+                     <p><strong>Overall Characteristics:</strong></p>
+                </div>
+            </fieldset>
+            <label for="summative-comments">Summative Comments:</label>
+            <textarea id="summative-comments" name="summative-comments" rows="8" placeholder="Enter your overall summative comments for the exhibition..."></textarea>
+
+            <div class="grade-section">
+                <div>
+                    <label for="predicted-grade-band">Predicted Grade Band (Manual):</label>
+                    <select id="predicted-grade-band" name="predicted-grade-band">
+                        <option value="">-- Select Grade Band --</option>
+                        <option value="9-10">9-10 (Excellent)</option>
+                        <option value="7-8">7-8 (Good)</option>
+                        <option value="5-6">5-6 (Satisfactory)</option>
+                        <option value="3-4">3-4 (Basic)</option>
+                        <option value="1-2">1-2 (Rudimentary)</option>
+                        <option value="0">0 (Not Rateable)</option>
+                    </select>
+                </div>
+                <div id="automated-grade-estimation">
+                    <label>Automated Estimated Grade Band:</label>
+                    <span id="automated-grade-display" title="Select rubric items and overall characteristics to see an estimate.">N/A
+                        <span class="tooltip-text">Reasoning will appear here.</span>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section id="actions-section" class="input-section">
+            <h2>Actions</h2>
+            <button id="generate-feedback-btn">Generate Feedback File (for ChatGPT)</button>
+            <button id="export-comments-btn">Export Comments Only (.txt)</button>
+            <button id="reset-form-btn">Reset Form</button>
+        </section>
+
+    </div> <!-- Closing .container -->
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal-btn" id="close-help-modal">&times;</span>
+            <h3>TOK Exhibition Marking Tool - Help & Guide</h3>
+            
+            <h4>Purpose:</h4>
+            <p>This tool streamlines marking TOK exhibitions by providing a structured way to apply rubrics, record comments, and generate comprehensive feedback. It leverages AI (via ChatGPT) for formatting and synthesizing targeted improvement steps.</p>
+
+            <h4>Workflow:</h4>
+            <ol>
+                <li><strong>Student Info:</strong> Enter student's name.</li>
+                <li><strong>IA Prompt:</strong> Select from dropdown. The section is sticky for reference.</li>
+                <li><strong>Marking Objects (x3):</strong>
+                    <ul>
+                        <li>Optional object name.</li>
+                        <li>Select "Object Evaluation" (e.g., "Too Generic").</li>
+                        <li>Complete commentary rubric (Context, Links, Justification).</li>
+                        <li>Write detailed comments.</li>
+                    </ul>
+                </li>
+                <li><strong>Summative Assessment:</strong>
+                    <ul>
+                        <li>Evaluate "Overall Support & Evidence".</li>
+                        <li>Select "Overall Characteristics".</li>
+                        <li>Write summative comments.</li>
+                        <li>Select "Predicted Grade Band".</li>
+                    </ul>
+                </li>
+                <li><strong>Automated Grade:</strong> Reference only. Hover for calculation (total score / max possible, band thresholds).</li>
+                <li><strong>Generate File for ChatGPT:</strong> Downloads a .txt file with data and embedded instructions for ChatGPT.</li>
+                 <li><strong>Using ChatGPT Output File:</strong>
+                    <ul>
+                        <li>Upload .txt to ChatGPT (if supported) or copy-paste all text.</li>
+                        <li>Use prompt: "Process the uploaded/pasted text. It contains TOK feedback and embedded instructions. Follow all 'MANDATORY PROCESSING INSTRUCTIONS' and output the complete, formatted feedback document."</li>
+                        <li>ChatGPT should provide well-formatted Markdown output.</li>
+                    </ul>
+                </li>
+                <li><strong>Export Comments Only:</strong> Downloads a .txt of student info, IA prompt, and all written comments.</li>
+                <li><strong>Local Storage:</strong> Work auto-saves. Restore prompt appears on reload if data exists.</li>
+                <li><strong>Reset Form:</strong> Clears all fields, local storage, and scrolls to top.</li>
+            </ol>
+
+            <h4>Philosophy:</h4>
+            <p>Encourages detailed, criterion-referenced feedback. AI-generated "Concrete Steps" provide actionable guidance. Aims to make feedback structured and accessible for student improvement.</p>
+            <p><em>Last Updated: October 26, 2023</em></p>
+        </div>
+    </div>
+
+<script>
+// JavaScript - Final Version
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Core DOM Elements ---
+    const studentNameInput = document.getElementById('student-name');
+    const iaPromptSelect = document.getElementById('ia-prompt-select');
+    const characteristicsChecklistDiv = document.getElementById('possible-characteristics-checklist');
+    const automatedGradeDisplay = document.getElementById('automated-grade-display');
+    const automatedGradeTooltip = automatedGradeDisplay.querySelector('.tooltip-text');
+    const predictedGradeBandSelect = document.getElementById('predicted-grade-band');
+    const sideNavLinks = document.querySelectorAll('#side-nav a:not(#help-guide-link)');
+    const helpGuideLink = document.getElementById('help-guide-link');
+    const helpModal = document.getElementById('help-modal');
+    const closeModalBtn = document.getElementById('close-help-modal');
+
+    const objectSections = [
+        { id: 1, nameInput: document.getElementById('object1-name'), commentsInput: document.getElementById('object1-comments'), criteriaPrefix: 'obj1', evalFlagName: 'obj1-eval-flag' },
+        { id: 2, nameInput: document.getElementById('object2-name'), commentsInput: document.getElementById('object2-comments'), criteriaPrefix: 'obj2', evalFlagName: 'obj2-eval-flag' },
+        { id: 3, nameInput: document.getElementById('object3-name'), commentsInput: document.getElementById('object3-comments'), criteriaPrefix: 'obj3', evalFlagName: 'obj3-eval-flag' }
+    ];
+    const summativeCommentsInput = document.getElementById('summative-comments');
+
+    // --- Help Modal Logic ---
+    if(helpGuideLink) {
+        helpGuideLink.addEventListener('click', (e) => {
+            e.preventDefault(); if(helpModal) helpModal.style.display = "block";
+        });
+    }
+    if(closeModalBtn) {
+        closeModalBtn.addEventListener('click', () => { if(helpModal) helpModal.style.display = "none"; });
+    }
+    window.addEventListener('click', (event) => {
+        if (event.target == helpModal) { if(helpModal) helpModal.style.display = "none"; }
+    });
+
+    // --- Side Navigation Active State ---
+    function updateActiveNavLink() {
+        let currentSectionId = ""; let minDistance = Infinity;
+        const viewportCenterY = window.innerHeight * 0.3; // Bias towards top 1/3 of viewport
+
+        document.querySelectorAll('.input-section').forEach(section => {
+            const rect = section.getBoundingClientRect();
+            if (rect.bottom > viewportCenterY && rect.top < viewportCenterY + (window.innerHeight * 0.4) ) { // Check if a good portion is in view
+                const distanceToFocusPoint = Math.abs(rect.top - viewportCenterY);
+                if (distanceToFocusPoint < minDistance) {
+                    minDistance = distanceToFocusPoint;
+                    currentSectionId = section.id;
+                }
+            }
+        });
+        if (!currentSectionId && window.scrollY < 50 && document.querySelectorAll('.input-section').length > 0) {
+             currentSectionId = document.querySelectorAll('.input-section')[0].id;
+        }
+        sideNavLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${currentSectionId}`);
+        });
+    }
+    window.addEventListener('scroll', updateActiveNavLink, { passive: true });
+
+    // --- IA Prompts ---
+    const iaPrompts = [
+        "What counts as knowledge?", "Are some types of knowledge more useful than others?", "What features of knowledge have an impact on its reliability?",
+        "On what grounds might we doubt a claim?", "What counts as good evidence for a claim?", "How does the way that we organize or classify knowledge affect what we know?",
+        "What are the implications of having, or not having, knowledge?", "To what extent is certainty attainable?", "Are some types of knowledge less open to interpretation than others?",
+        "What challenges are raised by the dissemination and/or communication of knowledge?", "Can new knowledge change established values or beliefs?",
+        "Is bias inevitable in the production of knowledge?", "How can we know that current knowledge is an improvement upon past knowledge?",
+        "Does some knowledge belong only to particular communities of knowers?", "What constraints are there on the pursuit of knowledge?",
+        "Should some knowledge not be sought on ethical grounds?", "Why do we seek knowledge?", "Are some things unknowable?",
+        "What counts as a good justification for a claim?", "What is the relationship between personal experience and knowledge?",
+        "What is the relationship between knowledge and culture?", "What role do experts play in influencing our consumption or acquisition of knowledge?",
+        "How important are material tools in the production or acquisition of knowledge?", "How might the context in which knowledge is presented influence whether it is accepted or rejected?",
+        "How can we distinguish between knowledge, belief and opinion?", "Does our knowledge depend on our interactions with other knowers?",
+        "Does all knowledge impose ethical obligations on those who know it?", "To what extent is objectivity possible in the production or acquisition of knowledge?",
+        "Who owns knowledge?", "What role does imagination play in producing knowledge about the world?", "How can we judge when evidence is adequate?",
+        "What makes a good explanation?", "How is current knowledge shaped by its historical development?", "In what ways do our values affect our acquisition of knowledge?",
+        "In what ways do values affect the production of knowledge?"
+    ];
+    function populateIAPrompts() {
+        iaPrompts.forEach((prompt, index) => {
+            const option = document.createElement('option');
+            option.value = `${index + 1}. ${prompt}`; option.textContent = `${index + 1}. ${prompt}`;
+            iaPromptSelect.appendChild(option);
+        });
+    }
+
+    // --- Possible Characteristics ---
+    const possibleCharacteristics = [
+        { text: "Lucid", value: "Lucid", score: 2 }, { text: "Precise", value: "Precise", score: 2 }, { text: "Convincing", value: "Convincing", score: 2 },
+        { text: "Focused", value: "Focused", score: 1 }, { text: "Relevant", value: "Relevant", score: 1 }, { text: "Coherent", value: "Coherent", score: 1 },
+        { text: "Adequate", value: "Adequate", score: 0 }, { text: "Competent", value: "Competent", score: 0 }, { text: "Acceptable", value: "Acceptable", score: 0 },
+        { text: "Simplistic", value: "Simplistic", score: -1 }, { text: "Limited", value: "Limited", score: -1 }, { text: "Undeveloped", value: "Undeveloped", score: -2 },
+        { text: "Ineffective", value: "Ineffective", score: -2 }, { text: "Descriptive (rather than analytical)", value: "Descriptive", score: -1 }, { text: "Incoherent", value: "Incoherent", score: -2 }
+    ];
+    function populateCharacteristics() {
+        possibleCharacteristics.forEach(char => {
+            const div = document.createElement('div'); const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox'; checkbox.name = 'characteristic'; checkbox.value = char.value; checkbox.dataset.score = char.score;
+            label.appendChild(checkbox); label.appendChild(document.createTextNode(` ${char.text}`));
+            div.appendChild(label); characteristicsChecklistDiv.appendChild(div);
+        });
+    }
+
+    // --- Automated Grade Logic ---
+    const objectRubricKeys = ['context', 'links', 'justification'];
+    const maxPossibleObjectScorePerCriterion = 5; const maxPossibleSummativeEvidenceScore = 5;
+    let maxScore = (objectSections.length * objectRubricKeys.length * maxPossibleObjectScorePerCriterion) + maxPossibleSummativeEvidenceScore;
+    let maxPositiveCharacteristicScore = 0;
+    possibleCharacteristics.forEach(char => { if(char.score > 0) maxPositiveCharacteristicScore += char.score; });
+    maxScore += maxPositiveCharacteristicScore;
+    const gradeBandConfig = [
+        { band: "9-10 (Excellent)", minPercentage: 0.80, absoluteMin: 50 }, { band: "7-8 (Good)", minPercentage: 0.65, absoluteMin: 40 },
+        { band: "5-6 (Satisfactory)", minPercentage: 0.50, absoluteMin: 30 }, { band: "3-4 (Basic)", minPercentage: 0.35, absoluteMin: 20 },
+        { band: "1-2 (Rudimentary)", minPercentage: 0.15, absoluteMin: 10 }, { band: "0 (Not Rateable)", minPercentage: 0, absoluteMin: 0 }
+    ];
+    const gradeBands = gradeBandConfig.map(gb => ({...gb, minScore: Math.max(gb.absoluteMin, Math.ceil(gb.minPercentage * maxScore)) }));
+
+    function calculateAutomatedGrade() {
+        let totalScore = 0; let reasoning = "Automated Grade Reasoning:\n"; let itemsSelected = 0;
+        objectSections.forEach(obj => {
+            let objectScore = 0; reasoning += `\nObject ${obj.id} Commentary:\n`;
+            objectRubricKeys.forEach(key => {
+                const checkedRadio = document.querySelector(`input[name="${obj.criteriaPrefix}-${key}"]:checked`);
+                if (checkedRadio) { const score = parseInt(checkedRadio.dataset.score); objectScore += score; itemsSelected++; reasoning += `- ${key.charAt(0).toUpperCase() + key.slice(1)}: ${checkedRadio.value} (${score} pts)\n`;
+                } else { reasoning += `- ${key.charAt(0).toUpperCase() + key.slice(1)}: Not selected\n`; }
+            });
+            totalScore += objectScore; reasoning += `Subtotal for Object ${obj.id} Commentary: ${objectScore} pts\n`;
+        });
+        reasoning += "\nOverall Exhibition:\n";
+        const summativeEvidenceRadio = document.querySelector('input[name="summative-evidence"]:checked');
+        if (summativeEvidenceRadio) {
+            const score = parseInt(summativeEvidenceRadio.dataset.score); totalScore += score; itemsSelected++;
+            reasoning += `- Overall Support & Evidence: ${summativeEvidenceRadio.value} (${score} pts)\n`;
+        } else { reasoning += "- Overall Support & Evidence: Not selected\n"; }
+        let characteristicsScore = 0; reasoning += "Overall Characteristics:\n";
+        const checkedCharacteristics = document.querySelectorAll('#possible-characteristics-checklist input[type="checkbox"]:checked');
+        if (checkedCharacteristics.length > 0) {
+            checkedCharacteristics.forEach(charCheckbox => { const score = parseInt(charCheckbox.dataset.score); characteristicsScore += score; itemsSelected++; reasoning += `- ${charCheckbox.value} (${score} pts)\n`; });
+        } else { reasoning += "- No characteristics selected\n"; }
+        totalScore += characteristicsScore;
+        reasoning += `Subtotal for Characteristics: ${characteristicsScore} pts\n`;
+        reasoning += `\nTotal Calculated Score: ${totalScore} / ${maxScore} (Max Possible)\n`;
+        reasoning += "\nGrade Band Thresholds (Min Score for Band):\n";
+        gradeBands.slice(0, -1).forEach(gb => { reasoning += `- ${gb.band}: ${gb.minScore} pts\n`; });
+
+        if (itemsSelected === 0) return { band: "N/A", reasoning: "Select rubric items to see an estimate." };
+        for (const grade of gradeBands) { if (totalScore >= grade.minScore) return { band: grade.band, reasoning: reasoning }; }
+        return { band: gradeBands[gradeBands.length - 1].band, reasoning: reasoning };
+    }
+    function updateAutomatedGradeDisplay() {
+        const result = calculateAutomatedGrade();
+        automatedGradeDisplay.childNodes[0].nodeValue = result.band + " ";
+        if (automatedGradeTooltip) automatedGradeTooltip.textContent = result.reasoning;
+    }
+
+    // --- Event Listeners & Local Storage ---
+    const localStorageKey = 'tokExhibitionMarkerData_Final_V1'; // Updated key
+    function saveFormToLocalStorage() {
+        const formData = {
+            studentName: studentNameInput.value, iaPrompt: iaPromptSelect.value, objects: [], characteristics: [],
+            summativeComments: summativeCommentsInput.value, predictedGrade: predictedGradeBandSelect.value,
+            summativeEvidence: null
+        };
+        const checkedSummativeEvidence = document.querySelector('input[name="summative-evidence"]:checked');
+        if (checkedSummativeEvidence) formData.summativeEvidence = checkedSummativeEvidence.value;
+        objectSections.forEach(obj => {
+            const objectData = { id: obj.id, name: obj.nameInput.value, comments: obj.commentsInput.value, rubric: {}, evalFlag: null };
+            objectRubricKeys.forEach(key => {
+                const checkedRadio = document.querySelector(`input[name="${obj.criteriaPrefix}-${key}"]:checked`);
+                objectData.rubric[key] = checkedRadio ? checkedRadio.value : null;
+            });
+            const checkedEvalFlag = document.querySelector(`input[name="${obj.evalFlagName}"]:checked`);
+            if (checkedEvalFlag) objectData.evalFlag = checkedEvalFlag.value;
+            formData.objects.push(objectData);
+        });
+        document.querySelectorAll('#possible-characteristics-checklist input[type="checkbox"]:checked').forEach(cb => {
+            formData.characteristics.push(cb.value);
+        });
+        localStorage.setItem(localStorageKey, JSON.stringify(formData));
+    }
+    function loadFormFromLocalStorage() {
+        const savedData = localStorage.getItem(localStorageKey);
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            studentNameInput.value = formData.studentName || "";
+            iaPromptSelect.value = formData.iaPrompt || "";
+            summativeCommentsInput.value = formData.summativeComments || "";
+            predictedGradeBandSelect.value = formData.predictedGrade || "";
+            if (formData.summativeEvidence) {
+                const radioToSelect = document.querySelector(`input[name="summative-evidence"][value="${formData.summativeEvidence}"]`);
+                if (radioToSelect) radioToSelect.checked = true;
+            }
+            formData.objects.forEach(savedObj => {
+                const targetObj = objectSections.find(o => o.id === savedObj.id);
+                if (targetObj) {
+                    targetObj.nameInput.value = savedObj.name || "";
+                    targetObj.commentsInput.value = savedObj.comments || "";
+                    objectRubricKeys.forEach(key => {
+                        if (savedObj.rubric[key]) {
+                            const radioToSelect = document.querySelector(`input[name="${targetObj.criteriaPrefix}-${key}"][value="${savedObj.rubric[key]}"]`);
+                            if (radioToSelect) radioToSelect.checked = true;
+                        }
+                    });
+                    if (savedObj.evalFlag) { // Only check if a specific flag was saved
+                        const flagRadio = document.querySelector(`input[name="${targetObj.evalFlagName}"][value="${savedObj.evalFlag}"]`);
+                        if (flagRadio) flagRadio.checked = true;
+                    } // No default needed here as HTML now doesn't have one, or you can add one if no savedObj.evalFlag
+                }
+            });
+            document.querySelectorAll('#possible-characteristics-checklist input[type="checkbox"]').forEach(cb => {
+                cb.checked = formData.characteristics.includes(cb.value);
+            });
+            updateAutomatedGradeDisplay(); updateActiveNavLink();
+            return true;
+        }
+        return false;
+    }
+    function clearLocalStorage() { localStorage.removeItem(localStorageKey); }
+
+    function addFormChangeListeners() {
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"], input[type="text"], textarea, select').forEach(input => {
+            const eventType = (input.tagName.toLowerCase() === 'textarea' || input.type === 'text' || input.tagName.toLowerCase() === 'select') ? 'input' : 'change';
+            input.addEventListener(eventType, () => {
+                if (input.type === 'radio' || input.type === 'checkbox') updateAutomatedGradeDisplay();
+                saveFormToLocalStorage();
+            });
+        });
+    }
+
+    const restorePromptWrapper = document.getElementById('restore-prompt-wrapper');
+    const restorePromptDiv = document.getElementById('restore-prompt');
+    const restoreYesBtn = document.getElementById('restore-yes-btn');
+    const restoreNoBtn = document.getElementById('restore-no-btn');
+    const mainContainer = document.querySelector('.container');
+    const pageTitleH1 = mainContainer ? mainContainer.querySelector('h1') : null;
+
+    if (localStorage.getItem(localStorageKey)) {
+        restorePromptDiv.style.display = 'block';
+        if (mainContainer && pageTitleH1) { mainContainer.insertBefore(restorePromptWrapper, pageTitleH1.nextSibling); }
+        else if (mainContainer) { mainContainer.prepend(restorePromptWrapper); }
+        restorePromptWrapper.style.display = 'block';
+    } else { restorePromptWrapper.style.display = 'none'; }
+    restoreYesBtn.addEventListener('click', () => { loadFormFromLocalStorage(); restorePromptWrapper.style.display = 'none'; });
+    restoreNoBtn.addEventListener('click', () => { clearLocalStorage(); restorePromptWrapper.style.display = 'none'; resetForm(false); });
+
+    // --- Form Action Functions ---
+    const resetFormBtn = document.getElementById('reset-form-btn');
+    const generateFeedbackBtn = document.getElementById('generate-feedback-btn');
+    const exportCommentsBtn = document.getElementById('export-comments-btn');
+
+    function resetForm(confirmReset = true) {
+        let doReset = confirmReset ? confirm("Are you sure you want to reset all fields? This cannot be undone.") : true;
+        if (doReset) {
+            studentNameInput.value = ""; iaPromptSelect.value = "";
+            const summativeEvidenceRadios = document.querySelectorAll('input[name="summative-evidence"]');
+            summativeEvidenceRadios.forEach(r => r.checked = false);
+            objectSections.forEach(obj => {
+                obj.nameInput.value = ""; obj.commentsInput.value = "";
+                objectRubricKeys.forEach(key => { document.querySelectorAll(`input[name="${obj.criteriaPrefix}-${key}"]`).forEach(r => r.checked = false); });
+                document.querySelectorAll(`input[name="${obj.evalFlagName}"]`).forEach(r => r.checked = false);
+                 // No explicit default checked for object eval, user needs to select
+            });
+            document.querySelectorAll('#possible-characteristics-checklist input[type="checkbox"]').forEach(cb => cb.checked = false);
+            summativeCommentsInput.value = ""; predictedGradeBandSelect.value = "";
+            if (confirmReset) clearLocalStorage();
+            updateAutomatedGradeDisplay(); updateActiveNavLink();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+    resetFormBtn.addEventListener('click', () => resetForm(true));
+
+    function generateRawCommentsOutput() {
+        const studentName = studentNameInput.value.trim() || "N/A";
+        let rawOutput = `TOK Exhibition Comments\n`;
+        rawOutput += `Student Name: ${studentName}\n`;
+        rawOutput += `IA Prompt: ${iaPromptSelect.value || "Not Selected"}\n\n`;
+        objectSections.forEach(obj => {
+            rawOutput += `--- Object ${obj.id} ${obj.nameInput.value ? `(${obj.nameInput.value.trim()})` : ''} ---\n`;
+            const checkedEvalFlag = document.querySelector(`input[name="${obj.evalFlagName}"]:checked`);
+            if(checkedEvalFlag) rawOutput += `Object Evaluation: ${checkedEvalFlag.value}\n`;
+            rawOutput += `Comments:\n${obj.commentsInput.value.trim() || "No comments."}\n\n`;
+        });
+        rawOutput += `--- Summative Comments ---\n${summativeCommentsInput.value.trim() || "No summative comments."}\n`;
+        
+        const filenameBase = studentName !== "N/A" ? studentName.replace(/\s+/g, '_') : 'TOK_Exhibition';
+        const filename = `${filenameBase}_Raw_Comments.txt`;
+        const blob = new Blob([rawOutput], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob); link.download = filename;
+        document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href);
+    }
+    if(exportCommentsBtn) exportCommentsBtn.addEventListener('click', generateRawCommentsOutput);
+
+
+    function generateFeedbackForChatGPT() {
+        let missingFieldsMessages = [];
+        if (!studentNameInput.value.trim()) missingFieldsMessages.push("Student Name");
+        if (!iaPromptSelect.value) missingFieldsMessages.push("IA Prompt");
+        objectSections.forEach(obj => { if (!obj.commentsInput.value.trim()) missingFieldsMessages.push(`Comments for Object ${obj.id}`); });
+        if (!document.querySelector('input[name="summative-evidence"]:checked')) missingFieldsMessages.push("Overall Support & Evidence (Summative)");
+        if (!summativeCommentsInput.value.trim()) missingFieldsMessages.push("Summative Comments");
+        if (!predictedGradeBandSelect.value) missingFieldsMessages.push("Predicted Grade Band (Manual)");
+        if (document.querySelectorAll('#possible-characteristics-checklist input[type="checkbox"]:checked').length === 0) missingFieldsMessages.push("At least one Overall Characteristic");
+        if (missingFieldsMessages.length > 0) { if (!confirm(`It looks like you haven't provided:\n- ${missingFieldsMessages.join("\n- ")}\n\nProceed anyway?`)) return; }
+
+        const studentName = studentNameInput.value.trim();
+        let outputText = `IMMEDIATE ACTION REQUIRED:\nYou are to act as a TOK Exhibition Feedback Formatter.\nYour SOLE OUTPUT must be the fully processed and formatted feedback document as detailed below, using Markdown-style formatting for headings, bolding, and lists where appropriate to enhance readability and structure. Ensure clear separation between sections and distinct presentation for each object.\nDO NOT provide any introductory text, summarization, confirmation, or any conversational preamble before generating the feedback document.\nThe very first line of your response MUST be the start of the formatted feedback document (beginning with "**Student Name:** ...").\n\nBegin processing the following TOK Exhibition feedback data according to these strict output requirements and the detailed MANDATORY PROCESSING INSTRUCTIONS that follow:\n\nMANDATORY PROCESSING INSTRUCTIONS:\n`;
+        outputText += `1.  **FORMATTING & ORGANIZATION**: Present the feedback clearly. Use Markdown for structure (e.g., '## Section Title', '### Object Title', '**Label:** Value', '* List item').\n    *   Start with:\n        **Student Name:** [Name]\n        **IA Prompt Selected:** [Prompt]\n        \n        ---\n    *   For each object, use a clear heading like '### OBJECT X: [Optional Object Name]'. Under this, include:\n        *   '**Object Evaluation:** [Selected Flag]'\n        *   '**Rubric Selections for Commentary:**' followed by a bulleted list of rubric criteria and the teacher's selection (e.g., '*   Object's Real-World Context: Clearly & specifically identified').\n        *   '**Comments on Object X:**' followed by the teacher's comments. Add a horizontal rule ('---') after each object's full feedback.\n    *   The summative section should have a heading like '## SUMMATIVE ASSESSMENT'. Under this, include:\n        *   '**Overall Support & Evidence for the Exhibition:** [Selected Rubric Value]'\n        *   '**Overall Characteristics Selected by Teacher:**' followed by a bulleted list.\n        *   '**Summative Comments by Teacher:**'\n        *   '**Teacher's Predicted Grade Band:** [Grade Band]'\n    *   Use ample paragraph breaks within longer comments for readability. Strive for a professional, clear, and easy-to-scan document. A horizontal rule ('---') should separate major sections.\n`;
+        outputText += `2.  **EDITING & TONE**: Maintain the teacher's authentic voice and style as expressed in their comments. Perform necessary grammar and spelling checks on the teacher's comments and integrate these corrections seamlessly without altering the core meaning or tone.\n`;
+        outputText += `3.  **CONCRETE STEPS FOR IMPROVEMENT (CRITICALLY IMPORTANT)**: After presenting all the teacher's feedback (and after a '---' separator), you MUST generate a distinct section titled '## CONCRETE STEPS FOR IMPROVEMENT'. This section must contain 3-5 actionable, bullet-pointed 'to-do' items specifically tailored to the student. These action items should be directly derived from a careful analysis of both the teacher's written comments, their rubric selections (including object commentary rubrics and summative evidence), AND any 'Object Evaluation' flags selected. When generating these steps, give approximately 80% weight to deficiencies clearly indicated by lower rubric selections/negative flags and 20% weight to nuances or specific points raised in the teacher's written comments. Rank these bullet points starting with the most impactful and practical steps the student can take. For each bullet point, briefly explain WHY this improvement is important in the context of a successful TOK exhibition. The advice should be specific and practical.\n`;
+        outputText += `4.  **RESOURCES (If Relevant and Adds Value)**: Within the "CONCRETE STEPS FOR IMPROVEMENT" section, IF DIRECTLY RELEVANT to a specific piece of advice and genuinely adds value, you MAY suggest that the student consult general TOK resources. For example: "To further develop your understanding of X, consider exploring resources like TheoryOfKnowledge.net, TOKStudent.com, your school's TOK materials, or the official IB TOK Guide for general guidance on the concepts they need to improve." Use this sparingly and only when it supports a specific point of improvement.\n`;
+        outputText += `5.  **NO SUMMARIZATION OF TEACHER'S COMMENTS**: Do NOT summarize the teacher's original comments. The teacher's detailed comments for each object and the summative remarks ARE the core feedback. Your role is to structure this feedback, polish its presentation, and critically, to enhance it with the targeted "CONCRETE STEPS FOR IMPROVEMENT" section.\n\n`;
+        outputText += `--------------------------------------------------------------------\nBEGIN TOK EXHIBITION FEEDBACK DATA:\n--------------------------------------------------------------------\n\n`;
+        outputText += `**Student Name:** ${studentName || "Not Provided"}\n`;
+        outputText += `**IA Prompt Selected:** ${iaPromptSelect.value || "Not Selected"}\n\n---\n\n`;
+        objectSections.forEach(obj => {
+            outputText += `### OBJECT ${obj.id}${obj.nameInput.value ? `: ${obj.nameInput.value.trim()}` : ''}\n`;
+            const checkedEvalFlag = document.querySelector(`input[name="${obj.evalFlagName}"]:checked`);
+            outputText += `**Object Evaluation:** ${checkedEvalFlag ? checkedEvalFlag.value : "No evaluation selected"}\n`; // Changed from "No specific..."
+            outputText += `**Rubric Selections for Commentary:**\n`;
+            objectRubricKeys.forEach(key => {
+                const checkedRadio = document.querySelector(`input[name="${obj.criteriaPrefix}-${key}"]:checked`);
+                const value = checkedRadio ? checkedRadio.value : "Not selected";
+                let criterionName = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim();
+                if (key === "context") criterionName = "Object's Real-World Context";
+                if (key === "links") criterionName = "Links Between Object & IA Prompt";
+                if (key === "justification") criterionName = "Justification for Object Inclusion";
+                outputText += `*   ${criterionName}: ${value}\n`;
+            });
+            outputText += `**Comments on Object ${obj.id}:**\n${obj.commentsInput.value.trim() || "No specific comments provided."}\n\n---\n\n`;
+        });
+        outputText += `## SUMMATIVE ASSESSMENT\n`;
+        const summEvidenceRadio = document.querySelector('input[name="summative-evidence"]:checked');
+        const summEvidenceValue = summEvidenceRadio ? summEvidenceRadio.value : "Not selected";
+        outputText += `**Overall Support & Evidence for the Exhibition:** ${summEvidenceValue}\n`;
+        const selectedChars = Array.from(document.querySelectorAll('#possible-characteristics-checklist input[type="checkbox"]:checked')).map(cb => cb.value);
+        outputText += `**Overall Characteristics Selected by Teacher:**\n${selectedChars.length > 0 ? selectedChars.map(c => `* ${c}`).join('\n') : "* None selected"}\n`;
+        outputText += `**Summative Comments by Teacher:**\n${summativeCommentsInput.value.trim() || "No summative comments provided."}\n\n`;
+        outputText += `**Teacher's Predicted Grade Band:** ${predictedGradeBandSelect.value || "Not selected"}\n\n---\n\n`;
+        outputText += `--------------------------------------------------------------------\nEND OF TOK EXHIBITION FEEDBACK DATA.\n--------------------------------------------------------------------\n`;
+        outputText += `REMINDER: Your response should ONLY be the formatted feedback document itself, starting directly with "**Student Name:** ...". Adhere strictly to all instructions, especially the Markdown formatting guidelines for a professional and readable output.\nNow, please generate the complete, formatted feedback document for the student, ensuring you include the "## CONCRETE STEPS FOR IMPROVEMENT" section as specified in the MANDATORY PROCESSING INSTRUCTIONS above.\n`;
+
+        const filenameBase = studentName ? studentName.replace(/\s+/g, '_') : 'TOK_Exhibition';
+        const filename = `${filenameBase}_Feedback_for_ChatGPT.txt`;
+        const blob = new Blob([outputText], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob); link.download = filename;
+        document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(link.href);
+    }
+    if(generateFeedbackBtn) generateFeedbackBtn.addEventListener('click', generateFeedbackForChatGPT);
+
+    // Initial population and setup
+    populateIAPrompts();
+    populateCharacteristics();
+    addFormChangeListeners();
+    if (restorePromptWrapper.style.display !== 'block') { loadFormFromLocalStorage(); }
+    else { updateAutomatedGradeDisplay(); updateActiveNavLink(); }
+    updateActiveNavLink(); // Initial call for nav link state
+    updateAutomatedGradeDisplay(); // Ensure grade is calculated on initial load
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOK Essay Marking Tool - May 2026 (v7 Professional)</title>
+<style>
+/* CSS Styling - TOK Essay Version 7 */
+:root {
+    --nav-width: 220px;
+    --primary-color: #2c3e50; /* IB Dark Blue */
+    --accent-color: #e67e22; /* Orange for contrast */
+    --light-grey: #f4f6f8;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --locked-bg: #e9ecef;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; margin: 0; padding: 20px;
+    background-color: var(--light-grey); color: var(--text-color);
+    padding-left: calc(var(--nav-width) + 30px);
+}
+
+/* Navigation */
+#side-nav {
+    position: fixed; left: 0; top: 0; width: var(--nav-width); height: 100vh;
+    background-color: var(--primary-color); padding-top: 15px; overflow-y: auto;
+    z-index: 1000; border-right: 1px solid #1a2531;
+}
+#side-nav h3 {
+    color: #ecf0f1; text-align: center; font-size: 1.1em; margin-bottom: 15px;
+    padding-bottom: 10px; border-bottom: 1px solid #34495e;
+}
+#side-nav ul { list-style-type: none; padding: 0; margin: 0; }
+#side-nav li a {
+    display: block; padding: 12px 20px; color: #bdc3c7; text-decoration: none;
+    font-size: 0.9em; border-bottom: 1px solid #34495e;
+    transition: all 0.2s ease;
+}
+#side-nav li a:hover, #side-nav li a.active {
+    background-color: var(--accent-color); color: #ffffff;
+}
+
+/* Main Content */
+.container {
+    max-width: 950px; margin-left: 0; background-color: #fff;
+    padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+/* Save Status Indicator */
+#save-status {
+    position: absolute; top: 20px; right: 30px;
+    font-size: 0.85em; color: #27ae60; font-weight: bold;
+    opacity: 0; transition: opacity 0.5s;
+}
+
+h1 { text-align: center; color: var(--primary-color); margin-bottom: 35px; }
+h2 {
+    color: var(--primary-color); border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 8px; margin-top: 35px; margin-bottom: 20px; font-size: 1.5em;
+}
+
+.input-section {
+    margin-bottom: 35px; padding: 25px; border: 1px solid var(--border-color);
+    border-radius: 6px; background-color: #ffffff;
+}
+
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #495057; }
+
+/* Form Elements */
+input[type="text"], select, textarea, input[type="number"] {
+    width: 100%; padding: 12px; margin-bottom: 18px; border: 1px solid #ced4da;
+    border-radius: 4px; box-sizing: border-box; font-size: 1rem;
+}
+textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+
+/* Help Section specific styles */
+.help-box {
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--accent-color);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.help-step {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+/* Special handling for Title Select */
+select#title-select {
+    white-space: normal; height: auto; padding: 10px;
+}
+option { padding: 10px; border-bottom: 1px solid #eee; }
+
+/* Display box for selected title */
+#full-title-display {
+    background-color: #e8f6f3; border: 1px solid #1abc9c; color: #0e6251;
+    padding: 15px; border-radius: 5px; font-weight: 500; margin-bottom: 20px;
+    display: none; line-height: 1.5;
+}
+
+/* AOK Wrapper in Section 4 */
+.aok-block {
+    background: #f8f9fa; padding: 15px; border: 1px solid #e9ecef; border-radius: 5px; margin-bottom: 20px;
+}
+.aok-header-input {
+    font-weight: bold; color: var(--primary-color); 
+    border: 1px solid #ccc; background: #fff; width: 100%; padding: 8px;
+    margin-bottom: 10px; font-size: 1em;
+}
+
+/* Locked Inputs */
+input.locked-input {
+    background-color: #e2e6ea; color: #495057; cursor: not-allowed;
+    border-color: #adb5bd; font-weight: 700;
+}
+
+/* Rubric & Grade Styling */
+.characteristic-group { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+.characteristic-group h4 { margin: 5px 0 10px 0; font-size: 1em; color: #555; }
+#possible-characteristics-checklist label {
+    display: inline-block; margin-right: 15px; font-weight: normal; cursor: pointer;
+}
+#possible-characteristics-checklist input[type="checkbox"] { margin-right: 5px; transform: scale(1.1); }
+
+.grade-wrapper {
+    display: flex; gap: 20px; align-items: flex-start; padding-top: 20px; border-top: 1px dashed #ccc;
+}
+#automated-grade-display {
+    font-weight: bold; font-size: 1.2em; color: #27ae60; display: block; margin-top: 5px;
+}
+
+/* Buttons */
+button {
+    background-color: var(--primary-color); color: white; padding: 12px 22px;
+    border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: 500;
+    transition: background-color 0.2s ease; margin-right: 10px; margin-bottom: 10px;
+}
+button:hover { background-color: #34495e; }
+#reset-form-btn { background-color: #c0392b; }
+#reset-form-btn:hover { background-color: #a93226; }
+#generate-feedback-btn { background-color: var(--accent-color); }
+#generate-feedback-btn:hover { background-color: #d35400; }
+
+/* Restore Prompt */
+#restore-prompt-wrapper { display: none; margin-bottom: 20px; }
+#restore-prompt {
+    padding: 15px; background-color: #d4edda; border: 1px solid #c3e6cb; 
+    color: #155724; border-radius: 5px; text-align: center;
+}
+
+@media (max-width: 1200px) {
+    body { padding-left: 20px; }
+    #side-nav { display: none; }
+    .container { margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+
+    <nav id="side-nav">
+        <h3>Marking Nav</h3>
+        <ul>
+            <li><a href="#student-info-section">Student Info</a></li>
+            <li><a href="#ia-prompt-section">Prescribed Title</a></li>
+            <li><a href="#intro-section">Intro & Title</a></li>
+            <li><a href="#argument-section">Quality of AOKs</a></li>
+            <li><a href="#evaluation-section">Evaluation</a></li>
+            <li><a href="#assessment-section">Rubric & Score</a></li>
+            <li><a href="#actions-section">Actions</a></li>
+            <li><a href="#help-section" style="color:#e67e22; border-top: 1px solid #555;">How to Use (Help)</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <span id="save-status">✓ Saved</span>
+
+        <div id="restore-prompt-wrapper">
+            <div id="restore-prompt">
+                <strong>Previous Session Found:</strong> Would you like to restore your unsaved work?
+                <br><br>
+                <button id="restore-yes-btn" style="background:#218838; font-size:0.9em; padding:8px 15px;">Yes, Restore</button>
+                <button id="restore-no-btn" style="background:#6c757d; font-size:0.9em; padding:8px 15px;">No, Delete</button>
+            </div>
+        </div>
+
+        <h1>TOK Essay Marking Tool (May 2026)</h1>
+
+        <!-- Section 1: Student Info -->
+        <section id="student-info-section" class="input-section">
+            <h2>1. Student Information</h2>
+            <label for="student-name">Student Name:</label>
+            <input type="text" id="student-name" placeholder="Enter student's full name">
+        </section>
+
+        <!-- Section 2: Title Only -->
+        <section id="ia-prompt-section" class="input-section">
+            <h2>2. Prescribed Title</h2>
+            <label for="title-select">Select May 2026 Prescribed Title:</label>
+            <select id="title-select">
+                <option value="">-- Select a Title --</option>
+            </select>
+            <!-- Full Text Display -->
+            <div id="full-title-display"></div>
+        </section>
+
+        <!-- Section 3: Intro -->
+        <section id="intro-section" class="input-section">
+            <h2>3. Introduction & Interpretation</h2>
+            <p><em>Focus: Definition of terms, clear thesis, and interpretation of the prompt.</em></p>
+            <textarea id="intro-comments" rows="5" placeholder="Comments on Intro..."></textarea>
+        </section>
+
+        <!-- Section 4: Quality of AOKs -->
+        <section id="argument-section" class="input-section">
+            <h2>4. Quality of AOKs (Arguments)</h2>
+            <p><em>Identify the AOKs and provide feedback on the arguments/examples.</em></p>
+            
+            <!-- AOK 1 Block -->
+            <div class="aok-block">
+                <label for="aok1-input">Area of Knowledge 1:</label>
+                <input type="text" id="aok1-input" class="aok-header-input" placeholder="e.g. History (Type here)">
+                <textarea id="aok1-comments" rows="6" placeholder="Feedback on arguments and examples for the first Area of Knowledge..."></textarea>
+            </div>
+
+            <!-- AOK 2 Block -->
+            <div class="aok-block">
+                <label for="aok2-input">Area of Knowledge 2:</label>
+                <input type="text" id="aok2-input" class="aok-header-input" placeholder="e.g. The Arts (Type here)">
+                <textarea id="aok2-comments" rows="6" placeholder="Feedback on arguments and examples for the second Area of Knowledge..."></textarea>
+            </div>
+            
+            <p style="font-size:0.85em; color:#7f8c8d;">*AOK fields will auto-fill and lock if the title prescribes specific Areas.</p>
+        </section>
+
+        <!-- Section 5: Evaluation -->
+        <section id="evaluation-section" class="input-section">
+            <h2>5. Evaluation & Implications</h2>
+            <p><em>Focus: Counter-claims, different perspectives, and conclusions.</em></p>
+            <textarea id="eval-comments" rows="5" placeholder="Comments on evaluation..."></textarea>
+        </section>
+
+        <!-- Section 6: Rubric -->
+        <section id="assessment-section" class="input-section">
+            <h2>6. Holistic Assessment</h2>
+            
+            <fieldset>
+                <legend>Rubric Keywords</legend>
+                <div id="possible-characteristics-checklist"></div>
+            </fieldset>
+
+            <div class="grade-wrapper">
+                <div style="flex:1;">
+                    <label>Predicted Band:</label>
+                    <span id="automated-grade-display">Select keywords...</span>
+                </div>
+                <div style="flex:1; border-left: 1px solid #eee; padding-left: 20px;">
+                    <label for="final-score">Final Mark (0-10):</label>
+                    <select id="final-score" style="font-weight:bold; color:var(--primary-color);">
+                        <option value="">-- Score --</option>
+                        <option value="10">10 (Excellent)</option>
+                        <option value="9">9 (Excellent)</option>
+                        <option value="8">8 (Good)</option>
+                        <option value="7">7 (Good)</option>
+                        <option value="6">6 (Satisfactory)</option>
+                        <option value="5">5 (Satisfactory)</option>
+                        <option value="4">4 (Basic)</option>
+                        <option value="3">3 (Basic)</option>
+                        <option value="2">2 (Rudimentary)</option>
+                        <option value="1">1 (Rudimentary)</option>
+                        <option value="0">0</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="summative-comments" style="margin-top:20px;">Overall Summative Comments:</label>
+            <textarea id="summative-comments" rows="4" placeholder="General summary..."></textarea>
+        </section>
+
+        <!-- Actions Section -->
+        <section id="actions-section" class="input-section">
+            <h2>Actions</h2>
+            <button id="generate-feedback-btn">Generate Instructions (For Uploaded Essay)</button>
+            <button id="export-comments-btn">Export Simple Comments</button>
+            <button id="reset-form-btn">Reset Form</button>
+        </section>
+
+        <!-- Help Section (NEW) -->
+        <section id="help-section" class="input-section">
+            <h2>Teacher Guide: The AI Workflow</h2>
+            <p>This tool is designed to bridge the gap between teacher insight and student action. It allows you to provide high-level feedback while using an LLM (like ChatGPT or Claude) to handle the "dirty work" of finding quotes and providing guided reflections.</p>
+            
+            <div class="help-box">
+                <p><span class="help-step">Step 1: Mark as Usual.</span> Select the student's Prescribed Title and fill in your professional comments in sections 1–6. Use the rubric checklist to help determine the band.</p>
+            </div>
+
+            <div class="help-box">
+                <p><span class="help-step">Step 2: Generate the "Instruction File".</span> Click the <strong style="color:var(--accent-color)">"Generate Instructions"</strong> button. This downloads a <code>.txt</code> file containing your comments and a specialized prompt that tells the AI exactly how to behave.</p>
+            </div>
+
+            <div class="help-box">
+                <p><span class="help-step">Step 3: Uploading to an LLM.</span> Open your preferred AI (ChatGPT-4, Claude 3.5, or Gemini).
+                <br><strong>Important:</strong> Upload <u>TWO</u> files to the chat:
+                <ol>
+                    <li>The Student's Essay Draft (PDF, Word, or Text).</li>
+                    <li>The <code>Feedback_Instructions.txt</code> file you just downloaded.</li>
+                </ol>
+                The AI will read your comments, read the student's essay, and automatically map your feedback to the specific paragraphs where the issues occur.</p>
+            </div>
+
+            <div class="help-box">
+                <p><span class="help-step">Step 4: The Result.</span> The AI will output a professional "TOK Essay Feedback" document. It includes a section called <strong>"Guided Reflection"</strong> which quotes the student's own work and asks them pedagogical questions based on <em>your</em> instructions, without simply rewriting the essay for them.</p>
+            </div>
+            
+            <p><em>Pro Tip: This method ensures that the feedback is "Human-in-the-loop"—the AI never makes up pedagogical advice; it only applies YOUR advice to the student's text.</em></p>
+        </section>
+
+    </div>
+
+<script>
+/* --- DATA CONFIGURATION --- */
+const titlesConfig = {
+    "1": { 
+        text: "1. In the production of knowledge, does it matter that observation is an essential but flawed tool? Discuss with reference to the natural sciences and one other area of knowledge.",
+        aok1: "Natural Sciences", aok2: null 
+    },
+    "2": { 
+        text: "2. To what extent do you agree that doubt is central to the pursuit of knowledge? Answer with reference to two areas of knowledge.",
+        aok1: null, aok2: null 
+    },
+    "3": { 
+        text: "3. Is the power of knowledge determined by the way in which the knowledge is conveyed? Discuss with reference to mathematics and one other area of knowledge.",
+        aok1: "Mathematics", aok2: null 
+    },
+    "4": { 
+        text: "4. In the acquisition of knowledge, can we only understand something to the extent that we understand its context? Discuss with reference to two areas of knowledge.",
+        aok1: null, aok2: null 
+    },
+    "5": { 
+        text: "5. To what extent do you agree with the claim that \"all things are numbers\" (Pythagoras)? Answer with reference to the arts and the human sciences.",
+        aok1: "The Arts", aok2: "Human Sciences" 
+    },
+    "6": { 
+        text: "6. To what extent is interpretation a reliable tool in the production of knowledge? Answer with reference to history and one other area of knowledge.",
+        aok1: "History", aok2: null 
+    }
+};
+
+const essayCharacteristics = [
+    { group: "Excellent (9-10)", items: [{ text: "Insightful", score: 5 }, { text: "Convincing", score: 5 }, { text: "Accomplished", score: 5 }, { text: "Lucid", score: 5 }]},
+    { group: "Good (7-8)", items: [{ text: "Pertinent", score: 4 }, { text: "Relevant", score: 4 }, { text: "Analytical", score: 4 }, { text: "Organized", score: 4 }]},
+    { group: "Satisfactory (5-6)", items: [{ text: "Acceptable", score: 3 }, { text: "Mainstream", score: 3 }, { text: "Adequate", score: 3 }, { text: "Competent", score: 3 }]},
+    { group: "Basic (3-4)", items: [{ text: "Underdeveloped", score: 2 }, { text: "Basic", score: 2 }, { text: "Superficial", score: 2 }, { text: "Limited", score: 2 }]},
+    { group: "Rudimentary (1-2)", items: [{ text: "Ineffective", score: 1 }, { text: "Descriptive", score: 1 }, { text: "Incoherent", score: 1 }, { text: "Formless", score: 1 }]}
+];
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM ELEMENTS ---
+    const titleSelect = document.getElementById('title-select');
+    const fullTitleDisplay = document.getElementById('full-title-display');
+    const aok1Input = document.getElementById('aok1-input');
+    const aok2Input = document.getElementById('aok2-input');
+    const checklistDiv = document.getElementById('possible-characteristics-checklist');
+    const automatedGradeDisplay = document.getElementById('automated-grade-display');
+    const saveStatus = document.getElementById('save-status');
+
+    // --- INITIALIZATION ---
+    populateUI();
+    setupListeners();
+    checkStorage();
+
+    function populateUI() {
+        titleSelect.innerHTML = '<option value="">-- Select a Title --</option>';
+        Object.keys(titlesConfig).forEach(key => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.textContent = titlesConfig[key].text.substring(0, 80) + "..."; 
+            titleSelect.appendChild(opt);
+        });
+
+        checklistDiv.innerHTML = "";
+        essayCharacteristics.forEach(group => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'characteristic-group';
+            const h4 = document.createElement('h4');
+            h4.textContent = group.group;
+            groupDiv.appendChild(h4);
+            group.items.forEach(char => {
+                const label = document.createElement('label');
+                const box = document.createElement('input');
+                box.type = 'checkbox'; box.value = char.text; box.dataset.score = char.score;
+                label.appendChild(box); label.appendChild(document.createTextNode(" " + char.text));
+                groupDiv.appendChild(label);
+            });
+            checklistDiv.appendChild(groupDiv);
+        });
+    }
+
+    function setupListeners() {
+        titleSelect.addEventListener('change', handleTitleChange);
+        
+        const inputs = document.querySelectorAll('input, textarea, select');
+        inputs.forEach(el => {
+            el.addEventListener('change', () => { triggerSave(); if(el.type==='checkbox') calcGrade(); });
+            if(el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && el.type === 'text')) {
+                el.addEventListener('input', triggerSave);
+            }
+        });
+
+        document.getElementById('generate-feedback-btn').addEventListener('click', generateFeedbackPrompt);
+        document.getElementById('export-comments-btn').addEventListener('click', exportRawComments);
+        document.getElementById('reset-form-btn').addEventListener('click', resetForm);
+        document.getElementById('restore-yes-btn').addEventListener('click', restoreForm);
+        document.getElementById('restore-no-btn').addEventListener('click', () => { 
+            localStorage.removeItem("TOK_Essay_Tool_Final"); 
+            document.getElementById('restore-prompt-wrapper').style.display = 'none'; 
+        });
+    }
+
+    function checkStorage() {
+        try {
+            if(localStorage.getItem("TOK_Essay_Tool_Final")) {
+                document.getElementById('restore-prompt-wrapper').style.display = 'block';
+            }
+        } catch(e) { console.warn("Storage access error", e); }
+    }
+
+    // --- CORE LOGIC ---
+
+    let saveTimeout;
+    function triggerSave() {
+        saveToStorage();
+        saveStatus.style.opacity = 1;
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            saveStatus.style.opacity = 0;
+        }, 1500);
+    }
+
+    function handleTitleChange() {
+        const key = titleSelect.value;
+        if (!key) {
+            fullTitleDisplay.style.display = "none";
+            fullTitleDisplay.textContent = "";
+            unlockField(aok1Input);
+            unlockField(aok2Input);
+        } else {
+            const conf = titlesConfig[key];
+            fullTitleDisplay.style.display = "block";
+            fullTitleDisplay.textContent = conf.text;
+
+            if (conf.aok1) lockField(aok1Input, conf.aok1);
+            else unlockField(aok1Input);
+
+            if (conf.aok2) lockField(aok2Input, conf.aok2);
+            else unlockField(aok2Input);
+        }
+        triggerSave();
+    }
+
+    function lockField(el, val) {
+        el.value = val;
+        el.readOnly = true;
+        el.classList.add('locked-input');
+    }
+
+    function unlockField(el) {
+        el.readOnly = false;
+        el.classList.remove('locked-input');
+    }
+
+    function calcGrade() {
+        const checked = document.querySelectorAll('#possible-characteristics-checklist input:checked');
+        if (checked.length === 0) {
+            automatedGradeDisplay.textContent = "Select keywords...";
+            automatedGradeDisplay.style.color = "#777";
+            return;
+        }
+        let total = 0;
+        checked.forEach(box => total += parseInt(box.dataset.score));
+        const avg = total / checked.length;
+        let text = ""; let color = "";
+
+        if (avg >= 4.5) { text = "Excellent (9-10)"; color = "#27ae60"; }
+        else if (avg >= 3.5) { text = "Good (7-8)"; color = "#2980b9"; }
+        else if (avg >= 2.5) { text = "Satisfactory (5-6)"; color = "#f39c12"; }
+        else if (avg >= 1.5) { text = "Basic (3-4)"; color = "#d35400"; }
+        else { text = "Rudimentary (1-2)"; color = "#c0392b"; }
+        automatedGradeDisplay.textContent = text;
+        automatedGradeDisplay.style.color = color;
+    }
+
+    // --- DATA HANDLING ---
+
+    function saveToStorage() {
+        const data = {
+            studentName: document.getElementById('student-name').value,
+            titleKey: titleSelect.value,
+            aok1: aok1Input.value,
+            aok2: aok2Input.value,
+            introComments: document.getElementById('intro-comments').value,
+            aok1Comments: document.getElementById('aok1-comments').value,
+            aok2Comments: document.getElementById('aok2-comments').value,
+            evalComments: document.getElementById('eval-comments').value,
+            summativeComments: document.getElementById('summative-comments').value,
+            finalScore: document.getElementById('final-score').value,
+            characteristics: Array.from(document.querySelectorAll('#possible-characteristics-checklist input:checked')).map(cb => cb.value)
+        };
+        localStorage.setItem("TOK_Essay_Tool_Final", JSON.stringify(data));
+    }
+
+    function restoreForm() {
+        const saved = localStorage.getItem("TOK_Essay_Tool_Final");
+        if(!saved) return;
+        const data = JSON.parse(saved);
+
+        document.getElementById('student-name').value = data.studentName || "";
+        titleSelect.value = data.titleKey || "";
+        handleTitleChange(); 
+
+        if(!aok1Input.readOnly) aok1Input.value = data.aok1 || "";
+        if(!aok2Input.readOnly) aok2Input.value = data.aok2 || "";
+
+        document.getElementById('intro-comments').value = data.introComments || "";
+        document.getElementById('aok1-comments').value = data.aok1Comments || "";
+        document.getElementById('aok2-comments').value = data.aok2Comments || "";
+        document.getElementById('eval-comments').value = data.evalComments || "";
+        document.getElementById('summative-comments').value = data.summativeComments || "";
+        document.getElementById('final-score').value = data.finalScore || "";
+
+        if (data.characteristics) {
+            data.characteristics.forEach(val => {
+                const box = document.querySelector(`#possible-characteristics-checklist input[value="${val}"]`);
+                if(box) box.checked = true;
+            });
+        }
+        calcGrade();
+        document.getElementById('restore-prompt-wrapper').style.display = 'none';
+        triggerSave();
+    }
+
+    function resetForm() {
+        if(!confirm("Are you sure? This will clear all current work and saved data.")) return;
+        localStorage.removeItem("TOK_Essay_Tool_Final");
+        document.querySelectorAll('input, textarea, select').forEach(el => {
+            if(el.type === 'checkbox') el.checked = false;
+            else el.value = '';
+        });
+        titleSelect.selectedIndex = 0;
+        handleTitleChange(); 
+        calcGrade();
+        document.getElementById('restore-prompt-wrapper').style.display = 'none';
+        saveStatus.style.opacity = 0;
+    }
+
+    // --- GENERATORS ---
+
+    function generateFeedbackPrompt() {
+        const name = document.getElementById('student-name').value || "Student";
+        const titleKey = titleSelect.value;
+        const titleText = titleKey ? titlesConfig[titleKey].text : "No title selected";
+        
+        // --- STRICT PROFESSIONAL PROMPT ---
+        let prompt = `*** INSTRUCTIONS FOR AI ***\n\n`;
+        prompt += `You are generating a formal TOK Essay Feedback Document for a student.\n`;
+        prompt += `I will upload the essay. You must use the teacher's comments below.\n\n`;
+        
+        prompt += `### OUTPUT RESTRICTIONS (CRITICAL)\n`;
+        prompt += `1. **NO META-TALK:** Do not include headers like "Part 1", "(Corrected for Grammar)", or "Here is your report".\n`;
+        prompt += `2. **START IMMEDIATELY:** Your output must start with the title "TOK ESSAY FEEDBACK".\n`;
+        prompt += `3. **PROFESSIONAL TONE:** Correct only objective spelling/grammar errors in the teacher's text silently. Do not announce it.\n\n`;
+
+        prompt += `### DOCUMENT STRUCTURE\n`;
+        prompt += `1. **TOK ESSAY FEEDBACK** (Title)\n`;
+        prompt += `2. **Assessment Details**: Student Name, Title, Score.\n`;
+        prompt += `3. **Teacher Feedback**: Output the comments below section-by-section. (Do not summarize. Use the exact text).\n`;
+        prompt += `4. **Guided Reflection & Exemplification**: (See instructions below).\n\n`;
+
+        prompt += `### INSTRUCTIONS FOR "GUIDED REFLECTION" SECTION\n`;
+        prompt += `Read the essay and the teacher's comments. For the 3 most critical issues:\n`;
+        prompt += `1. **Quote the Issue**: Quote the specific sentence in the essay that demonstrates the problem.\n`;
+        prompt += `2. **Explain the Flaw**: Explain *why* this is an issue in the context of TOK (e.g., "This is descriptive, not analytical").\n`;
+        prompt += `3. **Pedagogical Prompt (DO NOT REWRITE)**: Do NOT rewrite the sentence for the student. Instead, ask a guiding question or provide a conceptual example that forces the student to do the thinking. \n`;
+        prompt += `   *Bad:* "Here is a better version: [AI Version]."\n`;
+        prompt += `   *Good:* "To fix this, ask yourself: How does this specific example support your claim about reliability? Try linking it explicitly to the concept of [Concept]."\n\n`;
+        
+        prompt += `=== DATA FOR DOCUMENT ===\n`;
+        prompt += `Student: ${name}\nTitle: ${titleText}\nScore: ${document.getElementById('final-score').value}/10\n\n`;
+        
+        prompt += `=== TEACHER COMMENTS ===\n`;
+        prompt += `**Introduction:**\n${document.getElementById('intro-comments').value || "No comment"}\n\n`;
+        prompt += `**Analysis of ${aok1Input.value}:**\n${document.getElementById('aok1-comments').value || "No comment"}\n\n`;
+        prompt += `**Analysis of ${aok2Input.value}:**\n${document.getElementById('aok2-comments').value || "No comment"}\n\n`;
+        prompt += `**Evaluation:**\n${document.getElementById('eval-comments').value || "No comment"}\n\n`;
+        prompt += `**Summative Comments:**\n${document.getElementById('summative-comments').value || "No comment"}\n\n`;
+        
+        prompt += `*** END OF INSTRUCTIONS. PLEASE WAIT FOR ESSAY FILE. ***`;
+
+        downloadFile(`${name.replace(/\s/g,'_')}_Feedback_Instructions.txt`, prompt);
+    }
+
+    function exportRawComments() {
+        const name = document.getElementById('student-name').value || "Student";
+        let text = `TOK Essay Comments: ${name}\n`;
+        text += `Title: ${titleSelect.value ? titlesConfig[titleSelect.value].text : "None"}\n\n`;
+        text += `Intro: ${document.getElementById('intro-comments').value}\n`;
+        text += `AOK 1 (${aok1Input.value}): ${document.getElementById('aok1-comments').value}\n`;
+        text += `AOK 2 (${aok2Input.value}): ${document.getElementById('aok2-comments').value}\n`;
+        text += `Evaluation: ${document.getElementById('eval-comments').value}\n`;
+        text += `Summative: ${document.getElementById('summative-comments').value}\n`;
+        text += `Score: ${document.getElementById('final-score').value}`;
+        downloadFile(`${name}_Raw_Comments.txt`, text);
+    }
+
+    function downloadFile(filename, content) {
+        const blob = new Blob([content], { type: 'text/plain' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        a.click();
+    }
+});
+</script>
+</body>
+</html>
