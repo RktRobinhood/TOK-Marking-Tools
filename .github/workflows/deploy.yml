@@ -1,4 +1,4 @@
-name: Deploy IBO Style Hub
+name: Deploy IBO-Style Landing Page
 
 on:
   push:
@@ -17,129 +17,140 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Generate IBO Landing Page
+      - name: Generate IBO-Branded Landing Page
         run: |
           cat <<EOF > index.html
           <!DOCTYPE html>
           <html lang="en">
           <head>
               <meta charset="UTF-8">
-              <title>TOK TERMINAL | IBO</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Tok Tools Hub</title>
               <style>
                   :root {
-                      --ib-blue: #0066b3;
-                      --ib-dark: #050a0e;
-                      --ib-border: #1e293b;
-                      --ib-text: #f8fafc;
-                      --ib-gray: #64748b;
+                      --ibo-blue: #00549b;
+                      --ibo-light-blue: #0073cf;
+                      --ibo-bg: #f8f9fa;
+                      --ibo-text: #333333;
+                      --ibo-white: #ffffff;
                   }
                   body {
-                      background-color: var(--ib-dark);
-                      color: var(--ib-text);
-                      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+                      font-family: "Open Sans", Arial, sans-serif;
+                      background-color: var(--ibo-bg);
+                      color: var(--ibo-text);
                       margin: 0;
                       display: flex;
                       flex-direction: column;
-                      align-items: center;
                       min-height: 100vh;
                   }
-                  /* Top Navigation Bar Style */
-                  nav {
-                      width: 100%;
-                      padding: 15px 40px;
-                      border-bottom: 1px solid var(--ib-border);
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      box-sizing: border-box;
-                      background: #000;
+                  /* Header styling like ibo.org */
+                  header {
+                      background-color: var(--ibo-blue);
+                      color: white;
+                      padding: 2rem 1rem;
+                      text-align: center;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                   }
-                  .logo {
-                      font-weight: 800;
-                      letter-spacing: 2px;
-                      font-size: 14px;
-                      color: #fff;
+                  header h1 {
+                      margin: 0;
+                      font-size: 1.75rem;
+                      font-weight: 300;
+                      letter-spacing: 0.5px;
                   }
-                  .system-status {
-                      font-size: 11px;
-                      color: #00ff00;
-                      font-family: monospace;
+                  /* Main container */
+                  .container {
+                      max-width: 900px;
+                      margin: 40px auto;
+                      padding: 0 20px;
+                      flex: 1;
                   }
-                  /* Main Dashboard Grid */
-                  .dashboard {
+                  /* Responsive Grid */
+                  .grid {
                       display: grid;
-                      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                      gap: 1px; /* Creates the IBO grid line look */
-                      background-color: var(--ib-border);
-                      width: 100%;
-                      max-width: 1200px;
-                      border: 1px solid var(--ib-border);
-                      margin-top: 50px;
+                      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                      gap: 25px;
                   }
-                  .tool-link {
-                      background-color: var(--ib-dark);
-                      padding: 40px 30px;
-                      text-decoration: none;
-                      color: var(--ib-text);
-                      transition: all 0.2s;
+                  /* Soft, clean cards (not boxy) */
+                  .card {
+                      background: var(--ibo-white);
+                      border-radius: 12px;
+                      padding: 30px;
+                      text-align: center;
+                      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                      transition: transform 0.2s ease, box-shadow 0.2s ease;
+                      border: 1px solid #eee;
                       display: flex;
-                      justify-content: space-between;
-                      align-items: center;
+                      flex-direction: column;
+                      justify-content: center;
                   }
-                  .tool-link:hover {
-                      background-color: #0f172a;
+                  .card:hover {
+                      transform: translateY(-5px);
+                      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
                   }
-                  .tool-link:hover .tool-name {
-                      color: var(--ib-blue);
-                  }
-                  .tool-name {
-                      font-size: 18px;
+                  .card h2 {
+                      color: var(--ibo-blue);
+                      font-size: 1.4rem;
+                      margin-bottom: 20px;
                       font-weight: 600;
-                      text-transform: uppercase;
-                      letter-spacing: 1px;
                   }
-                  .arrow {
-                      font-size: 20px;
-                      color: var(--ib-gray);
+                  /* Action Button Style */
+                  .btn {
+                      display: inline-block;
+                      background-color: var(--ibo-blue);
+                      color: white;
+                      text-decoration: none;
+                      padding: 12px 25px;
+                      border-radius: 50px; /* Rounded pill shape */
+                      font-weight: 600;
+                      font-size: 0.9rem;
+                      transition: background 0.2s;
+                  }
+                  .btn:hover {
+                      background-color: var(--ibo-light-blue);
                   }
                   footer {
-                      margin-top: auto;
+                      background: #e9ecef;
                       padding: 20px;
-                      font-size: 10px;
-                      color: var(--ib-gray);
-                      font-family: monospace;
-                      text-transform: uppercase;
+                      text-align: center;
+                      font-size: 0.8rem;
+                      color: #666;
+                  }
+                  /* Mobile adjustments */
+                  @media (max-width: 600px) {
+                      header { padding: 1.5rem 1rem; }
+                      .container { margin: 20px auto; }
                   }
               </style>
           </head>
           <body>
-              <nav>
-                  <div class="logo">TOK // INSTITUTIONAL</div>
-                  <div class="system-status">PORT: 443 // SECURE</div>
-              </nav>
+              <header>
+                  <h1>Tok Information System</h1>
+              </header>
 
-              <div class="dashboard">
+              <div class="container">
+                  <div class="grid">
           EOF
 
-          # Automatically find folders and add to the grid
+          # Automatically find folders in /tools and add to the grid
           for dir in tools/*/; do
               foldername=$(basename "$dir")
               if [ -f "tools/$foldername/index.html" ]; then
-                # Formatting the name: e.g. "tok-scraper" -> "TOK SCRAPER"
-                displayname=$(echo $foldername | tr '[:lower:]' '[:upper:]' | sed 's/-/ /g')
+                # Formatting name: "tok-scraper" -> "Tok Scraper"
+                displayname=$(echo $foldername | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++){$i=toupper(substr($i,1,1)) substr($i,2)}}1')
                 
-                echo "      <a class='tool-link' href='tools/$foldername/index.html'>" >> index.html
-                echo "          <span class='tool-name'>$displayname</span>" >> index.html
-                echo "          <span class='arrow'>→</span>" >> index.html
-                echo "      </a>" >> index.html
+                echo "      <div class='card'>" >> index.html
+                echo "          <h2>$displayname</h2>" >> index.html
+                echo "          <div><a href='tools/$foldername/index.html' class='btn'>Launch Tool</a></div>" >> index.html
+                echo "      </div>" >> index.html
               fi
           done
 
           cat <<EOF >> index.html
+                  </div>
               </div>
 
               <footer>
-                  Terminal Session: $(date +'%Y-%m-%d %H:%M:%S') UTC
+                  &copy; $(date +%Y) Tok Hub &bull; International Standards Layout
               </footer>
           </body>
           </html>
