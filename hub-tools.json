@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Essay Marking & Feedback",
+    "eyebrow": "For teachers",
+    "description": "Turn rubric decisions and written observations into clear, structured essay feedback for students.",
+    "href": "tools/Essay%20Marking%20%26%20Feedback%20Tool/index.html",
+    "kind": "essay",
+    "accent": "cyan"
+  },
+  {
+    "title": "Exhibition Marking & Feedback",
+    "eyebrow": "For teachers",
+    "description": "Assess exhibition objects, capture rubric evidence, and prepare focused next steps in one place.",
+    "href": "tools/Exhibition%20Marking%20%26%20Feedback%20Tool/index.html",
+    "kind": "exhibition",
+    "accent": "violet"
+  },
+  {
+    "title": "TOK Essay Outline Planner",
+    "eyebrow": "For students",
+    "description": "Explore AOK combinations, shape claims and counterclaims, and build a coherent essay plan.",
+    "href": "tools/TOK%20Essay%20Outline%20Planner/index.html",
+    "kind": "planner",
+    "accent": "coral"
+  }
+]

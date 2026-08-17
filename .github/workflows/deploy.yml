@@ -1,8 +1,8 @@
-name: Deploy IBO-Style Landing Page
+name: Deploy TOK Tools Hub
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -14,155 +14,27 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Generate IBO-Branded Landing Page
-        run: |
-          cat <<EOF > index.html
-          <!DOCTYPE html>
-          <html lang="en">
-          <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Tok Tools Hub</title>
-              <style>
-                  :root {
-                      --ibo-blue: #00549b;
-                      --ibo-light-blue: #0073cf;
-                      --ibo-bg: #f8f9fa;
-                      --ibo-text: #333333;
-                      --ibo-white: #ffffff;
-                  }
-                  body {
-                      font-family: "Open Sans", Arial, sans-serif;
-                      background-color: var(--ibo-bg);
-                      color: var(--ibo-text);
-                      margin: 0;
-                      display: flex;
-                      flex-direction: column;
-                      min-height: 100vh;
-                  }
-                  /* Header styling like ibo.org */
-                  header {
-                      background-color: var(--ibo-blue);
-                      color: white;
-                      padding: 2rem 1rem;
-                      text-align: center;
-                      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                  }
-                  header h1 {
-                      margin: 0;
-                      font-size: 1.75rem;
-                      font-weight: 300;
-                      letter-spacing: 0.5px;
-                  }
-                  /* Main container */
-                  .container {
-                      max-width: 900px;
-                      margin: 40px auto;
-                      padding: 0 20px;
-                      flex: 1;
-                  }
-                  /* Responsive Grid */
-                  .grid {
-                      display: grid;
-                      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                      gap: 25px;
-                  }
-                  /* Soft, clean cards (not boxy) */
-                  .card {
-                      background: var(--ibo-white);
-                      border-radius: 12px;
-                      padding: 30px;
-                      text-align: center;
-                      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-                      transition: transform 0.2s ease, box-shadow 0.2s ease;
-                      border: 1px solid #eee;
-                      display: flex;
-                      flex-direction: column;
-                      justify-content: center;
-                  }
-                  .card:hover {
-                      transform: translateY(-5px);
-                      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-                  }
-                  .card h2 {
-                      color: var(--ibo-blue);
-                      font-size: 1.4rem;
-                      margin-bottom: 20px;
-                      font-weight: 600;
-                  }
-                  /* Action Button Style */
-                  .btn {
-                      display: inline-block;
-                      background-color: var(--ibo-blue);
-                      color: white;
-                      text-decoration: none;
-                      padding: 12px 25px;
-                      border-radius: 50px; /* Rounded pill shape */
-                      font-weight: 600;
-                      font-size: 0.9rem;
-                      transition: background 0.2s;
-                  }
-                  .btn:hover {
-                      background-color: var(--ibo-light-blue);
-                  }
-                  footer {
-                      background: #e9ecef;
-                      padding: 20px;
-                      text-align: center;
-                      font-size: 0.8rem;
-                      color: #666;
-                  }
-                  /* Mobile adjustments */
-                  @media (max-width: 600px) {
-                      header { padding: 1.5rem 1rem; }
-                      .container { margin: 20px auto; }
-                  }
-              </style>
-          </head>
-          <body>
-              <header>
-                  <h1>Tok Information System</h1>
-              </header>
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
 
-              <div class="container">
-                  <div class="grid">
-          EOF
+      - name: Test hub
+        run: npm test
 
-          # Automatically find folders in /tools and add to the grid
-          for dir in tools/*/; do
-              foldername=$(basename "$dir")
-              if [ -f "tools/$foldername/index.html" ]; then
-                # Formatting name: "tok-scraper" -> "Tok Scraper"
-                displayname=$(echo $foldername | sed 's/-/ /g' | awk '{for(i=1;i<=NF;i++){$i=toupper(substr($i,1,1)) substr($i,2)}}1')
-                
-                echo "      <div class='card'>" >> index.html
-                echo "          <h2>$displayname</h2>" >> index.html
-                echo "          <div><a href='tools/$foldername/index.html' class='btn'>Launch Tool</a></div>" >> index.html
-                echo "      </div>" >> index.html
-              fi
-          done
-
-          cat <<EOF >> index.html
-                  </div>
-              </div>
-
-              <footer>
-                  &copy; $(date +%Y) Tok Hub &bull; International Standards Layout
-              </footer>
-          </body>
-          </html>
-          EOF
+      - name: Generate hub
+        run: npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: .
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
