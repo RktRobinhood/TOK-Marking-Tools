@@ -1,0 +1,9 @@
+{
+  "name": "tok-marking-tools-hub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/generate-hub.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}
