@@ -10,7 +10,7 @@ The TOK Essay Outline Planner helps a student develop and revise the logic of a 
 - **Section:** Introduction / Unpacking, an AOK Candidate, or Conclusion / Implications.
 - **AOK Candidate:** one official Area of Knowledge with its own stable identity and Blocks.
 - **Selected AOK:** either of the two AOK Candidates currently included in the essay, Teacher PDF, and AI feedback exports.
-- **Exploration Tray:** the side tray for opening AOK Candidates and selecting the essay's active pair.
+- **Exploration Tray:** the right-side tray for opening AOK Candidates and selecting the essay's active pair; a persistent right-edge tab reopens it after closing.
 - **Exploration Workspace:** the editable, explicitly non-exported Section for an unselected AOK Candidate.
 - **Starter Block:** a removable predefined Block supplied by a starting layout.
 - **Optional Block:** predefined, removable reasoning block.
@@ -33,6 +33,8 @@ The TOK Essay Outline Planner helps a student develop and revise the logic of a 
 
 - Project State is the source of truth for editing, persistence, history, print, and AI prompt generation.
 - A Project contains exactly two Selected AOK slots, while additional AOK Candidates may be explored without losing their Blocks.
+- Exploration becomes available only after both Selected AOK slots contain different official AOKs.
+- An official AOK may appear at most once among all AOK Candidates in a Project.
 - Introduction is always first and Conclusion is always last in the exportable essay; the two Selected AOKs may swap.
 - AOK names come from the five official choices: History, Human Sciences, Natural Sciences, The Arts, and Mathematics.
 - A block may be nested no more than two levels beneath a root block.
