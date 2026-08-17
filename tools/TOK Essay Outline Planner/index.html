@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOK Essay Outline Planner</title>
+<style>
+:root{
+  --navy:#17324d;--navy-2:#244964;--teal:#2f7f78;--orange:#c86d3f;--paper:#f4f6f8;--surface:#ffffff;
+  --text:#24313d;--muted:#6b7785;--line:#dce2e8;--soft:#edf2f5;--danger:#a94442;--success:#2f7a55;
+  --shadow:0 10px 28px rgba(20,38,55,.08);--radius:12px;--sidebar:290px;
+  --type-unpack:#6b5ca5;--type-aok:#3c7f88;--type-main:#245f90;--type-example:#a0632c;--type-analysis:#6a4f95;
+  --type-link:#2f7a55;--type-eval:#8b4c6e;--type-method:#4f6d7a;--type-perspective:#7d6a3d;--type-implication:#7a5a2f;--type-custom:#66717d;
+}
+body.dark{
+  --paper:#10161c;--surface:#17212a;--text:#e8edf2;--muted:#a7b1bb;--line:#32404b;--soft:#202c36;--navy:#0d2236;--navy-2:#1d3c54;
+  --shadow:0 12px 30px rgba(0,0,0,.24);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--text)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.45}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[contenteditable="true"]:focus-visible{outline:3px solid color-mix(in srgb,var(--teal) 55%,transparent);outline-offset:2px}
+.app-shell{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:50;height:58px;background:var(--navy);color:white;display:flex;align-items:center;gap:10px;padding:0 16px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+.brand{font-weight:760;letter-spacing:.01em;margin-right:auto;white-space:nowrap}
+.topbar .small-btn{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.08);color:white;border-radius:8px;padding:7px 10px}
+.topbar .small-btn:hover{background:rgba(255,255,255,.16)}
+.save-status{font-size:.8rem;color:#cfe9dc;min-width:48px;text-align:right}
+.layout{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:calc(100vh - 58px)}
+.layout.sidebar-collapsed{grid-template-columns:0 minmax(0,1fr)}
+.sidebar{background:var(--surface);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:58px;height:calc(100vh - 58px);overflow:auto;transition:.18s ease;z-index:20}
+.sidebar-collapsed .sidebar{transform:translateX(-100%);opacity:0;pointer-events:none}
+.sidebar h3{margin:0 0 6px;font-size:1rem;color:var(--navy-2)}
+.sidebar p{margin:0 0 14px;font-size:.82rem;color:var(--muted)}
+.toolbox-section{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
+.toolbox-grid{display:grid;gap:7px}
+.toolbox-btn{display:flex;align-items:center;gap:8px;text-align:left;width:100%;border:1px solid var(--line);background:var(--surface);color:var(--text);padding:5px 5px 5px 9px;border-radius:8px;cursor:grab;user-select:none}
+.toolbox-btn:hover{background:var(--soft);border-color:color-mix(in srgb,var(--teal) 50%,var(--line))}.toolbox-btn.dragging{opacity:.55;cursor:grabbing}.toolbox-label{flex:1;min-width:0}.toolbox-add{width:30px;height:30px;flex:0 0 30px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--navy-2);font-size:1.1rem;line-height:1}.toolbox-add:hover{background:var(--teal);border-color:var(--teal);color:white}
+.type-dot{width:9px;height:9px;border-radius:50%;background:var(--accent,var(--type-custom));flex:0 0 9px}
+.toolbox-more summary{cursor:pointer;color:var(--muted);font-size:.82rem;margin:8px 0}
+.workspace{padding:24px clamp(14px,3vw,42px) 60px;min-width:0}
+.workspace-inner{max-width:1120px;margin:0 auto}
+.meta-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:20px}
+.meta-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
+.meta-head h1{font-size:1.5rem;margin:0;color:var(--navy-2)}
+.meta-head p{margin:5px 0 0;color:var(--muted);font-size:.9rem}
+.meta-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.field{grid-column:span 4}.field.wide{grid-column:span 12}.field.half{grid-column:span 6}
+.field label{display:block;font-size:.76rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.035em;margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:10px 11px;outline:none}
+.field textarea{min-height:74px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(47,127,120,.12)}
+.aok-fields{display:flex;align-items:flex-end;gap:8px}.aok-fields select{flex:1}.aok-fields button{white-space:nowrap;border:1px solid var(--teal);background:var(--surface);color:var(--teal);border-radius:8px;padding:10px 11px;font-weight:700}
+.section-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin:18px 0;overflow:hidden;transition:border-color .15s ease,box-shadow .15s ease}
+.section-card.active-section{border-color:var(--teal);box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 28%,transparent),var(--shadow)}
+.section-card.toolbox-drop-target{border-color:var(--orange);box-shadow:0 0 0 4px color-mix(in srgb,var(--orange) 42%,transparent),var(--shadow)}
+.section-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,var(--soft),transparent)}
+.section-title-wrap{flex:1;min-width:0}.section-kicker{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}.section-head h2{font-size:1.14rem;margin:2px 0 0;color:var(--navy-2)}
+.section-progress{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.section-actions{display:flex;gap:6px}.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--text);width:34px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}.icon-btn:hover{background:var(--soft)}
+.blocks{padding:14px 16px 17px}.block-wrap{position:relative;margin:8px 0}.block-wrap.depth-1{margin-left:30px}.block-wrap.depth-2{margin-left:60px}
+.block-wrap.depth-1:before,.block-wrap.depth-2:before{content:"";position:absolute;left:-16px;top:-8px;bottom:-8px;border-left:2px solid var(--line)}
+.block-card{--accent:var(--type-custom);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;background:var(--surface);overflow:hidden;transition:.15s ease}
+.block-card.dragging{opacity:.45}.block-card.drop-target{outline:2px dashed var(--teal);outline-offset:2px}
+.block-head{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+.drag-handle{cursor:grab;color:var(--muted);font-size:1rem;user-select:none}.block-type{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);white-space:nowrap}.block-title{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.block-controls{display:flex;gap:4px}.block-controls button{border:0;background:transparent;color:var(--muted);width:27px;height:27px;border-radius:6px}.block-controls button:hover{background:var(--soft);color:var(--text)}
+.block-body{padding:9px 11px 11px}.block-card.collapsed .block-body{display:none}
+.rich-toolbar{display:none;flex-wrap:wrap;gap:5px;padding-bottom:8px}.block-card.active .rich-toolbar{display:flex}.rich-toolbar button,.rich-toolbar select{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:6px;min-height:28px;padding:3px 7px;font-size:.8rem}
+.helper{display:none;font-size:.8rem;color:var(--muted);padding:7px 9px;background:var(--soft);border-radius:7px;margin-bottom:8px}.block-card.active .helper.show{display:block}
+.editor{min-height:54px;outline:none;line-height:1.48;font-size:.93rem}.editor:empty:before{content:attr(data-placeholder);color:#98a2ad}.editor ul,.editor ol{margin:.25rem 0;padding-left:1.35rem}.editor p{margin:.3rem 0}
+.empty-section{padding:10px 0;color:var(--muted);font-size:.85rem}
+.floating-add{position:fixed;right:22px;bottom:22px;z-index:40;border:0;background:var(--orange);color:white;border-radius:999px;padding:11px 16px;font-weight:750;box-shadow:0 8px 22px rgba(0,0,0,.18);display:none}.app-shell.sidebar-is-collapsed .floating-add{display:block}
+.aok-tray{position:fixed;z-index:70;right:0;top:58px;bottom:0;width:min(340px,92vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:-12px 0 30px rgba(20,38,55,.18);padding:18px;overflow:auto;transform:translateX(105%);transition:transform .2s ease}.aok-tray.open{transform:none}.aok-tray-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}.aok-tray-head div{flex:1}.aok-tray h2{font-size:1.08rem;margin:0;color:var(--navy-2)}.aok-tray p{font-size:.82rem;color:var(--muted);line-height:1.45;margin:5px 0 0}.aok-candidate-list{display:grid;gap:9px}.aok-candidate{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface)}.aok-candidate.selected{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 6%,var(--surface))}.aok-candidate strong{display:block}.aok-status{display:block;color:var(--muted);font-size:.75rem;margin:3px 0 8px}.aok-candidate-actions{display:flex;flex-wrap:wrap;gap:6px}.aok-candidate-actions button{font-size:.76rem;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:7px;padding:6px 8px}.aok-candidate-actions button.primary{background:var(--navy);border-color:var(--navy);color:white}.exploration-zone{border:2px dashed color-mix(in srgb,var(--orange) 65%,var(--line));border-radius:14px;padding:0 14px 6px;margin:28px 0;background:color-mix(in srgb,var(--orange) 4%,var(--surface))}.exploration-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--orange);padding:12px 4px 0}.exploration-note{color:var(--muted);font-size:.82rem;padding:4px}.exploration-zone .section-card{box-shadow:none}.onboarding-help-note{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--soft);border-radius:9px;padding:9px 11px;margin-top:12px;font-size:.83rem}.onboarding-help-note button{border:1px solid var(--teal);color:var(--teal);background:var(--surface);border-radius:7px;padding:7px 9px;font-weight:700}
+.utility-row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}.utility-row button{border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:8px;padding:8px 10px}.utility-row button.primary{background:var(--navy);border-color:var(--navy);color:white}.utility-row button.accent{background:var(--orange);border-color:var(--orange);color:white}.utility-row button.danger{color:var(--danger)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#18232d;color:white;padding:10px 14px;border-radius:8px;z-index:100;opacity:0;pointer-events:none;transition:.2s}.toast.show{opacity:1}
+.restore-banner{display:none;margin-bottom:14px;background:#e9f4ef;border:1px solid #cce1d6;color:#24553e;border-radius:9px;padding:10px 12px;align-items:center;gap:8px}.restore-banner.show{display:flex}.restore-banner span{flex:1}.restore-banner button{border:1px solid #b7d5c5;background:white;border-radius:7px;padding:6px 9px}
+.validation{display:none;background:#fff3cd;border:1px solid #ead28a;color:#6b5412;border-radius:8px;padding:9px 11px;margin:10px 0;font-size:.85rem}.validation.show{display:block}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);padding:0;box-shadow:0 20px 55px rgba(0,0,0,.28);width:min(520px,92vw)}dialog::backdrop{background:rgba(0,0,0,.35)}.dialog-body{padding:18px}.dialog-body h3{margin:0 0 14px}.dialog-grid{display:grid;gap:10px}.dialog-grid label{font-size:.8rem;font-weight:700;color:var(--muted)}.dialog-grid input,.dialog-grid select{width:100%;padding:9px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--text)}.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}.dialog-actions button{padding:8px 11px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--text)}.dialog-actions .save{background:var(--navy);color:white;border-color:var(--navy)}
+.guide-dialog{width:min(820px,94vw)}.guide-shell{padding:24px}.guide-kicker{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}.guide-shell h2{margin:5px 0 8px;color:var(--navy-2)}.guide-shell>p{color:var(--muted);margin:0 0 18px}.wizard-step{display:none}.wizard-step.active{display:block}.guide-visual{border:1px solid var(--line);border-radius:14px;background:var(--soft);padding:16px;margin:16px 0}.guide-visual svg{display:block;width:100%;height:auto;max-height:210px}.template-grid,.help-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.template-card{position:relative}.template-card input{position:absolute;opacity:0;pointer-events:none}.template-card label{display:block;height:100%;border:2px solid var(--line);border-radius:12px;padding:12px;background:var(--surface);cursor:pointer}.template-card input:checked+label{border-color:var(--teal);box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 20%,transparent)}.template-card input:focus-visible+label{outline:3px solid var(--orange);outline-offset:2px}.template-mini{height:62px;display:flex;gap:4px;align-items:flex-start;margin-bottom:9px}.template-mini i{display:block;width:9px;border-radius:3px;background:var(--teal)}.template-mini i:nth-child(2n){background:var(--orange)}.template-card strong{display:block;font-size:.88rem}.template-card small{display:block;color:var(--muted);margin-top:4px;line-height:1.3}.wizard-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wizard-meta .wide{grid-column:1/-1}.wizard-meta label{display:block;font-size:.76rem;font-weight:750;color:var(--muted);margin-bottom:4px}.wizard-meta input,.wizard-meta textarea,.wizard-meta select{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)}.wizard-meta textarea{min-height:66px}.help-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface)}.help-card svg{width:100%;height:96px}.help-card h3{margin:8px 0 4px;color:var(--navy-2);font-size:.94rem}.help-card p{margin:0;color:var(--muted);font-size:.8rem;line-height:1.4}
+.insert-zone{height:8px;position:relative;margin:0 4px;border-radius:6px;opacity:0;transition:.12s ease}.toolbox-dragging .insert-zone{height:18px;opacity:1}.toolbox-dragging .insert-zone:before{content:"";position:absolute;left:6px;right:6px;top:8px;border-top:2px dashed color-mix(in srgb,var(--teal) 58%,var(--line))}.insert-zone.drop-position{background:color-mix(in srgb,var(--orange) 16%,transparent)}.insert-zone.drop-position:before{border-top:4px solid var(--orange);top:7px}.insert-zone.depth-1{margin-left:30px}.insert-zone.depth-2{margin-left:60px}
+.help-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* Guide illustrations are drawn with fixed ink colours, so their panel stays light in either theme. */
+body.dark .guide-visual{background:#eaf0f4;border-color:#c3ced6}
+/* --navy-2 is a dark ink and disappears against the dark surface in dialog headings. */
+body.dark .guide-shell h2,body.dark .tutorial-step h3,body.dark .feedback-card strong,body.dark .help-card h3{color:var(--text)}
+.tutorial-step{display:none}.tutorial-step.active{display:block}.tutorial-step h3{margin:0 0 6px;color:var(--navy-2);font-size:1.02rem}.tutorial-step p{color:var(--muted);margin:0 0 12px;line-height:1.5}.tutorial-step .guide-visual svg{max-height:190px}.tutorial-points{margin:14px 0 0;padding-left:20px;color:var(--muted);font-size:.86rem;line-height:1.55}.tutorial-points li{margin-bottom:7px}.tutorial-points strong,.tutorial-step p strong{color:var(--text)}.tutorial-note{background:var(--soft);border-left:3px solid var(--teal);border-radius:0 7px 7px 0;padding:9px 11px;font-size:.83rem;margin:14px 0 0!important}
+.tutorial-nav{justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line);padding-top:14px}.tutorial-move{display:flex;gap:8px}.tutorial-move button{padding:8px 11px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--text)}.tutorial-move .save{background:var(--navy);color:white;border-color:var(--navy)}.tutorial-move button[disabled]{opacity:.4;cursor:not-allowed}.tutorial-progress{display:flex;align-items:center;gap:9px;font-size:.76rem;font-weight:700;color:var(--muted)}.tutorial-dots{display:flex;gap:4px}.tutorial-dots i{display:block;width:7px;height:7px;border-radius:50%;background:var(--line)}.tutorial-dots i.done{background:var(--teal)}
+.feedback-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:0;padding:0;margin:0}.feedback-card label{display:flex;flex-direction:column}.feedback-stage{display:block;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}.feedback-card input:checked+label .feedback-stage{color:var(--orange)}.feedback-card strong{font-size:.92rem;line-height:1.3;color:var(--navy-2)}.feedback-card small{margin-top:7px}
+@media(max-width:900px){:root{--sidebar:245px}.workspace{padding-left:16px;padding-right:16px}.field{grid-column:span 6}.field.wide{grid-column:span 12}.block-wrap.depth-2{margin-left:44px}.block-wrap.depth-1{margin-left:22px}}
+@media(max-width:760px){.template-grid,.help-grid{grid-template-columns:1fr 1fr}.feedback-grid{grid-template-columns:1fr}.guide-shell{padding:18px}.wizard-meta{grid-template-columns:1fr}.wizard-meta .wide{grid-column:auto}.tutorial-nav{justify-content:center}}
+@media(max-width:700px){.layout{grid-template-columns:0 minmax(0,1fr)}.sidebar{transform:translateX(-100%);opacity:0;pointer-events:none;position:fixed;left:0;width:min(86vw,300px);box-shadow:var(--shadow)}.layout.sidebar-open-mobile .sidebar{transform:none;opacity:1;pointer-events:auto}.app-shell.sidebar-is-collapsed .floating-add{display:block}.field,.field.half{grid-column:span 12}.aok-fields{align-items:stretch;flex-direction:column}.topbar{padding:0 9px}.brand{font-size:.9rem}.workspace{padding:12px 8px 50px}.block-wrap.depth-1{margin-left:16px}.block-wrap.depth-2{margin-left:30px}}
+@media print{
+  :root,body.dark{--paper:#fff;--surface:#fff;--text:#111;--muted:#555;--line:#cfd5db;--soft:#f4f6f8;--navy:#17324d;--navy-2:#17324d}
+  body{background:white!important;color:#111!important}.topbar,.sidebar,.floating-add,.utility-row,.restore-banner,.validation,.section-actions,.block-controls,.rich-toolbar,.drag-handle,.aok-tray,.exploration-zone{display:none!important}.layout,.layout.sidebar-collapsed{display:block}.workspace{padding:0}.workspace-inner{max-width:none}.meta-card,.section-card{box-shadow:none!important;border:1px solid #cfd5db!important;break-inside:avoid}.section-card{break-inside:auto}.block-card{box-shadow:none;break-inside:avoid;background:white!important;color:#111!important}.block-card.collapsed .block-body{display:block!important}.block-wrap.depth-1{margin-left:22px}.block-wrap.depth-2{margin-left:44px}.helper{display:none!important}.editor{color:#111!important}.meta-head p{color:#555}.meta-card input,.meta-card textarea,.meta-card select{border:0;padding:2px 0;color:#111;background:white;appearance:none}.section-head{background:#f4f6f8!important}.section-progress{display:none}.block-head{background:#f7f7f7!important}.block-type{color:#222!important}.toast,dialog{display:none!important}}
+</style>
+</head>
+<body>
+<script id="embedded-state">window.__EMBEDDED_PROJECT_STATE__ = null;</script>
+<div class="app-shell">
+  <header class="topbar">
+    <button class="small-btn" id="sidebar-toggle" title="Collapse reasoning toolbox" aria-label="Collapse reasoning toolbox">◀</button>
+    <div class="brand">TOK Essay Outline Planner</div>
+    <span id="save-status" class="save-status" role="status" aria-live="polite"></span>
+    <button class="small-btn" id="undo-btn" title="Undo (Ctrl/Cmd+Z)" aria-label="Undo">↶</button>
+    <button class="small-btn" id="redo-btn" title="Redo (Ctrl/Cmd+Shift+Z)" aria-label="Redo">↷</button>
+    <button class="small-btn" id="theme-toggle" title="Toggle light/dark mode" aria-label="Toggle light or dark mode">◐</button>
+    <button class="small-btn" id="help-btn" title="Help and visual guide" aria-label="Help and visual guide">? Help</button>
+  </header>
+
+  <div class="layout" id="layout">
+    <aside class="sidebar" id="sidebar">
+      <h3>Reasoning toolbox</h3>
+      <p>Add a reasoning move to the active essay section. Suggestions change with context; they are not a checklist.</p>
+      <div id="toolbox-context"></div>
+    </aside>
+
+    <main class="workspace">
+      <div class="workspace-inner">
+        <div id="restore-banner" class="restore-banner" role="status"><span id="restore-message">A browser-saved session is available.</span><button id="restore-local" type="button">Restore</button><button id="ignore-local" type="button">Ignore</button></div>
+
+        <section class="meta-card">
+          <div class="meta-head">
+            <div><h1>Essay project</h1><p>Build the logic first. Use concise bullets or short notes; the outline is not the draft.</p></div>
+            <small id="last-edited-label"></small>
+          </div>
+          <div id="validation" class="validation" role="alert" tabindex="-1"></div>
+          <div class="meta-grid">
+            <div class="field"><label for="student-name">Student name *</label><input id="student-name" data-meta="studentName" type="text" autocomplete="name" placeholder="Full name"></div>
+            <div class="field"><label for="class-course">Class / course</label><input id="class-course" data-meta="classCourse" type="text" placeholder="Optional"></div>
+            <div class="field"><label for="teacher-name">Teacher</label><input id="teacher-name" data-meta="teacher" type="text" placeholder="Optional"></div>
+            <div class="field wide"><label for="prescribed-title">Prescribed title *</label><textarea id="prescribed-title" data-meta="prescribedTitle" placeholder="Paste or type the full prescribed title"></textarea></div>
+            <div class="field half"><label for="aok-1">AOK 1 *</label><select id="aok-1" data-aok-slot="0"></select></div>
+            <div class="field half"><label for="aok-2">AOK 2 *</label><div class="aok-fields"><select id="aok-2" data-aok-slot="1"></select><button type="button" id="add-aok-candidate">Explore another AOK</button></div></div>
+          </div>
+          <div class="utility-row">
+            <button type="button" class="primary" id="save-html">Save Working Copy (.html)</button>
+            <button type="button" class="accent" id="export-pdf">Export PDF / Print</button>
+            <button type="button" id="ai-prompt">Ask AI for Feedback</button>
+            <button type="button" id="aok-tray-toggle" hidden>Manage AOK combinations</button>
+            <button type="button" id="collapse-all">Collapse All</button>
+            <button type="button" id="expand-all">Expand All</button>
+            <button type="button" class="danger" id="reset-project">Reset Outline</button>
+          </div>
+        </section>
+
+        <div id="sections-root"></div>
+        <div id="exploration-root"></div>
+      </div>
+    </main>
+  </div>
+  <button class="floating-add" id="floating-add" type="button" aria-label="Add a block to the active section">+ Add block</button>
+</div>
+
+<aside id="aok-tray" class="aok-tray" aria-labelledby="aok-tray-title" aria-hidden="true">
+  <div class="aok-tray-head"><div><h2 id="aok-tray-title">AOK combinations</h2><p>Keep several possibilities, then choose the two that belong to the essay and its feedback exports.</p></div><button type="button" class="icon-btn" id="aok-tray-close" aria-label="Close AOK combinations">×</button></div>
+  <div id="aok-candidate-list" class="aok-candidate-list"></div>
+</aside>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<dialog id="edit-dialog" aria-labelledby="edit-dialog-title">
+  <div class="dialog-body">
+    <h3 id="edit-dialog-title">Edit block</h3>
+    <div class="dialog-grid">
+      <div><label for="edit-type">Block type</label><select id="edit-type"></select></div>
+      <div><label for="edit-title">Visible title</label><input id="edit-title" type="text"></div>
+    </div>
+    <div class="dialog-actions"><button type="button" id="edit-cancel">Cancel</button><button type="button" class="save" id="edit-save">Save changes</button></div>
+  </div>
+</dialog>
+
+<dialog id="onboarding-dialog" class="guide-dialog" aria-labelledby="onboarding-title">
+  <div class="guide-shell">
+    <section class="wizard-step active" data-wizard-step="0">
+      <div class="guide-kicker">Welcome</div><h2 id="onboarding-title">Build the reasoning before the prose</h2>
+      <p>This planner is a movable map of your TOK argument. Nothing here is graded, and every starting Block can be changed or removed.</p>
+      <div class="guide-visual">
+        <svg viewBox="0 0 720 190" role="img" aria-label="A toolbox card moves into an essay section and becomes part of a nested argument">
+          <defs><marker id="guide-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#c86d3f"/></marker></defs>
+          <rect x="18" y="28" width="170" height="130" rx="14" fill="#fff" stroke="#2f7f78" stroke-width="3"/><text x="38" y="55" font-weight="700" fill="#17324d">TOOLBOX</text><rect x="38" y="72" width="130" height="34" rx="7" fill="#edf2f5"/><circle cx="52" cy="89" r="5" fill="#6a4f95"/><text x="64" y="94" fill="#24313d">Analysis</text><text x="145" y="95" font-size="20" fill="#17324d">+</text>
+          <path d="M206 94 C260 94 270 94 314 94" stroke="#c86d3f" stroke-width="5" fill="none" marker-end="url(#guide-arrow)"/>
+          <rect x="336" y="20" width="365" height="150" rx="14" fill="#fff" stroke="#2f7f78" stroke-width="4"/><text x="356" y="48" font-weight="700" fill="#17324d">FRAMED SECTION = ADD TARGET</text><rect x="360" y="65" width="312" height="35" rx="7" fill="#f5f1fa" stroke="#6a4f95"/><text x="377" y="88" fill="#24313d">Claim</text><line x1="370" y1="112" x2="660" y2="112" stroke="#c86d3f" stroke-width="4"/><rect x="390" y="124" width="260" height="30" rx="7" fill="#edf2f5"/><text x="407" y="144" fill="#24313d">Analysis · nested support</text>
+        </svg>
+      </div>
+      <div class="onboarding-help-note"><span>The full visual guide is always available from <strong>? Help</strong> in the top bar.</span><button type="button" id="wizard-help">Open the full Help guide</button></div>
+      <div class="dialog-actions"><button type="button" id="wizard-skip">Skip for now</button><button type="button" class="save" data-wizard-next="1">Choose a starting layout</button></div>
+    </section>
+    <section class="wizard-step" data-wizard-step="1">
+      <div class="guide-kicker">Step 2 of 3</div><h2>Choose a starting layout</h2><p>Not sure is completely fine—use Guided starter. All layouts are only suggestions, and every Block is removable.</p>
+      <div class="template-grid">
+        <div class="template-card"><input id="tpl-guided" type="radio" name="starter-template" value="guided" checked><label for="tpl-guided"><span class="template-mini"><i style="height:44px"></i><i style="height:56px"></i><i style="height:36px"></i><i style="height:50px"></i></span><strong>Guided starter</strong><small>A balanced set of prompts. Best when you are not sure yet.</small></label></div>
+        <div class="template-card"><input id="tpl-discussion" type="radio" name="starter-template" value="discussion"><label for="tpl-discussion"><span class="template-mini"><i style="height:55px"></i><i style="height:34px"></i><i style="height:55px"></i><i style="height:34px"></i></span><strong>Discussion-led</strong><small>Claim, alternative perspective, and evaluation rhythm.</small></label></div>
+        <div class="template-card"><input id="tpl-comparison" type="radio" name="starter-template" value="comparison"><label for="tpl-comparison"><span class="template-mini"><i style="height:48px"></i><i style="height:48px"></i><i style="height:48px"></i><i style="height:48px"></i></span><strong>Comparison-led</strong><small>Foregrounds methods and connections across the AOKs.</small></label></div>
+        <div class="template-card"><input id="tpl-blank" type="radio" name="starter-template" value="blank"><label for="tpl-blank"><span class="template-mini" style="border:2px dashed #a7b1bb;border-radius:7px;align-items:center;justify-content:center;color:#6b7785">Blank</span><strong>Blank slate</strong><small>Only the four Sections. Add exactly what your argument needs.</small></label></div>
+      </div>
+      <div class="dialog-actions"><button type="button" data-wizard-next="0">Back</button><button type="button" class="save" data-wizard-next="2">Add optional project details</button></div>
+    </section>
+    <section class="wizard-step" data-wizard-step="2">
+      <div class="guide-kicker">Step 3 of 3</div><h2>Add what you know—leave the rest blank</h2><p>These fields are optional here. You can fill or change all of them in the workspace later.</p>
+      <div class="wizard-meta"><div class="wide"><label for="wizard-title">Wizard prescribed title</label><textarea id="wizard-title"></textarea></div><div><label for="wizard-aok1">Wizard AOK 1</label><select id="wizard-aok1"></select></div><div><label for="wizard-aok2">Wizard AOK 2</label><select id="wizard-aok2"></select></div></div>
+      <div class="dialog-actions"><button type="button" data-wizard-next="1">Back</button><button type="button" class="save" id="wizard-finish">Start planning</button></div>
+    </section>
+  </div>
+</dialog>
+
+<dialog id="help-dialog" class="guide-dialog" aria-labelledby="help-title">
+  <div class="guide-shell"><div class="guide-kicker">Tutorial</div><h2 id="help-title">How to use the planner</h2>
+
+    <section class="tutorial-step active" data-tutorial-step="0">
+      <h3>Build the reasoning before the prose</h3>
+      <p>An outline here is not a list of paragraphs. It is a map of your argument: each Block holds one move in your reasoning, and the way Blocks sit under one another shows what supports what.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="A claim block with an example and an analysis block nested beneath it">
+        <rect x="40" y="18" width="380" height="34" rx="8" fill="#f5f1fa" stroke="#6a4f95" stroke-width="3"/><text x="58" y="41" fill="#17324d" font-weight="700">Claim — knowledge here depends on method</text>
+        <path d="M70 52 V78 H108" stroke="#c86d3f" stroke-width="4" fill="none"/>
+        <rect x="116" y="62" width="330" height="32" rx="8" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="134" y="83" fill="#24313d" font-size="13">Example — the case that puts it to the test</text>
+        <path d="M70 78 V122 H108" stroke="#c86d3f" stroke-width="4" fill="none"/>
+        <rect x="116" y="106" width="330" height="32" rx="8" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="134" y="127" fill="#24313d" font-size="13">Analysis — what the case shows about knowledge</text>
+        <text x="470" y="60" fill="#6b7785" font-size="13">Nesting is the argument:</text><text x="470" y="82" fill="#6b7785" font-size="13">everything indented under a</text><text x="470" y="104" fill="#6b7785" font-size="13">Block is there to support it.</text>
+      </svg></div>
+      <p class="tutorial-note">Nothing in this planner is graded, and every Block you start with can be rewritten or deleted.</p>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="1">
+      <h3>1. Add a Block</h3>
+      <p>The Toolbox on the left shows the kinds of reasoning move that make sense where you are working. There are two ways to bring one in.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="Dragging a toolbox card onto a highlighted insertion line, or pressing its plus button">
+        <rect x="18" y="20" width="180" height="120" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="3"/><text x="36" y="46" font-weight="700" fill="#17324d">TOOLBOX</text>
+        <rect x="36" y="60" width="144" height="32" rx="7" fill="#edf2f5"/><circle cx="52" cy="76" r="5" fill="#6a4f95"/><text x="64" y="81" fill="#24313d" font-size="13">Counterclaim</text>
+        <circle cx="166" cy="76" r="11" fill="#17324d"/><text x="161" y="81" fill="#fff" font-size="14">+</text>
+        <path d="M212 80 H286" stroke="#c86d3f" stroke-width="5"/><path d="M286 70 L306 80 L286 90 Z" fill="#c86d3f"/>
+        <rect x="322" y="14" width="380" height="132" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="3"/>
+        <rect x="344" y="34" width="336" height="28" rx="7" fill="#f5f1fa" stroke="#6a4f95"/><text x="360" y="53" fill="#24313d" font-size="13">Main Idea</text>
+        <line x1="344" y1="76" x2="680" y2="76" stroke="#c86d3f" stroke-width="5" stroke-linecap="round"/><text x="344" y="96" fill="#c86d3f" font-size="12" font-weight="700">drop here</text>
+        <rect x="344" y="104" width="336" height="28" rx="7" fill="#edf2f5"/><text x="360" y="123" fill="#24313d" font-size="13">Evaluation</text>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li><strong>Drag the card</strong> onto the outline. While you drag, orange lines appear between the existing Blocks — drop on the line where the new Block belongs.</li>
+        <li><strong>Or press the card's + button.</strong> That adds the Block to the end of the Section you are currently working in, which is the one drawn with a coloured frame.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="2">
+      <h3>2. Show what supports what</h3>
+      <p>Indenting a Block means "this exists to support the Block above it". This is the single most important thing the planner records, because it is what an examiner reads as argument rather than as a list.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="A flat list of three blocks becoming a nested structure">
+        <text x="40" y="24" fill="#6b7785" font-size="13" font-weight="700">A flat list</text>
+        <rect x="40" y="34" width="250" height="26" rx="7" fill="#f5f1fa" stroke="#6a4f95"/><text x="56" y="52" fill="#24313d" font-size="12">Claim</text>
+        <rect x="40" y="68" width="250" height="26" rx="7" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="56" y="86" fill="#24313d" font-size="12">Example</text>
+        <rect x="40" y="102" width="250" height="26" rx="7" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="56" y="120" fill="#24313d" font-size="12">Analysis</text>
+        <path d="M312 80 H370" stroke="#c86d3f" stroke-width="5"/><path d="M370 70 L390 80 L370 90 Z" fill="#c86d3f"/>
+        <text x="406" y="24" fill="#6b7785" font-size="13" font-weight="700">An argument</text>
+        <rect x="406" y="34" width="274" height="26" rx="7" fill="#f5f1fa" stroke="#6a4f95"/><text x="422" y="52" fill="#24313d" font-size="12">Claim</text>
+        <path d="M424 60 V81 H452" stroke="#c86d3f" stroke-width="3" fill="none"/>
+        <rect x="452" y="68" width="228" height="26" rx="7" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="468" y="86" fill="#24313d" font-size="12">Example</text>
+        <path d="M424 81 V115 H452" stroke="#c86d3f" stroke-width="3" fill="none"/>
+        <rect x="452" y="102" width="228" height="26" rx="7" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="468" y="120" fill="#24313d" font-size="12">Analysis</text>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li>Use a Block's <strong>indent</strong> and <strong>outdent</strong> controls to change what it sits under.</li>
+        <li>A Block can go two levels deep at most. That limit is deliberate — if you need a third level, the reasoning usually wants splitting into two Blocks instead.</li>
+        <li>Moving a Block <strong>carries everything nested under it</strong>, so a supported claim never gets separated from its support.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="3">
+      <h3>3. Reorder, duplicate, remove</h3>
+      <p>Order is an argument too. If your evaluation arrives before the reasoning it evaluates, the outline will show you.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="Block controls for moving up, moving down, duplicating and deleting">
+        <rect x="150" y="30" width="420" height="100" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="3"/>
+        <rect x="170" y="48" width="260" height="24" rx="6" fill="#f5f1fa" stroke="#6a4f95"/><text x="184" y="65" fill="#24313d" font-size="12">Counterclaim</text>
+        <rect x="170" y="88" width="260" height="24" rx="6" fill="#edf2f5"/><text x="184" y="105" fill="#24313d" font-size="12">Evaluation</text>
+        <circle cx="470" cy="60" r="14" fill="#17324d"/><text x="464" y="66" fill="#fff" font-size="14">↑</text>
+        <circle cx="508" cy="60" r="14" fill="#17324d"/><text x="502" y="66" fill="#fff" font-size="14">↓</text>
+        <circle cx="470" cy="100" r="14" fill="#2f7f78"/><text x="463" y="105" fill="#fff" font-size="12">⧉</text>
+        <circle cx="508" cy="100" r="14" fill="#c86d3f"/><text x="503" y="105" fill="#fff" font-size="13">×</text>
+        <text x="536" y="64" fill="#6b7785" font-size="12">move</text><text x="536" y="104" fill="#6b7785" font-size="12">copy · delete</text>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li><strong>Duplicate</strong> is useful when two Blocks share a shape — copy the Block, then rewrite the copy.</li>
+        <li><strong>Every Block can be deleted</strong>, including the ones your starting layout gave you. An empty Section is a valid outline.</li>
+        <li>Anything you undo by accident comes back with <strong>Undo</strong> in the top bar.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="4">
+      <h3>4. Write inside a Block</h3>
+      <p>Click into a Block to open it. Predefined Blocks show a grey Helper Prompt — a question to answer, not text to keep.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="A block showing a grey helper prompt which is replaced by the student's own notes">
+        <rect x="30" y="22" width="310" height="116" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="3"/>
+        <text x="48" y="46" fill="#17324d" font-weight="700" font-size="13">Analysis / Explanation</text>
+        <rect x="48" y="56" width="274" height="42" rx="7" fill="#edf2f5"/><text x="60" y="74" fill="#6b7785" font-size="11">What does this example show about</text><text x="60" y="90" fill="#6b7785" font-size="11">knowledge, rather than what happened?</text>
+        <path d="M356 80 H414" stroke="#c86d3f" stroke-width="5"/><path d="M414 70 L434 80 L414 90 Z" fill="#c86d3f"/>
+        <rect x="450" y="22" width="250" height="116" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="3"/>
+        <text x="468" y="46" fill="#17324d" font-weight="700" font-size="13">Why the method matters</text>
+        <line x1="468" y1="62" x2="682" y2="62" stroke="#24313d" stroke-width="2"/><line x1="468" y1="80" x2="682" y2="80" stroke="#24313d" stroke-width="2"/><line x1="468" y1="98" x2="614" y2="98" stroke="#24313d" stroke-width="2"/>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li>The Helper Prompt disappears as soon as you write your own content — it is scaffolding, and it never reaches your teacher or the AI.</li>
+        <li><strong>Rename the Block title</strong> to what your reasoning actually claims. "Why the method matters" tells you far more later than "Analysis" does.</li>
+        <li>Bold, italic and bullet lists are available while a Block is open. Collapse a finished Block to get the whole shape back on screen.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="5">
+      <h3>5. Choose, explore, and order your AOKs</h3>
+      <p>Choose from the five official Areas of Knowledge. Introduction stays first and Conclusion stays last, while your two selected AOK Sections can trade places as complete units.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="The two AOK sections exchanging position">
+        <rect x="60" y="20" width="230" height="26" rx="7" fill="#edf2f5" stroke="#a7b1bb"/><text x="76" y="38" fill="#6b7785" font-size="12">Introduction (always first)</text>
+        <rect x="60" y="54" width="230" height="30" rx="7" fill="#f5f1fa" stroke="#6a4f95" stroke-width="2"/><text x="76" y="74" fill="#24313d" font-size="12" font-weight="700">AOK 1 — History</text>
+        <rect x="60" y="92" width="230" height="30" rx="7" fill="#fdf0e8" stroke="#c86d3f" stroke-width="2"/><text x="76" y="112" fill="#24313d" font-size="12" font-weight="700">AOK 2 — Mathematics</text>
+        <rect x="60" y="130" width="230" height="24" rx="7" fill="#edf2f5" stroke="#a7b1bb"/><text x="76" y="147" fill="#6b7785" font-size="12">Conclusion (always last)</text>
+        <circle cx="360" cy="80" r="18" fill="#17324d"/><text x="350" y="87" fill="#fff" font-size="16">↕</text>
+        <rect x="430" y="20" width="230" height="26" rx="7" fill="#edf2f5" stroke="#a7b1bb"/><text x="446" y="38" fill="#6b7785" font-size="12">Introduction (always first)</text>
+        <rect x="430" y="54" width="230" height="30" rx="7" fill="#fdf0e8" stroke="#c86d3f" stroke-width="2"/><text x="446" y="74" fill="#24313d" font-size="12" font-weight="700">AOK 2 — Mathematics</text>
+        <rect x="430" y="92" width="230" height="30" rx="7" fill="#f5f1fa" stroke="#6a4f95" stroke-width="2"/><text x="446" y="112" fill="#24313d" font-size="12" font-weight="700">AOK 1 — History</text>
+        <rect x="430" y="130" width="230" height="24" rx="7" fill="#edf2f5" stroke="#a7b1bb"/><text x="446" y="147" fill="#6b7785" font-size="12">Conclusion (always last)</text>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li>Use <strong>Explore another AOK</strong> if you are not ready to settle on a pair. The extra AOK keeps its own Blocks in a separate exploration workspace.</li>
+        <li>The <strong>AOK combinations</strong> tray lets you try a different AOK 1 or AOK 2 without deleting the AOK you replace.</li>
+        <li>Only the two marked <strong>Selected for essay</strong> appear in the Teacher PDF or AI feedback prompt. Every candidate remains in the Working Copy.</li>
+      </ul>
+      <p class="tutorial-note">Swap the selected pair if the essay feels back-to-front. The AOK that sets up the problem usually wants to come first.</p>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="6">
+      <h3>6. Keep your work</h3>
+      <p>This planner has no account and no server. Read this step carefully — it is the one that protects your work.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="The downloaded working copy file is the real document, browser autosave is only a backup">
+        <rect x="30" y="26" width="300" height="108" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="4"/>
+        <text x="50" y="54" fill="#17324d" font-weight="700" font-size="14">Working Copy (.html)</text>
+        <text x="50" y="78" fill="#24313d" font-size="12">A real file you can keep, email,</text><text x="50" y="96" fill="#24313d" font-size="12">back up, and reopen anywhere.</text>
+        <text x="50" y="120" fill="#2f7f78" font-size="12" font-weight="700">This is your document.</text>
+        <rect x="390" y="26" width="300" height="108" rx="12" fill="#fff" stroke="#a7b1bb" stroke-width="2" stroke-dasharray="7 5"/>
+        <text x="410" y="54" fill="#6b7785" font-weight="700" font-size="14">Browser autosave</text>
+        <text x="410" y="78" fill="#6b7785" font-size="12">Lives only in this browser on this</text><text x="410" y="96" fill="#6b7785" font-size="12">computer. Clearing data erases it.</text>
+        <text x="410" y="120" fill="#c86d3f" font-size="12" font-weight="700">Backup only — do not rely on it.</text>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li>Press <strong>Save Working Copy (.html)</strong> to download your outline. The file contains both your work and the planner itself.</li>
+        <li>To carry on later, <strong>open that downloaded file</strong> — it reopens as a working planner with everything where you left it, with no internet connection needed.</li>
+        <li>Save a fresh copy at the end of every session. Each download is a new file, so keeping several is a free version history.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="7">
+      <h3>7. Print it for your teacher</h3>
+      <p><strong>Export PDF / Print</strong> opens your browser's print dialog; choose "Save as PDF" to get a file you can hand in.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="Collapsed blocks on screen printing as fully opened blocks on paper">
+        <text x="60" y="26" fill="#6b7785" font-size="13" font-weight="700">On screen (collapsed)</text>
+        <rect x="60" y="36" width="250" height="24" rx="6" fill="#f5f1fa" stroke="#6a4f95"/><text x="74" y="53" fill="#24313d" font-size="12">Claim ▸</text>
+        <rect x="60" y="68" width="250" height="24" rx="6" fill="#edf2f5" stroke="#2f7f78" stroke-width="2"/><text x="74" y="85" fill="#24313d" font-size="12">Example ▸</text>
+        <path d="M334 70 H392" stroke="#c86d3f" stroke-width="5"/><path d="M392 60 L412 70 L392 80 Z" fill="#c86d3f"/>
+        <text x="430" y="26" fill="#6b7785" font-size="13" font-weight="700">On paper (everything shown)</text>
+        <rect x="430" y="36" width="250" height="52" rx="6" fill="#fff" stroke="#cfd5db"/><text x="444" y="54" fill="#24313d" font-size="12" font-weight="700">Claim</text><line x1="444" y1="64" x2="666" y2="64" stroke="#8a929b"/><line x1="444" y1="78" x2="600" y2="78" stroke="#8a929b"/>
+        <rect x="430" y="96" width="250" height="52" rx="6" fill="#fff" stroke="#cfd5db"/><text x="444" y="114" fill="#24313d" font-size="12" font-weight="700">Example</text><line x1="444" y1="124" x2="666" y2="124" stroke="#8a929b"/><line x1="444" y1="138" x2="620" y2="138" stroke="#8a929b"/>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li>Collapsed Blocks are <strong>opened automatically</strong> in the printout, so your teacher always sees the whole outline.</li>
+        <li>Buttons, handles and Helper Prompts are stripped out. Only your argument prints.</li>
+        <li>Your name, title and AOKs need to be filled in before printing — the planner will tell you if any are missing.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="8">
+      <h3>8. Ask an AI for feedback</h3>
+      <p><strong>Ask AI for Feedback</strong> asks you what kind of help you want, then downloads a file containing your whole outline plus instructions for the AI. Paste the entire file into any AI chat.</p>
+      <div class="guide-visual"><svg viewBox="0 0 720 160" role="img" aria-label="Three feedback choices matching three stages of work">
+        <rect x="16" y="30" width="216" height="104" rx="12" fill="#fff" stroke="#6a4f95" stroke-width="3"/><text x="34" y="56" fill="#6a4f95" font-size="11" font-weight="700">STILL THINKING</text><text x="34" y="80" fill="#17324d" font-size="13" font-weight="700">Ask me questions</text><text x="34" y="102" fill="#6b7785" font-size="11">One question at a time.</text><text x="34" y="119" fill="#6b7785" font-size="11">You do the answering.</text>
+        <rect x="252" y="30" width="216" height="104" rx="12" fill="#fff" stroke="#2f7f78" stroke-width="3"/><text x="270" y="56" fill="#2f7f78" font-size="11" font-weight="700">OUTLINE BUILT</text><text x="270" y="80" fill="#17324d" font-size="13" font-weight="700">Find the weak spots</text><text x="270" y="102" fill="#6b7785" font-size="11">A written report, worst</text><text x="270" y="119" fill="#6b7785" font-size="11">problems first.</text>
+        <rect x="488" y="30" width="216" height="104" rx="12" fill="#fff" stroke="#c86d3f" stroke-width="3"/><text x="506" y="56" fill="#c86d3f" font-size="11" font-weight="700">NEARLY WRITING</text><text x="506" y="80" fill="#17324d" font-size="13" font-weight="700">Am I ready?</text><text x="506" y="102" fill="#6b7785" font-size="11">A last check for gaps</text><text x="506" y="119" fill="#6b7785" font-size="11">before you draft.</text>
+      </svg></div>
+      <ul class="tutorial-points">
+        <li>All three refuse to write your essay. They diagnose, question and flag — <strong>they will not give you arguments, examples or sentences to copy</strong>. That is deliberate: the thinking has to be yours.</li>
+        <li>The AI's reply does not come back into the planner. <strong>You decide</strong> what is worth acting on and change the outline yourself.</li>
+        <li>The AI sees the Block IDs, so it can point at exactly which Block it means.</li>
+      </ul>
+    </section>
+
+    <section class="tutorial-step" data-tutorial-step="9">
+      <h3>At a glance</h3>
+      <p>Three gestures are enough to reshape an outline.</p>
+    <div class="help-grid">
+      <article class="help-card"><svg viewBox="0 0 180 96" aria-hidden="true"><rect x="5" y="15" width="62" height="66" rx="9" fill="#edf2f5" stroke="#2f7f78"/><rect x="15" y="29" width="42" height="20" rx="5" fill="#fff"/><text x="48" y="44" font-size="18" fill="#17324d">+</text><path d="M75 48 H110" stroke="#c86d3f" stroke-width="4"/><rect x="118" y="19" width="56" height="60" rx="9" fill="#fff" stroke="#2f7f78" stroke-width="3"/></svg><h3>1. Add deliberately</h3><p>Drag a Toolbox card to a line, or use its + button to append it.</p></article>
+      <article class="help-card"><svg viewBox="0 0 180 96" aria-hidden="true"><rect x="18" y="12" width="144" height="25" rx="6" fill="#f5f1fa" stroke="#6a4f95"/><rect x="42" y="57" width="120" height="25" rx="6" fill="#edf2f5"/><path d="M103 40 V53" stroke="#c86d3f" stroke-width="4"/></svg><h3>2. Show support</h3><p>Move, indent, or outdent Blocks. A parent carries its nested group.</p></article>
+      <article class="help-card"><svg viewBox="0 0 180 96" aria-hidden="true"><path d="M22 70 V25 H82" stroke="#2f7f78" stroke-width="6" fill="none"/><path d="M94 25 H158 V70" stroke="#c86d3f" stroke-width="6" fill="none"/><circle cx="90" cy="48" r="12" fill="#17324d"/><text x="86" y="54" fill="#fff">↔</text></svg><h3>3. Compare and export</h3><p>Swap AOK order, save a Working Copy, then print it or ask AI for feedback.</p></article>
+    </div>
+    </section>
+
+    <div class="dialog-actions tutorial-nav">
+      <button type="button" id="help-close">Close guide</button>
+      <div class="tutorial-progress"><span id="tutorial-count" aria-live="polite">Step 1 of 10</span><span class="tutorial-dots" id="tutorial-dots" aria-hidden="true"></span></div>
+      <div class="tutorial-move"><button type="button" id="tutorial-prev">Back</button><button type="button" class="save" id="tutorial-next">Next</button></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="feedback-dialog" class="guide-dialog" aria-labelledby="feedback-title">
+  <div class="guide-shell">
+    <div class="guide-kicker">Ask AI for feedback</div>
+    <h2 id="feedback-title">What kind of help do you want right now?</h2>
+    <p>Pick the one that matches where you have got to. Whichever you choose, the AI will question and diagnose — it will never write your essay for you.</p>
+    <fieldset class="feedback-grid">
+      <legend class="visually-hidden">Kind of feedback</legend>
+      <div class="template-card feedback-card"><input id="fb-interview" type="radio" name="feedback-mode" value="interview" checked><label for="fb-interview"><span class="feedback-stage">While you are still thinking</span><strong>Ask me questions about my thinking</strong><small>The AI interviews you about your argument, one question at a time, and waits for each answer. Good when your ideas are still loose and you need to hear yourself explain them. Expect to be pushed.</small></label></div>
+      <div class="template-card feedback-card"><input id="fb-review" type="radio" name="feedback-mode" value="review"><label for="fb-review"><span class="feedback-stage">Once your outline is built</span><strong>Show me what is weak or missing</strong><small>You get a written report on your argument: what is working, the most serious problems first, and a short list of things to change. Good when you want something to work through on your own.</small></label></div>
+      <div class="template-card feedback-card"><input id="fb-readiness" type="radio" name="feedback-mode" value="readiness"><label for="fb-readiness"><span class="feedback-stage">Just before you start writing</span><strong>Check whether I am ready to write</strong><small>A short, blunt check for holes: empty Blocks, claims with nothing behind them, and places you never link back to the title. Good as a last look before the essay itself.</small></label></div>
+    </fieldset>
+    <p class="tutorial-note">Your outline downloads as a text file and is copied to your clipboard where the browser allows it. Paste the whole thing into an AI chat.</p>
+    <div class="dialog-actions"><button type="button" id="feedback-cancel">Cancel</button><button type="button" class="save" id="feedback-confirm">Get my prompt</button></div>
+  </div>
+</dialog>
+
+<dialog id="quick-add-dialog" aria-labelledby="quick-add-title">
+  <div class="dialog-body">
+    <h3 id="quick-add-title">Add block</h3>
+    <p id="quick-add-context"></p>
+    <div id="quick-add-options" class="toolbox-grid"></div>
+    <div class="dialog-actions"><button type="button" id="quick-add-cancel">Cancel</button></div>
+  </div>
+</dialog>
+
+<dialog id="add-aok-dialog" aria-labelledby="add-aok-title">
+  <div class="dialog-body">
+    <h3 id="add-aok-title">Explore another Area of Knowledge</h3>
+    <p>This AOK will keep its own Blocks in your Working Copy. It will not appear in teacher or AI exports unless you select it as AOK 1 or AOK 2.</p>
+    <div class="dialog-grid"><div><label for="add-aok-select">Area of Knowledge to explore</label><select id="add-aok-select"></select></div></div>
+    <div class="dialog-actions"><button type="button" id="add-aok-cancel">Cancel</button><button type="button" class="save" id="add-aok-confirm">Add to exploration tray</button></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+'use strict';
+// Keep the storage key stable so older browser recovery data can be migrated.
+const STORAGE_KEY = 'TOK_OUTLINE_PLANNER_V01';
+const SCHEMA_VERSION = 3;
+const AOK_OPTIONS = ['History','Human Sciences','Natural Sciences','The Arts','Mathematics'];
+
+const TYPE_REGISTRY = {
+  unpack:{title:'Unpack the Prescribed Title',category:'Framing',helper:'What is the title asking you to examine? Identify the central relationship or tension without trying to write the introduction.',accent:'var(--type-unpack)',priority:['intro'],valid:['intro']},
+  aokFraming:{title:'AOK Framing',category:'Framing',helper:'How will these Areas of Knowledge help you investigate the title? Note any initial difference in meaning, method, or emphasis.',accent:'var(--type-aok)',priority:['intro'],valid:['intro']},
+  keyTerm:{title:'Key Term',category:'Framing',helper:'Which term needs clarification for your argument? Note how you intend to use it, rather than writing a dictionary definition.',accent:'var(--type-unpack)',priority:['intro']},
+  ambiguity:{title:'Ambiguity',category:'Framing',helper:'Where could the wording reasonably be interpreted in more than one way? Why might that matter to the argument?',accent:'var(--type-unpack)',priority:['intro']},
+  thesis:{title:'Thesis / Position',category:'Framing',helper:'What is your current overall position? Keep it provisional; the outline may change it.',accent:'var(--type-main)',priority:['intro']},
+  scope:{title:'Scope / Conditions',category:'Framing',helper:'Under what conditions might your answer hold? What does your argument deliberately not try to prove?',accent:'var(--type-method)',priority:['intro','conclusion']},
+  assumption:{title:'Assumption',category:'Analysis',helper:'What are you taking for granted here? Would the reasoning change if that assumption were challenged?',accent:'var(--type-eval)',priority:['intro','aok1','aok2']},
+  comparisonSetup:{title:'AOK Comparison Setup',category:'Comparison',helper:'What difference or similarity between the AOKs may become important later?',accent:'var(--type-aok)',priority:['intro']},
+  mainIdea:{title:'Main Idea / Line of Argument',category:'Argument',helper:'State the reasoning move you want this part of the AOK to establish. Keep it concise and arguable.',accent:'var(--type-main)',priority:['aok1','aok2']},
+  claim:{title:'Claim',category:'Argument',helper:'What specific position are you advancing here? Make it precise enough that it could be challenged.',accent:'var(--type-main)',priority:['aok1','aok2']},
+  counterclaim:{title:'Counterclaim',category:'Perspective',helper:'What serious alternative position challenges or qualifies the reasoning above?',accent:'var(--type-perspective)',priority:['aok1','aok2']},
+  example:{title:'Example / Case',category:'Evidence',helper:'What specific case will you use? Note only the details needed to support the reasoning, not the full story.',accent:'var(--type-example)',priority:['aok1','aok2']},
+  analysis:{title:'Analysis / Explanation',category:'Analysis',helper:'What does the example or claim show about knowledge? Explain the significance rather than merely describing what happened.',accent:'var(--type-analysis)',priority:['aok1','aok2']},
+  methodology:{title:'Methodology',category:'Methods',helper:'How does this AOK produce, test, justify, interpret, or communicate knowledge? Why does that method matter to the title?',accent:'var(--type-method)',priority:['aok1','aok2']},
+  perspective:{title:'Perspective / Alternative Perspective',category:'Perspective',helper:'Whose perspective or alternative interpretation matters here, and how does it alter the reasoning?',accent:'var(--type-perspective)',priority:['aok1','aok2']},
+  evaluation:{title:'Evaluation',category:'Evaluation',helper:'How strong is the preceding reasoning? Under what conditions does it hold, fail, or need qualification?',accent:'var(--type-eval)',priority:['aok1','aok2']},
+  crossAok:{title:'Comparison to Other AOK',category:'Comparison',helper:'Does the title or key term operate differently in the other AOK? What methodological difference could explain that?',accent:'var(--type-aok)',priority:['aok1','aok2','conclusion']},
+  implication:{title:'Implication',category:'Implications',helper:'If this reasoning is accepted, what follows? Why does this matter for how knowledge is understood or used?',accent:'var(--type-implication)',priority:['aok1','aok2','conclusion']},
+  linkTitle:{title:'Link to Prescribed Title',category:'Connection',helper:'Make the connection explicit: how does this reasoning change, support, limit, or complicate your answer to the title?',accent:'var(--type-link)',priority:['aok1','aok2']},
+  overallAnswer:{title:'Overall Answer to Prescribed Title',category:'Conclusion',helper:'What answer now emerges from the argument as a whole? Synthesize rather than repeat earlier points.',accent:'var(--type-link)',priority:['conclusion'],valid:['conclusion']},
+  qualification:{title:'Qualification',category:'Evaluation',helper:'What qualification prevents your conclusion from becoming too absolute?',accent:'var(--type-eval)',priority:['conclusion'],valid:['conclusion']},
+  limitation:{title:'Limitation',category:'Evaluation',helper:'What important limitation remains after your analysis?',accent:'var(--type-eval)',priority:['conclusion'],valid:['conclusion']},
+  tension:{title:'Unresolved Tension',category:'Evaluation',helper:'What tension remains unresolved, and why is it reasonable that the essay cannot fully remove it?',accent:'var(--type-perspective)',priority:['conclusion'],valid:['conclusion']},
+  furtherQuestion:{title:'Further Question',category:'Implications',helper:'What question follows naturally from your conclusion without opening an entirely new essay?',accent:'var(--type-implication)',priority:['conclusion'],valid:['conclusion']},
+  note:{title:'Free Note',category:'Note',helper:'Use this as a temporary thinking space. Decide later whether it belongs in the argument.',accent:'var(--type-custom)',priority:['intro','aok1','aok2','conclusion']},
+  custom:{title:'Custom Block',category:'Custom',helper:'',accent:'var(--type-custom)',priority:['intro','aok1','aok2','conclusion']}
+};
+
+const SECTION_DEFS = {
+  intro:{kicker:'Section 1',title:'Introduction / Unpacking'},
+  aok1:{kicker:'Section 2',title:'AOK 1'},
+  aok2:{kicker:'Section 3',title:'AOK 2'},
+  conclusion:{kicker:'Section 4',title:'Conclusion / Implications'}
+};
+
+const TEMPLATE_DEFS = {
+  guided:{intro:['unpack','aokFraming'],aok1:['mainIdea','example','analysis','linkTitle'],aok2:['mainIdea','example','analysis','linkTitle'],conclusion:['overallAnswer','implication']},
+  discussion:{intro:['unpack','thesis'],aok1:['claim','example','analysis','counterclaim','evaluation','linkTitle'],aok2:['claim','example','analysis','perspective','evaluation','linkTitle'],conclusion:['overallAnswer','qualification','implication']},
+  comparison:{intro:['unpack','comparisonSetup'],aok1:['mainIdea','methodology','example','analysis','crossAok','linkTitle'],aok2:['mainIdea','methodology','example','analysis','crossAok','linkTitle'],conclusion:['crossAok','overallAnswer','qualification','implication']},
+  blank:{intro:[],aok1:[],aok2:[],conclusion:[]}
+};
+
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'b-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2));
+const nowISO = () => new Date().toISOString();
+const esc = s => String(s ?? '').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const textOnly = html => { const d=document.createElement('div'); d.innerHTML=html||''; return (d.textContent||'').replace(/\u00a0/g,' ').trim(); };
+const safeColor = v => /^#[0-9a-fA-F]{6}$/.test(v||'') ? v : '';
+
+function makeBlock(type,title){
+  return {id:uid(),type,title:title||TYPE_REGISTRY[type]?.title||'Custom Block',defaultTitle:TYPE_REGISTRY[type]?.title||title||'Custom Block',isCustom:type==='custom',depth:0,content:'',collapsed:false,children:[]};
+}
+function sectionsFromTemplate(templateId='guided'){
+  const template=TEMPLATE_DEFS[templateId]||TEMPLATE_DEFS.guided,sections={};
+  Object.keys(SECTION_DEFS).forEach(key=>{sections[key]={id:key,collapsed:false,blocks:(template[key]||[]).map(type=>makeBlock(type))};});
+  return sections;
+}
+function defaultState(){
+  return {schemaVersion:SCHEMA_VERSION,projectId:uid(),createdAt:nowISO(),updatedAt:nowISO(),metadata:{studentName:'',classCourse:'',teacher:'',prescribedTitle:''},aokCandidates:[{id:'aok1',name:'',legacyName:''},{id:'aok2',name:'',legacyName:''}],selectedAokIds:['aok1','aok2'],sectionOrder:['intro','aok1','aok2','conclusion'],sections:sectionsFromTemplate('guided'),ui:{theme:'light',sidebarCollapsed:false,activeSection:'intro',onboardingComplete:false,starterTemplate:'guided',candidateTrayOpen:false,exploringAokId:''}};
+}
+
+function normalizeProjectState(raw){
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('Project data is not a valid object.');
+  if(raw.schemaVersion!==SCHEMA_VERSION)throw new Error(`This file uses unsupported project schema ${String(raw.schemaVersion??'unknown')}.`);
+  const base=defaultState(),seenIds=new Set();
+  const stringValue=v=>typeof v==='string'?v:'';
+  const validDate=v=>typeof v==='string'&&!Number.isNaN(Date.parse(v))?v:nowISO();
+  const normalizeBlockList=(items,depth)=>{
+    if(!Array.isArray(items))return [];
+    const result=[];
+    items.forEach(item=>{
+      if(!item||typeof item!=='object'||Array.isArray(item))return;
+      let id=stringValue(item.id).trim();if(!id||seenIds.has(id))id=uid();seenIds.add(id);
+      const type=Object.hasOwn(TYPE_REGISTRY,item.type)?item.type:'custom';
+      const reg=TYPE_REGISTRY[type];
+      const block={id,type,title:stringValue(item.title).trim()||reg.title,defaultTitle:stringValue(item.defaultTitle).trim()||reg.title,isCustom:type==='custom',depth,content:sanitizeEditorHTML(stringValue(item.content)),collapsed:!!item.collapsed,children:[]};
+      if(depth<2)block.children=normalizeBlockList(item.children,depth+1);
+      result.push(block);
+      if(depth>=2&&Array.isArray(item.children))result.push(...normalizeBlockList(item.children,depth));
+    });
+    return result;
+  };
+  const metadata={};Object.keys(base.metadata).forEach(key=>metadata[key]=stringValue(raw.metadata?.[key]));
+  const candidateNames=new Set(),candidateIds=new Set();
+  const aokCandidates=(Array.isArray(raw.aokCandidates)?raw.aokCandidates:[]).slice(0,AOK_OPTIONS.length).flatMap(item=>{
+    if(!item||typeof item!=='object'||Array.isArray(item))return [];
+    const id=stringValue(item.id).trim();if(!id||candidateIds.has(id)||id==='intro'||id==='conclusion')return [];
+    let name=AOK_OPTIONS.includes(item.name)?item.name:'';if(name&&candidateNames.has(name))name='';
+    if(name)candidateNames.add(name);candidateIds.add(id);
+    return [{id,name,legacyName:stringValue(item.legacyName).trim()}];
+  });
+  ['aok1','aok2'].forEach(id=>{if(aokCandidates.length<2&&!candidateIds.has(id)){aokCandidates.push({id,name:'',legacyName:''});candidateIds.add(id);}});
+  const requestedSelected=Array.isArray(raw.selectedAokIds)?raw.selectedAokIds.filter((id,index,arr)=>candidateIds.has(id)&&arr.indexOf(id)===index).slice(0,2):[];
+  const selectedAokIds=requestedSelected.length===2?requestedSelected:aokCandidates.slice(0,2).map(candidate=>candidate.id);
+  const starterTemplate=Object.hasOwn(TEMPLATE_DEFS,raw.ui?.starterTemplate)?raw.ui.starterTemplate:'guided';
+  const sections={};
+  ['intro','conclusion',...aokCandidates.map(candidate=>candidate.id)].forEach(key=>{const templateKey=key==='intro'||key==='conclusion'?key:'aok1';sections[key]={id:key,collapsed:!!raw.sections?.[key]?.collapsed,blocks:raw.sections?.[key]?normalizeBlockList(raw.sections[key].blocks,0):(TEMPLATE_DEFS[starterTemplate][templateKey]||[]).map(type=>makeBlock(type))};});
+  const activeSection=Object.hasOwn(sections,raw.ui?.activeSection)?raw.ui.activeSection:'intro';
+  const exploringAokId=candidateIds.has(raw.ui?.exploringAokId)&&!selectedAokIds.includes(raw.ui.exploringAokId)?raw.ui.exploringAokId:'';
+  return {schemaVersion:SCHEMA_VERSION,projectId:stringValue(raw.projectId).trim()||uid(),createdAt:validDate(raw.createdAt),updatedAt:validDate(raw.updatedAt),metadata,aokCandidates,selectedAokIds,sectionOrder:['intro',...selectedAokIds,'conclusion'],sections,ui:{theme:raw.ui?.theme==='dark'?'dark':'light',sidebarCollapsed:!!raw.ui?.sidebarCollapsed,activeSection,onboardingComplete:!!raw.ui?.onboardingComplete,starterTemplate,candidateTrayOpen:aokCandidates.length>2&&!!raw.ui?.candidateTrayOpen,exploringAokId}};
+}
+let state = defaultState();
+let undoStack=[]; let redoStack=[]; let historyTimer=null; let pendingHistorySnapshot=null; let saveTimer=null; let editingBlockId=null;
+
+const $=s=>document.querySelector(s); const $$=s=>Array.from(document.querySelectorAll(s));
+const appShell=$('.app-shell'), layout=$('#layout'), sectionsRoot=$('#sections-root'), toolbox=$('#toolbox-context'), toast=$('#toast');
+
+function deepClone(v){return JSON.parse(JSON.stringify(v));}
+function syncBlockMetadata(){Object.values(state.sections).forEach(section=>walkBlocks(section.blocks,(block,depth)=>{block.depth=depth;block.isCustom=block.type==='custom';delete block.required;}));}
+function snapshot(){syncBlockMetadata();return deepClone(state);}
+function pushHistory(before){clearTimeout(historyTimer);const point=before||snapshot();if(pendingHistorySnapshot&&JSON.stringify(pendingHistorySnapshot)!==JSON.stringify(point))undoStack.push(pendingHistorySnapshot);pendingHistorySnapshot=null;if(!undoStack.length||JSON.stringify(undoStack.at(-1))!==JSON.stringify(point))undoStack.push(point);if(undoStack.length>80)undoStack.splice(0,undoStack.length-80);redoStack=[];updateUndoButtons();}
+function scheduleHistory(before){if(!pendingHistorySnapshot)pendingHistorySnapshot=before;clearTimeout(historyTimer);historyTimer=setTimeout(flushHistory,450);}
+function flushHistory(){if(!pendingHistorySnapshot)return;const before=pendingHistorySnapshot;pendingHistorySnapshot=null;clearTimeout(historyTimer);pushHistory(before);}
+function undo(){flushHistory();if(!undoStack.length)return;redoStack.push(snapshot());state=undoStack.pop();state.updatedAt=nowISO();renderAll();persist(false);updateUndoButtons();}
+function redo(){flushHistory();if(!redoStack.length)return;undoStack.push(snapshot());state=redoStack.pop();state.updatedAt=nowISO();renderAll();persist(false);updateUndoButtons();}
+function updateUndoButtons(){ $('#undo-btn').disabled=!undoStack.length; $('#redo-btn').disabled=!redoStack.length; }
+
+function touch(){syncBlockMetadata();state.updatedAt=nowISO(); $('#last-edited-label').textContent='Last edited '+new Date(state.updatedAt).toLocaleString(); schedulePersist();}
+function schedulePersist(){clearTimeout(saveTimer); $('#save-status').textContent='Saving…'; saveTimer=setTimeout(()=>persist(true),350);}
+function persist(show=true){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));if(show){$('#save-status').textContent='Saved';setTimeout(()=>$('#save-status').textContent='',1000);}}catch(e){$('#save-status').textContent='Local save unavailable';}}
+function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1800);}
+
+function findLocation(sectionKey,id){
+  const root=state.sections[sectionKey].blocks;
+  function walk(arr,parent=null,depth=0){for(let i=0;i<arr.length;i++){const n=arr[i];if(n.id===id)return{node:n,siblings:arr,index:i,parent,depth};const hit=walk(n.children,n,depth+1);if(hit)return hit;}return null;}
+  return walk(root);
+}
+function findBlockAny(id){for(const key of Object.keys(state.sections)){const x=findLocation(key,id);if(x)return{sectionKey:key,...x};}return null;}
+function walkBlocks(arr,cb,depth=0){arr.forEach(b=>{cb(b,depth);walkBlocks(b.children,cb,depth+1);});}
+
+function renderAll(){applyUIState();renderMetadata();renderSections();renderToolbox();updateUndoButtons();}
+function applyUIState(){
+  document.body.classList.toggle('dark',state.ui.theme==='dark');
+  layout.classList.toggle('sidebar-collapsed',!!state.ui.sidebarCollapsed);
+  layout.classList.toggle('sidebar-open-mobile',!state.ui.sidebarCollapsed);
+  appShell.classList.toggle('sidebar-is-collapsed',!!state.ui.sidebarCollapsed);
+  const sidebarToggle=$('#sidebar-toggle'),sidebarAction=state.ui.sidebarCollapsed?'Expand':'Collapse';
+  sidebarToggle.textContent=state.ui.sidebarCollapsed?'▶':'◀';sidebarToggle.setAttribute('aria-label',sidebarAction+' reasoning toolbox');sidebarToggle.title=sidebarAction+' reasoning toolbox';
+  $('#last-edited-label').textContent='Last edited '+new Date(state.updatedAt).toLocaleString();
+}
+function selectedAok(slot){return state.aokCandidates.find(candidate=>candidate.id===state.selectedAokIds[slot]);}
+function candidateForSection(key){return state.aokCandidates.find(candidate=>candidate.id===key);}
+function aokOptionsHTML(value='',otherSelected=''){return `<option value="">Choose an AOK</option>`+AOK_OPTIONS.map(name=>`<option value="${esc(name)}" ${name===value?'selected':''} ${name===otherSelected?'disabled':''}>${esc(name)}</option>`).join('');}
+function renderMetadata(){
+  $$('[data-meta]').forEach(el=>{el.value=state.metadata[el.dataset.meta]||'';});
+  [0,1].forEach(slot=>{const select=$(`[data-aok-slot="${slot}"]`),current=selectedAok(slot)?.name||'',other=selectedAok(slot===0?1:0)?.name||'';select.innerHTML=aokOptionsHTML(current,other);select.value=current;});
+  $('#aok-tray-toggle').hidden=state.aokCandidates.length<3;
+}
+
+function sectionRole(key){return key==='intro'||key==='conclusion'?key:'aok1';}
+function sectionDisplayTitle(key){const slot=state.selectedAokIds.indexOf(key),candidate=candidateForSection(key);if(candidate){const label=slot>=0?`AOK ${slot+1}`:'Exploring AOK';return candidate.name?`${label} — ${candidate.name}`:label;}return SECTION_DEFS[key].title;}
+function sectionKicker(key){const slot=state.selectedAokIds.indexOf(key);if(slot>=0)return `Section ${slot+2}`;if(candidateForSection(key))return 'Not included in exports';return SECTION_DEFS[key].kicker;}
+function starterProgress(key){const template=TEMPLATE_DEFS[state.ui.starterTemplate]||TEMPLATE_DEFS.guided;const starterTypes=template[sectionRole(key)]||[];let done=0;starterTypes.forEach(type=>{let developed=false;walkBlocks(state.sections[key].blocks,block=>{if(block.type===type&&textOnly(block.content))developed=true;});if(developed)done++;});return `Starter prompts: ${done} of ${starterTypes.length} developed`;}
+function renderSectionCard(key){
+    const section=document.createElement('section');section.className='section-card';section.classList.toggle('active-section',state.ui.activeSection===key);section.dataset.section=key;
+    const isAok=!!candidateForSection(key),isSelected=state.selectedAokIds.includes(key);
+    section.innerHTML=`<div class="section-head"><div class="section-title-wrap"><div class="section-kicker">${esc(sectionKicker(key))}</div><h2>${esc(sectionDisplayTitle(key))}</h2></div><div class="section-progress">${esc(starterProgress(key))}</div><div class="section-actions">${isAok&&isSelected?`<button type="button" class="icon-btn swap-aok" title="Swap AOK order" aria-label="Swap AOK order">⇅</button>`:''}<button type="button" class="icon-btn section-add" title="Add block" aria-label="Add block to ${esc(sectionDisplayTitle(key))}">＋</button></div></div><div class="blocks"></div>`;
+    const blocks=section.querySelector('.blocks');
+    blocks.appendChild(renderInsertZone(key,null,0,0));
+    state.sections[key].blocks.forEach((block,index)=>{blocks.appendChild(renderBlock(key,block,0));blocks.appendChild(renderInsertZone(key,null,index+1,0));});
+    if(state.sections[key].blocks.length===0){const empty=document.createElement('div');empty.className='empty-section';empty.textContent='Blank slate — drag a Block to the line or use + in the Toolbox.';blocks.appendChild(empty);}
+    section.addEventListener('click',()=>setActiveSection(key));
+    section.addEventListener('dragover',event=>{if(!toolboxDragType||!isTypeValidForSection(toolboxDragType,key))return;event.preventDefault();event.dataTransfer.dropEffect='copy';section.classList.add('toolbox-drop-target');});
+    section.addEventListener('dragleave',event=>{if(!section.contains(event.relatedTarget))section.classList.remove('toolbox-drop-target');});
+    section.addEventListener('drop',event=>{if(!toolboxDragType||!isTypeValidForSection(toolboxDragType,key))return;event.preventDefault();const type=toolboxDragType;clearToolboxDrag();setActiveSection(key);addBlock(key,type);});
+    section.querySelector('.section-add').addEventListener('click',e=>{e.stopPropagation();setActiveSection(key);if(state.ui.sidebarCollapsed){openQuickAdd(key);}else showToast('Drag a block here or use its + button');});
+    const swap=section.querySelector('.swap-aok');if(swap)swap.addEventListener('click',e=>{e.stopPropagation();swapAoks();});
+    return section;
+}
+function renderSections(){
+  sectionsRoot.innerHTML='';state.sectionOrder.forEach(key=>sectionsRoot.appendChild(renderSectionCard(key)));
+  const explorationRoot=$('#exploration-root'),exploring=state.ui.exploringAokId;
+  explorationRoot.innerHTML='';
+  if(exploring&&state.sections[exploring]&&!state.selectedAokIds.includes(exploring)){
+    const zone=document.createElement('section');zone.className='exploration-zone';zone.innerHTML='<div class="exploration-label">Exploration workspace</div><div class="exploration-note">This AOK stays in your Working Copy but is excluded from Teacher PDF and AI feedback until selected for the essay.</div>';zone.appendChild(renderSectionCard(exploring));explorationRoot.appendChild(zone);
+  }
+  renderCandidateTray();
+}
+
+function candidateHasStudentWork(candidateId){let hasWork=false;walkBlocks(state.sections[candidateId]?.blocks||[],block=>{if(textOnly(block.content))hasWork=true;});return hasWork;}
+function nextAokId(){for(let number=1;number<=AOK_OPTIONS.length;number++){const id='aok'+number;if(!state.aokCandidates.some(candidate=>candidate.id===id))return id;}return 'aok-'+uid();}
+function createAokCandidate(name){const id=nextAokId(),template=sectionsFromTemplate(state.ui.starterTemplate);state.aokCandidates.push({id,name,legacyName:''});state.sections[id]=template.aok1;state.sections[id].id=id;return id;}
+function syncSelectedAokOrder(){state.sectionOrder=['intro',...state.selectedAokIds,'conclusion'];}
+function selectCandidateForSlot(candidateId,slot){
+  if(slot!==0&&slot!==1||!state.aokCandidates.some(candidate=>candidate.id===candidateId))return;
+  const otherSlot=slot===0?1:0;if(state.selectedAokIds[otherSlot]===candidateId)return showToast('Choose two different Areas of Knowledge.');
+  const before=snapshot(),displaced=state.selectedAokIds[slot];state.selectedAokIds[slot]=candidateId;syncSelectedAokOrder();
+  if(displaced&&displaced!==candidateId)state.ui.exploringAokId=displaced;
+  state.ui.candidateTrayOpen=state.aokCandidates.length>2;state.ui.activeSection=candidateId;pushHistory(before);touch();renderAll();
+}
+function selectAokNameForSlot(name,slot){
+  if(!AOK_OPTIONS.includes(name)){const before=snapshot(),candidate=selectedAok(slot);if(candidate){candidate.name='';pushHistory(before);touch();renderAll();}return;}
+  const existing=state.aokCandidates.find(candidate=>candidate.name===name);if(existing)return selectCandidateForSlot(existing.id,slot);
+  const current=selectedAok(slot);
+  if(current&&!current.name&&!current.legacyName&&!candidateHasStudentWork(current.id)){const before=snapshot();current.name=name;pushHistory(before);touch();renderAll();return;}
+  const before=snapshot(),id=createAokCandidate(name),displaced=state.selectedAokIds[slot];state.selectedAokIds[slot]=id;syncSelectedAokOrder();state.ui.exploringAokId=displaced;state.ui.candidateTrayOpen=true;state.ui.activeSection=id;pushHistory(before);touch();renderAll();
+}
+function renderCandidateTray(){
+  const tray=$('#aok-tray'),show=state.aokCandidates.length>2&&state.ui.candidateTrayOpen;tray.classList.toggle('open',show);tray.setAttribute('aria-hidden',String(!show));
+  const list=$('#aok-candidate-list');list.innerHTML=state.aokCandidates.map(candidate=>{const slot=state.selectedAokIds.indexOf(candidate.id),selected=slot>=0,name=candidate.name||'AOK not chosen',legacy=candidate.legacyName?`<span class="aok-status">Previously entered: ${esc(candidate.legacyName)}. Choose an official AOK above.</span>`:'';return `<article class="aok-candidate ${selected?'selected':''}" data-candidate-id="${esc(candidate.id)}"><strong>${esc(name)}</strong>${legacy||`<span class="aok-status">${selected?`Selected for essay as AOK ${slot+1}`:'Exploring — not exported'}</span>`}<div class="aok-candidate-actions">${selected?'':`<button type="button" data-open-candidate="${esc(candidate.id)}">Open workspace</button><button type="button" class="primary" data-select-slot="0">Use ${esc(name)} as AOK 1</button><button type="button" class="primary" data-select-slot="1">Use ${esc(name)} as AOK 2</button>`}</div></article>`;}).join('');
+  list.querySelectorAll('[data-open-candidate]').forEach(button=>button.addEventListener('click',()=>{state.ui.exploringAokId=button.dataset.openCandidate;state.ui.candidateTrayOpen=false;state.ui.activeSection=button.dataset.openCandidate;touch();renderAll();setTimeout(()=>$('#exploration-root').scrollIntoView({behavior:'smooth',block:'start'}),0);}));
+  list.querySelectorAll('[data-select-slot]').forEach(button=>button.addEventListener('click',()=>selectCandidateForSlot(button.closest('[data-candidate-id]').dataset.candidateId,Number(button.dataset.selectSlot))));
+}
+
+function setActiveSection(key){
+  if(!Object.hasOwn(state.sections,key))return;
+  state.ui.activeSection=key;
+  $$('.section-card').forEach(section=>section.classList.toggle('active-section',section.dataset.section===key));
+  renderToolbox();touch();
+}
+
+function renderBlock(sectionKey,block,depth){
+  const wrap=document.createElement('div');wrap.className=`block-wrap depth-${Math.min(depth,2)}`;wrap.dataset.blockId=block.id;
+  const reg=TYPE_REGISTRY[block.type]||TYPE_REGISTRY.custom;
+  const helperVisible=block.title===block.defaultTitle && !!reg.helper;
+  wrap.innerHTML=`<div class="block-card ${block.collapsed?'collapsed':''}" style="--accent:${reg.accent}"><div class="block-head"><span class="drag-handle" draggable="true" title="Drag to reorder" role="button" tabindex="0" aria-label="Drag ${esc(block.title)} to reorder">⋮⋮</span><span class="block-type">${esc(reg.category)}</span><span class="block-title">${esc(block.title)}</span><div class="block-controls"><button type="button" data-act="edit" title="Edit title/type" aria-label="Edit ${esc(block.title)} title or type">✎</button><button type="button" data-act="up" title="Move up" aria-label="Move ${esc(block.title)} up">↑</button><button type="button" data-act="down" title="Move down" aria-label="Move ${esc(block.title)} down">↓</button><button type="button" data-act="indent" title="Indent" aria-label="Indent ${esc(block.title)}">→</button><button type="button" data-act="outdent" title="Outdent" aria-label="Outdent ${esc(block.title)}">←</button><button type="button" data-act="duplicate" title="Duplicate" aria-label="Duplicate ${esc(block.title)}">⧉</button><button type="button" data-act="collapse" title="Collapse/expand" aria-label="${block.collapsed?'Expand':'Collapse'} ${esc(block.title)}">${block.collapsed?'▸':'▾'}</button><button type="button" data-act="delete" title="Delete" aria-label="Delete ${esc(block.title)}">×</button></div></div><div class="block-body"><div class="rich-toolbar" aria-label="Text formatting"><button type="button" data-cmd="bold" aria-label="Bold"><b>B</b></button><button type="button" data-cmd="italic" aria-label="Italic"><i>I</i></button><button type="button" data-cmd="underline" aria-label="Underline"><u>U</u></button><button type="button" data-cmd="insertUnorderedList" aria-label="Bulleted list">• List</button><button type="button" data-cmd="insertOrderedList" aria-label="Numbered list">1. List</button><select data-color="foreColor" aria-label="Text color"><option value="">Text color</option><option value="#17324d">Navy</option><option value="#7a2f35">Dark red</option><option value="#2f6b50">Dark green</option><option value="#5a477a">Purple</option><option value="#111111">Black</option></select><select data-color="hiliteColor" aria-label="Highlight color"><option value="">Highlight</option><option value="#fff2a8">Yellow</option><option value="#dff1ff">Blue</option><option value="#e6f4e6">Green</option><option value="#f4e0ea">Rose</option></select></div><div class="helper ${helperVisible?'show':''}">${esc(reg.helper)}</div><div class="editor" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Notes for ${esc(block.title)}" data-placeholder="Add concise bullets or short notes…">${sanitizeEditorHTML(block.content||'')}</div></div></div>`;
+  const card=wrap.querySelector('.block-card'),editor=wrap.querySelector('.editor');
+  editor.addEventListener('focus',()=>{card.classList.add('active');setActiveSection(sectionKey);});
+  editor.addEventListener('blur',()=>card.classList.remove('active'));
+  let beforeEdit=null;
+  editor.addEventListener('beforeinput',()=>{if(!beforeEdit)beforeEdit=snapshot();});
+  editor.addEventListener('paste',event=>{const html=event.clipboardData?.getData('text/html'),text=event.clipboardData?.getData('text/plain');if(!html&&!text)return;event.preventDefault();if(!beforeEdit)beforeEdit=snapshot();document.execCommand('insertHTML',false,html?sanitizeEditorHTML(html):esc(text).replace(/\r?\n/g,'<br>'));block.content=sanitizeEditorHTML(editor.innerHTML);scheduleHistory(beforeEdit);beforeEdit=null;touch();updateProgressDOM(sectionKey);});
+  editor.addEventListener('input',()=>{block.content=sanitizeEditorHTML(editor.innerHTML);touch();if(beforeEdit){scheduleHistory(beforeEdit);beforeEdit=null;}updateProgressDOM(sectionKey);});
+  wrap.querySelectorAll('[data-act]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();handleBlockAction(sectionKey,block.id,btn.dataset.act);}));
+  wrap.querySelectorAll('[data-cmd]').forEach(btn=>btn.addEventListener('mousedown',e=>{e.preventDefault();editor.focus();const before=snapshot();document.execCommand(btn.dataset.cmd,false,null);block.content=sanitizeEditorHTML(editor.innerHTML);pushHistory(before);touch();}));
+  wrap.querySelectorAll('[data-color]').forEach(sel=>sel.addEventListener('change',()=>{if(!sel.value)return;editor.focus();const before=snapshot();document.execCommand(sel.dataset.color,false,safeColor(sel.value));block.content=sanitizeEditorHTML(editor.innerHTML);sel.selectedIndex=0;pushHistory(before);touch();}));
+  setupDrag(sectionKey,block.id,wrap.querySelector('.drag-handle'),card);
+  if(depth<2){wrap.appendChild(renderInsertZone(sectionKey,block.id,0,depth+1));block.children.forEach((child,index)=>{wrap.appendChild(renderBlock(sectionKey,child,depth+1));wrap.appendChild(renderInsertZone(sectionKey,block.id,index+1,depth+1));});}
+  return wrap;
+}
+
+function renderInsertZone(sectionKey,parentId,index,depth){
+  const zone=document.createElement('div');zone.className=`insert-zone depth-${Math.min(depth,2)}`;zone.dataset.insertIndex=String(index);zone.dataset.parentId=parentId||'';zone.setAttribute('aria-hidden','true');
+  zone.addEventListener('dragover',event=>{if(!toolboxDragType||!isTypeValidForSection(toolboxDragType,sectionKey))return;event.preventDefault();event.stopPropagation();event.dataTransfer.dropEffect='copy';$$('.insert-zone.drop-position').forEach(item=>item.classList.remove('drop-position'));zone.classList.add('drop-position');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drop-position'));
+  zone.addEventListener('drop',event=>{if(!toolboxDragType||!isTypeValidForSection(toolboxDragType,sectionKey))return;event.preventDefault();event.stopPropagation();const type=toolboxDragType;const insertIndex=Number(zone.dataset.insertIndex);clearToolboxDrag();setActiveSection(sectionKey);addBlockAt(sectionKey,type,parentId,insertIndex);});
+  return zone;
+}
+
+function sanitizeEditorHTML(html){
+  const tpl=document.createElement('template');tpl.innerHTML=html;
+  const allowed=new Set(['B','STRONG','I','EM','U','UL','OL','LI','P','DIV','BR','SPAN']);
+  const clean=node=>{Array.from(node.childNodes).forEach(ch=>{if(ch.nodeType===Node.COMMENT_NODE){ch.remove();return;}if(ch.nodeType!==Node.ELEMENT_NODE)return;clean(ch);if(!allowed.has(ch.tagName)){ch.replaceWith(...ch.childNodes);return;}if(ch.tagName==='SPAN'){const color=safeColor(rgbToHex(ch.style.color));const bg=safeColor(rgbToHex(ch.style.backgroundColor));ch.removeAttribute('style');if(color)ch.style.color=color;if(bg)ch.style.backgroundColor=bg;}else ch.removeAttribute('style');Array.from(ch.attributes).forEach(a=>{if(a.name!=='style')ch.removeAttribute(a.name)});});};clean(tpl.content);return tpl.innerHTML;
+}
+function rgbToHex(v){if(!v)return'';if(v.startsWith('#'))return v;const m=v.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);if(!m)return'';return'#'+[m[1],m[2],m[3]].map(x=>(+x).toString(16).padStart(2,'0')).join('');}
+function updateProgressDOM(key){const el=document.querySelector(`[data-section="${key}"] .section-progress`);if(el)el.textContent=starterProgress(key);}
+
+function handleBlockAction(sectionKey,id,act){
+  const loc=findLocation(sectionKey,id);if(!loc)return;
+  if(act==='edit')return openEditDialog(id);
+  if(act==='collapse'){const before=snapshot();loc.node.collapsed=!loc.node.collapsed;pushHistory(before);touch();renderSections();return;}
+  if(act==='delete'){const before=snapshot();loc.siblings.splice(loc.index,1);pushHistory(before);touch();renderSections();renderToolbox();return;}
+  if(act==='duplicate'){const before=snapshot();const copy=deepClone(loc.node);prepareDuplicate(copy);loc.siblings.splice(loc.index+1,0,copy);pushHistory(before);touch();renderSections();return;}
+  if(act==='up'||act==='down'){const delta=act==='up'?-1:1,target=loc.index+delta;if(target<0||target>=loc.siblings.length)return;const before=snapshot();[loc.siblings[loc.index],loc.siblings[target]]=[loc.siblings[target],loc.siblings[loc.index]];pushHistory(before);touch();renderSections();return;}
+  if(act==='indent'){if(loc.index===0)return showToast('Place this block after the block it should support.');if(loc.depth+1+subtreeHeight(loc.node)>2)return showToast('This group cannot be nested deeper than two levels.');const prev=loc.siblings[loc.index-1];const before=snapshot();loc.siblings.splice(loc.index,1);prev.children.push(loc.node);pushHistory(before);touch();renderSections();return;}
+  if(act==='outdent'){
+    if(!loc.parent)return;const parentLoc=findLocation(sectionKey,loc.parent.id);if(!parentLoc)return;const before=snapshot();loc.siblings.splice(loc.index,1);parentLoc.siblings.splice(parentLoc.index+1,0,loc.node);pushHistory(before);touch();renderSections();return;
+  }
+}
+function prepareDuplicate(node){node.id=uid();delete node.required;node.children.forEach(prepareDuplicate);}
+function subtreeHeight(node){return node.children.length?1+Math.max(...node.children.map(subtreeHeight)):0;}
+
+let dragInfo=null;
+function setupDrag(sectionKey,id,handle,card){
+  handle.addEventListener('dragstart',e=>{dragInfo={sectionKey,id};card.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',id);});
+  handle.addEventListener('dragend',()=>{card.classList.remove('dragging');$$('.drop-target').forEach(x=>x.classList.remove('drop-target'));dragInfo=null;});
+  card.addEventListener('dragover',e=>{if(!dragInfo||dragInfo.sectionKey!==sectionKey||dragInfo.id===id)return;e.preventDefault();card.classList.add('drop-target');});
+  card.addEventListener('dragleave',()=>card.classList.remove('drop-target'));
+  card.addEventListener('drop',e=>{e.preventDefault();card.classList.remove('drop-target');if(!dragInfo||dragInfo.sectionKey!==sectionKey||dragInfo.id===id)return;moveBeforeSameLevel(sectionKey,dragInfo.id,id);});
+}
+function moveBeforeSameLevel(sectionKey,sourceId,targetId){
+  const a=findLocation(sectionKey,sourceId),b=findLocation(sectionKey,targetId);if(!a||!b||a.siblings!==b.siblings)return showToast('Use indent/outdent controls to change nesting level.');
+  const before=snapshot();const node=a.siblings.splice(a.index,1)[0];const newTarget=findLocation(sectionKey,targetId);newTarget.siblings.splice(newTarget.index,0,node);pushHistory(before);touch();renderSections();
+}
+
+function renderToolbox(){
+  const key=state.ui.activeSection||'intro';
+  const role=sectionRole(key);
+  const validForSection=([,registryEntry])=>!registryEntry.valid||registryEntry.valid.includes(role);
+  const suggested=Object.entries(TYPE_REGISTRY).filter(([t,r])=>t!=='custom'&&validForSection([t,r])&&r.priority.includes(role));
+  const suggestedKeys=new Set(suggested.map(([t])=>t));
+  const more=Object.entries(TYPE_REGISTRY).filter(([t,r])=>t!=='custom'&&validForSection([t,r])&&!suggestedKeys.has(t));
+  toolbox.innerHTML=`<div class="toolbox-section"><h3>${esc(sectionDisplayTitle(key))}</h3><p>Drag a reasoning move to the framed section, or use + to add it at the end.</p><div class="toolbox-grid">${suggested.map(([t,r])=>toolboxCard(t,r)).join('')}</div></div><details class="toolbox-more toolbox-section"><summary>More block types</summary><div class="toolbox-grid">${more.map(([t,r])=>toolboxCard(t,r)).join('')}</div></details><div class="toolbox-section">${toolboxCard('custom',TYPE_REGISTRY.custom)}</div>`;
+  toolbox.querySelectorAll('[data-add-type]').forEach(btn=>btn.addEventListener('click',()=>addBlock(key,btn.dataset.addType)));
+  setupToolboxDragSources(toolbox);
+}
+function toolboxCard(type,registryEntry){return `<div class="toolbox-btn" draggable="true" data-block-type="${esc(type)}" style="--accent:${registryEntry.accent}" title="Drag to a section or use + to add"><span class="type-dot"></span><span class="toolbox-label">${esc(registryEntry.title)}</span><button type="button" class="toolbox-add" data-add-type="${esc(type)}" aria-label="Add ${esc(registryEntry.title)}" title="Add ${esc(registryEntry.title)}">+</button></div>`;}
+let toolboxDragType=null;
+function setupToolboxDragSources(container){container.querySelectorAll('[data-block-type]').forEach(card=>{card.addEventListener('dragstart',event=>{toolboxDragType=card.dataset.blockType;card.classList.add('dragging');document.body.classList.add('toolbox-dragging');event.dataTransfer.effectAllowed='copy';event.dataTransfer.setData('text/plain',toolboxDragType);});card.addEventListener('dragend',clearToolboxDrag);});}
+function clearToolboxDrag(){toolboxDragType=null;document.body.classList.remove('toolbox-dragging');$$('.toolbox-btn.dragging,.section-card.toolbox-drop-target,.insert-zone.drop-position').forEach(element=>element.classList.remove('dragging','toolbox-drop-target','drop-position'));}
+function addBlock(sectionKey,type){addBlockAt(sectionKey,type,null,state.sections[sectionKey].blocks.length);}
+function addBlockAt(sectionKey,type,parentId,index){const before=snapshot();const reg=TYPE_REGISTRY[type]||TYPE_REGISTRY.custom;const block=makeBlock(type,reg.title);const siblings=parentId?findLocation(sectionKey,parentId)?.node.children:state.sections[sectionKey].blocks;if(!siblings)return;const safeIndex=Math.max(0,Math.min(Number.isFinite(index)?index:siblings.length,siblings.length));siblings.splice(safeIndex,0,block);pushHistory(before);touch();renderSections();showToast('Block added at selected position');if(type==='custom')openEditDialog(block.id);}
+function openQuickAdd(key){
+  setActiveSection(key);
+  const role=sectionRole(key),entries=Object.entries(TYPE_REGISTRY).filter(([,registryEntry])=>!registryEntry.valid||registryEntry.valid.includes(role));
+  $('#quick-add-context').textContent='Choose a reasoning move for '+sectionDisplayTitle(key)+'.';
+  $('#quick-add-options').innerHTML=entries.map(([type,registryEntry])=>toolboxCard(type,registryEntry)).join('');
+  $('#quick-add-options').querySelectorAll('[data-add-type]').forEach(button=>button.addEventListener('click',()=>{$('#quick-add-dialog').close();addBlock(key,button.dataset.addType);}));
+  $('#quick-add-dialog').showModal();
+}
+
+function isTypeValidForSection(type,sectionKey){const registryEntry=TYPE_REGISTRY[type],role=sectionRole(sectionKey);return !!registryEntry&&(!registryEntry.valid||registryEntry.valid.includes(role));}
+function openEditDialog(id){const found=findBlockAny(id);if(!found)return;editingBlockId=id;const sel=$('#edit-type');sel.innerHTML=Object.entries(TYPE_REGISTRY).filter(([type])=>isTypeValidForSection(type,found.sectionKey)).map(([type,registryEntry])=>`<option value="${esc(type)}">${esc(registryEntry.title)}</option>`).join('');sel.value=found.node.type;sel.disabled=false;sel.title='';$('#edit-title').value=found.node.title;$('#edit-dialog').showModal();}
+function saveEditDialog(){const found=findBlockAny(editingBlockId);if(!found)return;const before=snapshot();const oldType=found.node.type;const oldDefault=found.node.defaultTitle;const requestedType=$('#edit-type').value;const newType=isTypeValidForSection(requestedType,found.sectionKey)?requestedType:oldType;const reg=TYPE_REGISTRY[newType]||TYPE_REGISTRY.custom;let newTitle=$('#edit-title').value.trim();if(!newTitle)newTitle=reg.title;if(newType!==oldType && found.node.title===oldDefault && newTitle===oldDefault)newTitle=reg.title;found.node.type=newType;found.node.defaultTitle=reg.title;found.node.title=newTitle;pushHistory(before);touch();$('#edit-dialog').close();renderSections();renderToolbox();}
+
+function swapAoks(){const before=snapshot();state.selectedAokIds.reverse();syncSelectedAokOrder();pushHistory(before);touch();renderAll();}
+function collapseAll(flag){const before=snapshot();Object.values(state.sections).forEach(s=>walkBlocks(s.blocks,b=>b.collapsed=flag));pushHistory(before);touch();renderSections();}
+
+function showWizardStep(step){$$('[data-wizard-step]').forEach(panel=>panel.classList.toggle('active',Number(panel.dataset.wizardStep)===step));}
+let tutorialStep=0;
+function tutorialPanels(){return $$('[data-tutorial-step]');}
+function showTutorialStep(step){
+  const panels=tutorialPanels(),total=panels.length;
+  tutorialStep=Math.min(Math.max(step,0),total-1);
+  panels.forEach(panel=>panel.classList.toggle('active',Number(panel.dataset.tutorialStep)===tutorialStep));
+  $('#tutorial-count').textContent=`Step ${tutorialStep+1} of ${total}`;
+  $('#tutorial-dots').innerHTML=panels.map((_,index)=>`<i class="${index<=tutorialStep?'done':''}"></i>`).join('');
+  $('#tutorial-prev').disabled=tutorialStep===0;
+  $('#tutorial-next').textContent=tutorialStep===total-1?'Finish':'Next';
+}
+function openHelpTutorial(){showTutorialStep(0);if(!$('#help-dialog').open)$('#help-dialog').showModal();}
+function openOnboarding(){showWizardStep(0);if(!$('#onboarding-dialog').open)$('#onboarding-dialog').showModal();}
+function completeOnboarding(applyTemplate){
+  if(applyTemplate){const templateId=$('[name="starter-template"]:checked')?.value||'guided';state.sections=sectionsFromTemplate(templateId);state.aokCandidates=[{id:'aok1',name:$('#wizard-aok1').value,legacyName:''},{id:'aok2',name:$('#wizard-aok2').value,legacyName:''}];state.selectedAokIds=['aok1','aok2'];syncSelectedAokOrder();state.ui.starterTemplate=templateId;state.metadata.prescribedTitle=$('#wizard-title').value.trim();}
+  state.ui.onboardingComplete=true;touch();$('#onboarding-dialog').close();renderAll();
+}
+
+function validateExport(){const req=[['studentName','Student name'],['prescribedTitle','Prescribed title']],missing=req.filter(([key])=>!(state.metadata[key]||'').trim()).map(([,label])=>label);[0,1].forEach(slot=>{if(!selectedAok(slot)?.name)missing.push(`AOK ${slot+1}`);});const box=$('#validation');if(missing.length){box.textContent='Before PDF export, complete: '+missing.join(', ')+'.';box.classList.add('show');box.focus();const first=missing[0];if(first==='AOK 1'||first==='AOK 2')$(`[data-aok-slot="${first.endsWith('1')?0:1}"]`)?.focus();else document.querySelector(`[data-meta="${req.find(([,label])=>label===first)?.[0]}"]`)?.focus();return false;}box.classList.remove('show');return true;}
+function buildWorkingCopyHTML(){
+  syncBlockMetadata();
+  const clone=document.documentElement.cloneNode(true),embedded=clone.querySelector('#embedded-state');
+  embedded.textContent='window.__EMBEDDED_PROJECT_STATE__ = '+JSON.stringify(state).replace(/</g,'\\u003c').replace(/\u2028/g,'\\u2028').replace(/\u2029/g,'\\u2029')+';';
+  clone.querySelectorAll('.toast.show').forEach(x=>x.classList.remove('show'));
+  clone.querySelector('#restore-banner')?.classList.remove('show');
+  return '<!DOCTYPE html>\n'+clone.outerHTML;
+}
+function saveWorkingCopy(){
+  state.updatedAt=nowISO();persist(false);
+  const blob=new Blob([buildWorkingCopyHTML()],{type:'text/html'});downloadBlob(blob,filenameBase()+'.html');showToast('Working copy saved');
+}
+function filenameBase(){const n=(state.metadata.studentName||'Student').trim().replace(/[^a-z0-9_-]+/gi,'_');return `TOK_Outline_${n}`;}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);}
+function exportPDF(){if(!validateExport())return;const prevTheme=state.ui.theme;document.body.classList.remove('dark');setTimeout(()=>{window.print();if(prevTheme==='dark')document.body.classList.add('dark');},40);}
+
+function notesText(html){
+  const root=document.createElement('div');root.innerHTML=sanitizeEditorHTML(html||'');
+  root.querySelectorAll('br').forEach(el=>el.replaceWith('\n'));
+  root.querySelectorAll('li').forEach(el=>el.append('\n'));
+  root.querySelectorAll('p,div').forEach(el=>el.append('\n'));
+  return (root.textContent||'').replace(/\u00a0/g,' ').split(/\n+/).map(line=>line.trim()).filter(Boolean);
+}
+function outlineText(){
+  const lines=[];state.sectionOrder.forEach(key=>{lines.push(`\n## ${sectionDisplayTitle(key)}`);const recur=(arr,depth)=>arr.forEach(b=>{const reg=TYPE_REGISTRY[b.type]||TYPE_REGISTRY.custom;const pad='  '.repeat(depth);lines.push(`${pad}- [${b.id}] TYPE: ${reg.title} | TITLE: ${b.title}`);notesText(b.content).forEach(line=>lines.push(`${pad}  CONTENT: ${line}`));recur(b.children,depth+1);});recur(state.sections[key].blocks,0);});return lines.join('\n');
+}
+const PROMPT_GUARDRAILS=`STRICT GUARDRAILS
+- Do NOT supply replacement examples.
+- Do NOT provide a new substantive TOK argument.
+- Do NOT invent content the student could paste into the essay.
+- Do NOT rewrite the student's prose or draft missing sections.
+- Do NOT complete a missing reasoning step on the student's behalf.
+- You MAY diagnose a structural problem, explain why it matters, recommend actions such as Move / Add / Split / Merge / Clarify / Connect, and ask Socratic questions that force the student to do the thinking.
+- If an example appears overused, generic, or clichéd in TOK, flag the concern but do NOT recommend a replacement. Ask the student to narrow, research, justify, or reconsider it.`;
+const PROMPT_LEGEND=`BLOCK LEGEND
+- Framing blocks interpret or set up the title and AOK relationship.
+- Argument blocks state positions or lines of reasoning.
+- Evidence blocks hold cases/examples.
+- Analysis blocks explain significance for knowledge.
+- Methods blocks examine how knowledge is produced/tested/justified/interpreted.
+- Perspective blocks introduce genuine alternatives.
+- Evaluation blocks qualify or assess reasoning.
+- Comparison blocks connect the AOKs.
+- Connection blocks explicitly return to the prescribed title.
+- Implication blocks explore what follows from the reasoning.
+- Custom/Note blocks have only the meaning given by the student.`;
+function promptOutlineContext(){return `${PROMPT_LEGEND}
+
+PROJECT
+Student: ${state.metadata.studentName||'Not entered'}
+Class/Course: ${state.metadata.classCourse||'Not entered'}
+Teacher: ${state.metadata.teacher||'Not entered'}
+Prescribed Title: ${state.metadata.prescribedTitle||'Not entered'}
+AOK 1: ${selectedAok(0)?.name||'Not entered'}
+AOK 2: ${selectedAok(1)?.name||'Not entered'}
+
+ORDERED / NESTED OUTLINE
+${outlineText()}
+
+END OUTLINE
+`;}
+function reviewPromptText(){return `TOK OUTLINE LOGIC REVIEW
+
+ROLE
+You are an argument-architecture reviewer and Socratic coach for a Theory of Knowledge essay outline. Review the student's reasoning structure. Do not become a content generator or essay writer.
+
+${PROMPT_GUARDRAILS}
+
+REVIEW FOR
+1. Overall argument architecture and sequencing.
+2. Whether examples genuinely support claims and are analyzed rather than described.
+3. Whether counterclaims or alternative perspectives actually interact with the main reasoning.
+4. Methodological distinctions within and across the AOKs.
+5. Whether key terms or the title operate differently across the AOKs, and whether the outline explains why.
+6. Cross-AOK coherence rather than two disconnected mini-essays.
+7. Explicit links back to the prescribed title.
+8. Evaluation, implications, assumptions, missing reasoning moves, misplaced blocks, repetition, and redundancy.
+
+RESPONSE FORMAT
+1. Overall Argument Architecture — concise macro diagnosis.
+2. Structural Strengths — what is already working and should be preserved.
+3. Priority Issues — identify the 3–5 most important issues. For each include:
+   - Priority: High / Medium / Low
+   - Affected block ID(s)
+   - Diagnosis
+   - Why it matters
+   - Structural action, when useful
+   - Socratic question
+   High = logic is broken, missing, unsupported, or substantially mis-sequenced. Medium = reasoning exists but needs strengthening, clarification, or repositioning. Low = refinement, clarity, or sophistication.
+4. Missing Reasoning Moves — only where genuinely necessary.
+5. Cross-AOK Coherence.
+6. Example Caution Flags — overused/generic/potentially superficial examples, without replacements.
+7. Revision Checklist — a short ordered set of next actions.
+
+${promptOutlineContext()}`;}
+function interviewPromptText(){return `TOK OUTLINE GRILLING SESSION
+
+ROLE
+You are a relentless but supportive Socratic interviewer working through a Theory of Knowledge essay outline with the student who wrote it. Your job is to interrogate their reasoning until they can state it clearly themselves. You are not writing a report, and you are not writing the essay. The thinking stays theirs.
+
+HOW TO RUN THIS SESSION
+- Ask exactly ONE question at a time, then stop and wait for the student's answer. Asking several questions at once is bewildering and defeats the purpose.
+- Do not open with a summary, a verdict, or a list of observations. Begin immediately with your first question.
+- With each question, offer your own provisional answer or recommendation so the student has something to push against. Make clear that the decision is theirs, not yours.
+- Work in dependency order: settle what the prescribed title is actually asking before interrogating the claims; settle a claim before interrogating the evidence beneath it; settle the evidence before asking what it shows.
+- Anything you can establish from the outline below, establish yourself. Never ask the student to repeat something already written in the outline.
+- When an answer is vague, ask again. Do not accept the first vague answer. Name the vagueness — "you said the example shows this; shows it how?" — and press until the reasoning is explicit.
+- Stay warm. The point is clarity, not defeat. The student should leave understanding their own argument better, not feeling attacked.
+- If the student asks you to write, draft, or supply an answer, decline and return them to the question.
+- Never answer your own question on the student's behalf and then treat the point as settled.
+- After roughly ten to fifteen exchanges, or sooner if the reasoning has become clear, ask whether the student wants to keep going or close the session.
+
+WHAT TO GRILL, IN ORDER
+1. The prescribed title: what it is actually asking, and whether the student's reading of it is defensible.
+2. The thesis: whether a position exists at all, and whether it is arguable rather than obvious.
+3. Each main claim: whether it is precise enough to be challenged.
+4. Each example: whether it does the work the claim needs, and whether it is analyzed rather than described.
+5. Each counterclaim: whether it genuinely threatens the reasoning, or is raised only to be dismissed.
+6. Method: how each AOK produces, tests, justifies, interprets, or communicates knowledge, and why that matters to the title.
+7. The two AOKs together: whether they genuinely interact, or whether this is two mini-essays side by side.
+8. The links back to the title: whether they are explicit, and whether they survive the counterclaims.
+9. Assumptions the student has not noticed they are making.
+
+${PROMPT_GUARDRAILS}
+
+HOW TO END
+When the reasoning is clear, or when the student asks to stop, write one final section and nothing else:
+
+WHAT TO CHANGE IN THE PLANNER
+An ordered list of concrete changes, each naming the affected block ID(s) and phrased as an action the student can carry out: Move / Add / Split / Merge / Clarify / Connect / Remove. Use the student's own words from this conversation rather than your own. Include only changes the student agreed to during the session. Do not add new content, and do not draft the wording of any block for them.
+
+${promptOutlineContext()}`;}
+function readinessPromptText(){return `TOK OUTLINE READINESS CHECK
+
+ROLE
+You are checking whether a Theory of Knowledge essay outline is complete enough for the student to start writing prose. You are looking for holes, not for polish, and you never fill the holes yourself.
+
+HOW TO ANSWER
+- Be blunt and brief. This is a last look before drafting, not a full review.
+- Judge only what is actually written in the outline. Do not assume the student has thought of something they did not record.
+- Name the affected block ID(s) for every point so the student can find what you mean.
+- Do not repeat the outline back to the student.
+
+${PROMPT_GUARDRAILS}
+
+RESPONSE FORMAT
+1. Verdict — exactly one of: Ready to write / Nearly ready / Not yet. One sentence saying why.
+2. Empty or Undeveloped Blocks — block IDs carrying a title but no real reasoning, or one thin line where a reasoning move is needed.
+3. Unsupported Claims — claims with no example, no analysis, or no methodological support beneath them.
+4. Described, Not Analyzed — examples that recount what happened without saying what it shows about knowledge.
+5. Missing Links to the Title — sections that never explicitly connect back to the prescribed title.
+6. Missing Counterweight — places where no counterclaim, alternative perspective, evaluation, or limitation appears at all.
+7. Fix These First — at most three items, in order, and nothing else.
+
+If the outline is genuinely ready, say so plainly and keep the remaining sections short.
+
+${promptOutlineContext()}`;}
+const AI_FEEDBACK_MODES={
+  interview:{build:interviewPromptText,suffix:'_AI_Questions.txt',label:'Question prompt'},
+  review:{build:reviewPromptText,suffix:'_AI_Logic_Review.txt',label:'AI review prompt'},
+  readiness:{build:readinessPromptText,suffix:'_AI_Readiness_Check.txt',label:'Readiness check prompt'}
+};
+function aiPromptText(mode){return (AI_FEEDBACK_MODES[mode]||AI_FEEDBACK_MODES.review).build();}
+function openFeedbackDialog(){const dialog=$('#feedback-dialog');if(!dialog.open)dialog.showModal();}
+function generateAIPrompt(mode){const config=AI_FEEDBACK_MODES[mode]||AI_FEEDBACK_MODES.review;const txt=config.build();downloadBlob(new Blob([txt],{type:'text/plain'}),filenameBase()+config.suffix);if(navigator.clipboard?.writeText)navigator.clipboard.writeText(txt).then(()=>showToast(config.label+' downloaded and copied')).catch(()=>showToast(config.label+' downloaded'));else showToast(config.label+' downloaded');}
+
+function openAddAokDialog(){const used=new Set(state.aokCandidates.map(candidate=>candidate.name).filter(Boolean)),available=AOK_OPTIONS.filter(name=>!used.has(name)),select=$('#add-aok-select');select.innerHTML=available.map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('');$('#add-aok-confirm').disabled=!available.length;if(!available.length)select.innerHTML='<option value="">All five AOKs are already in this Project</option>';$('#add-aok-dialog').showModal();}
+function addExplorationAok(){const name=$('#add-aok-select').value;if(!AOK_OPTIONS.includes(name)||state.aokCandidates.some(candidate=>candidate.name===name))return;const before=snapshot(),id=createAokCandidate(name);state.ui.exploringAokId=id;state.ui.candidateTrayOpen=true;state.ui.activeSection=id;pushHistory(before);touch();$('#add-aok-dialog').close();renderAll();}
+function populateWizardAoks(){const first=$('#wizard-aok1'),second=$('#wizard-aok2'),render=()=>{const firstValue=first.value,secondValue=second.value;first.innerHTML=aokOptionsHTML(firstValue,secondValue);second.innerHTML=aokOptionsHTML(secondValue,firstValue);first.value=firstValue;second.value=secondValue;};first.innerHTML=aokOptionsHTML();second.innerHTML=aokOptionsHTML();first.addEventListener('change',render);second.addEventListener('change',render);}
+
+function resetProject(){if(!confirm('Reset the entire outline? This will replace the current project and browser-saved state.'))return;const before=snapshot();state=defaultState();undoStack=[before];redoStack=[];localStorage.removeItem(STORAGE_KEY);renderAll();persist(false);openOnboarding();showToast('Outline reset');}
+
+function bindGlobal(){
+  $$('[data-meta]').forEach(el=>{let before=null;el.addEventListener('focus',()=>before=snapshot());el.addEventListener('input',()=>{state.metadata[el.dataset.meta]=el.value;touch();});el.addEventListener('blur',()=>{if(before&&JSON.stringify(before.metadata)!==JSON.stringify(state.metadata))pushHistory(before);before=null;});});
+  $$('[data-aok-slot]').forEach(select=>select.addEventListener('change',()=>selectAokNameForSlot(select.value,Number(select.dataset.aokSlot))));
+  $('#sidebar-toggle').addEventListener('click',()=>{state.ui.sidebarCollapsed=!state.ui.sidebarCollapsed;applyUIState();touch();});
+  $('#theme-toggle').addEventListener('click',()=>{const before=snapshot();state.ui.theme=state.ui.theme==='dark'?'light':'dark';pushHistory(before);touch();applyUIState();});
+  $('#undo-btn').addEventListener('click',undo);$('#redo-btn').addEventListener('click',redo);
+  $('#save-html').addEventListener('click',saveWorkingCopy);$('#export-pdf').addEventListener('click',exportPDF);$('#ai-prompt').addEventListener('click',openFeedbackDialog);
+  $('#collapse-all').addEventListener('click',()=>collapseAll(true));$('#expand-all').addEventListener('click',()=>collapseAll(false));$('#reset-project').addEventListener('click',resetProject);
+  $('#floating-add').addEventListener('click',()=>openQuickAdd(state.ui.activeSection||'intro'));
+  $('#edit-cancel').addEventListener('click',()=>$('#edit-dialog').close());$('#edit-save').addEventListener('click',saveEditDialog);
+  $('#quick-add-cancel').addEventListener('click',()=>$('#quick-add-dialog').close());
+  $('#add-aok-candidate').addEventListener('click',openAddAokDialog);$('#add-aok-cancel').addEventListener('click',()=>$('#add-aok-dialog').close());$('#add-aok-confirm').addEventListener('click',addExplorationAok);
+  $('#aok-tray-close').addEventListener('click',()=>{state.ui.candidateTrayOpen=false;touch();renderCandidateTray();});$('#aok-tray-toggle').addEventListener('click',()=>{state.ui.candidateTrayOpen=true;touch();renderCandidateTray();});
+  let returnToOnboarding=false;
+  const closeHelp=()=>{$('#help-dialog').close();if(returnToOnboarding){returnToOnboarding=false;openOnboarding();}};
+  $('#help-btn').addEventListener('click',openHelpTutorial);$('#help-close').addEventListener('click',closeHelp);
+  $('#wizard-help').addEventListener('click',()=>{returnToOnboarding=true;$('#onboarding-dialog').close();openHelpTutorial();});
+  $('#tutorial-prev').addEventListener('click',()=>showTutorialStep(tutorialStep-1));
+  $('#tutorial-next').addEventListener('click',()=>{if(tutorialStep>=tutorialPanels().length-1)closeHelp();else showTutorialStep(tutorialStep+1);});
+  $('#feedback-cancel').addEventListener('click',()=>$('#feedback-dialog').close());
+  $('#feedback-confirm').addEventListener('click',()=>{const mode=$('[name="feedback-mode"]:checked')?.value||'review';$('#feedback-dialog').close();generateAIPrompt(mode);});
+  $$('[data-wizard-next]').forEach(button=>button.addEventListener('click',()=>showWizardStep(Number(button.dataset.wizardNext))));
+  $('#wizard-skip').addEventListener('click',()=>completeOnboarding(false));$('#wizard-finish').addEventListener('click',()=>completeOnboarding(true));
+  $('#onboarding-dialog').addEventListener('cancel',event=>{event.preventDefault();completeOnboarding(false);});
+  document.addEventListener('keydown',e=>{const mod=e.ctrlKey||e.metaKey;if(!mod)return;if(e.key.toLowerCase()==='z'){e.preventDefault();if(e.shiftKey)redo();else undo();}else if(e.key.toLowerCase()==='y'){e.preventDefault();redo();}});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){flushHistory();persist(false);}});
+  window.addEventListener('beforeunload',()=>{flushHistory();persist(false);});
+}
+
+function migrate(raw){
+  if(raw?.schemaVersion===1){const migrated=deepClone(raw);migrated.schemaVersion=2;migrated.ui={...(migrated.ui||{}),onboardingComplete:true};Object.values(migrated.sections||{}).forEach(section=>walkBlocks(section.blocks||[],block=>{delete block.required;}));raw=migrated;}
+  if(raw?.schemaVersion===2){const migrated=deepClone(raw),canonical=value=>{const clean=typeof value==='string'?value.trim():'';return AOK_OPTIONS.find(name=>name.toLowerCase()===clean.toLowerCase()||('the '+name).toLowerCase()===clean.toLowerCase())||'';};migrated.schemaVersion=SCHEMA_VERSION;const existing=Array.isArray(migrated.aokCandidates)?migrated.aokCandidates:null;migrated.aokCandidates=existing||['aok1','aok2'].map(id=>{const oldName=migrated.metadata?.[id]||'',name=canonical(oldName);return{id,name,legacyName:oldName&&!name?oldName:''};});const candidateIds=new Set(migrated.aokCandidates.map(candidate=>candidate.id));const ordered=Array.isArray(migrated.sectionOrder)?migrated.sectionOrder.filter(id=>candidateIds.has(id)):[];migrated.selectedAokIds=Array.isArray(migrated.selectedAokIds)?migrated.selectedAokIds:(ordered.length===2?ordered:['aok1','aok2']);if(migrated.metadata){delete migrated.metadata.aok1;delete migrated.metadata.aok2;}migrated.ui={...(migrated.ui||{}),candidateTrayOpen:false,exploringAokId:''};return normalizeProjectState(migrated);}
+  return normalizeProjectState(raw);
+}
+function showProjectError(message){const box=$('#validation');box.textContent=message;box.classList.add('show');}
+function init(){
+  const embedded=window.__EMBEDDED_PROJECT_STATE__;
+  let loadError='',hasSavedSession=false;
+  if(embedded){try{state=migrate(embedded);}catch(error){state=defaultState();loadError='The embedded Working Copy could not be opened: '+error.message+' Your original file has not been changed.';}}
+  else{state=defaultState();try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){hasSavedSession=true;$('#restore-banner').classList.add('show');}}catch(error){loadError='Browser recovery storage is unavailable. Use Save Working Copy regularly.';}}
+  populateWizardAoks();bindGlobal();renderAll();
+  if(loadError)showProjectError(loadError);
+  $('#restore-local').addEventListener('click',()=>{try{const saved=localStorage.getItem(STORAGE_KEY);if(!saved)throw new Error('No saved browser session was found.');state=migrate(JSON.parse(saved));undoStack=[];redoStack=[];renderAll();persist(false);showToast('Browser session restored');if(!state.ui.onboardingComplete)openOnboarding();}catch(error){showProjectError('The browser-saved session could not be restored: '+error.message+' It has been left untouched.');}$('#restore-banner').classList.remove('show');});
+  $('#ignore-local').addEventListener('click',()=>{$('#restore-banner').classList.remove('show');if(!state.ui.onboardingComplete)openOnboarding();});
+  if(!hasSavedSession&&!state.ui.onboardingComplete)openOnboarding();
+}
+init();
+})();
+</script>
+</body>
+</html>
