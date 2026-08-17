@@ -14,7 +14,10 @@ Teacher PDF and AI feedback must still assess a coherent essay with exactly two 
 - Represent each AOK Candidate as a stable ID, an official AOK name, and its own Section of Blocks.
 - Store the ordered pair in `selectedAokIds`; its order determines the student-visible AOK 1 and AOK 2 labels.
 - Offer only History, Human Sciences, Natural Sciences, The Arts, and Mathematics in AOK selectors.
+- Enable additional exploration only after two different official AOKs are selected, and open the additional selector with no default choice.
+- Keep official AOK names unique across selected and exploratory candidates.
 - Show a side Exploration Tray after a third candidate is created. Editing an unselected candidate happens in a visually separate Exploration Workspace.
+- When the Exploration Tray is closed, keep a right-edge AOK options tab visible so the combination controls remain discoverable.
 - Keep all candidates in the Working Copy, history, and browser recovery state.
 - Generate the Teacher PDF and all AI Feedback Modes from Introduction, the two Selected AOKs, and Conclusion only.
 - Advance Project State to schema 3. Migrate schema 1 and 2 `aok1` / `aok2` Sections into selected candidates without changing their Block IDs or content. Preserve an unrecognized legacy AOK label as migration information while requiring a new official selection.

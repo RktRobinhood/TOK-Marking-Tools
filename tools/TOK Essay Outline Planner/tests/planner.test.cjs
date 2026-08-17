@@ -361,14 +361,42 @@ test('AOK Sections use the five official choices and reject duplicate selection'
   const { context, page } = await openPlanner();
   const aok1 = page.getByLabel('AOK 1 *');
   const aok2 = page.getByLabel('AOK 2 *');
+  const exploreAnother = page.getByRole('button', { name: 'Explore another AOK' });
   assert.deepEqual(await aok1.locator('option').allTextContents(), [
     'Choose an AOK', 'History', 'Human Sciences', 'Natural Sciences', 'The Arts', 'Mathematics'
   ]);
   assert.equal(await aok1.evaluate(element => element.tagName), 'SELECT');
+  assert.equal(await exploreAnother.isEnabled(), false);
   await aok1.selectOption({ label: 'History' });
+  assert.equal(await exploreAnother.isEnabled(), false);
   assert.equal(await aok2.locator('option', { hasText: 'History' }).isDisabled(), true);
   await aok2.selectOption({ label: 'The Arts' });
+  assert.equal(await exploreAnother.isEnabled(), true);
   assert.deepEqual((await projectState(page)).aokCandidates.map(candidate => candidate.name), ['History', 'The Arts']);
+
+  await exploreAnother.click();
+  const additionalAok = page.getByLabel('Area of Knowledge to explore');
+  const addToTray = page.getByRole('button', { name: 'Add to exploration tray' });
+  assert.equal(await additionalAok.inputValue(), '');
+  assert.equal(await addToTray.isEnabled(), false);
+  assert.equal(await additionalAok.locator('option', { hasText: 'History' }).count(), 0);
+  assert.equal(await additionalAok.locator('option', { hasText: 'The Arts' }).count(), 0);
+  await additionalAok.selectOption({ label: 'Mathematics' });
+  assert.equal(await addToTray.isEnabled(), true);
+  await addToTray.click();
+  await page.getByRole('button', { name: 'Close AOK combinations' }).click();
+  const reopenTray = page.getByRole('button', { name: 'Open AOK combinations' });
+  assert.equal(await reopenTray.isVisible(), true);
+  assert.match(await reopenTray.textContent(), /AOK options\s*\(3\)/);
+  await reopenTray.click();
+  assert.equal(await page.locator('#aok-tray').isVisible(), true);
+  await page.getByRole('button', { name: 'Close AOK combinations' }).click();
+  await exploreAnother.click();
+  assert.equal(await additionalAok.locator('option', { hasText: 'History' }).count(), 0);
+  assert.equal(await additionalAok.locator('option', { hasText: 'The Arts' }).count(), 0);
+  assert.equal(await additionalAok.locator('option', { hasText: 'Mathematics' }).count(), 0);
+  const candidateNames = (await projectState(page)).aokCandidates.map(candidate => candidate.name).filter(Boolean);
+  assert.equal(new Set(candidateNames).size, candidateNames.length);
   await context.close();
 });
 
