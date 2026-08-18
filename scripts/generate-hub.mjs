@@ -88,10 +88,13 @@ ${matching.map(renderCard).join("\n")}
       </section>`;
 }
 
-function renderCard(tool) {
-  return `          <li class="tool">
+function renderCard(tool, index) {
+  const icon = iconFor(tool.kind);
+  // --i staggers the entrance a touch; the watermark is the same glyph, enlarged.
+  return `          <li class="tool" style="--i: ${index}">
             <a class="tool__link" href="${escapeAttribute(tool.href)}">
-              <span class="tool__icon" aria-hidden="true">${iconFor(tool.kind)}</span>
+              <span class="tool__watermark" aria-hidden="true">${icon}</span>
+              <span class="tool__icon" aria-hidden="true">${icon}</span>
               <h3 class="tool__title">${escapeHtml(tool.title)}</h3>
               <p class="tool__description">${escapeHtml(tool.description)}</p>
               <span class="tool__action">Open<span class="tool__arrow" aria-hidden="true">→</span></span>

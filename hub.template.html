@@ -4,39 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Focused tools for planning and assessing Theory of Knowledge work.">
-  <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#16181c" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#e8ecf2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0d1120" media="(prefers-color-scheme: dark)">
   <title>TOK Tools</title>
   <style>
     :root {
-      --bg: #faf9f7;
-      --surface: #ffffff;
-      --ink: #1c1e22;
-      --muted: #5f656e;
-      --line: #e4e1db;
-      --line-strong: #cfcbc3;
-      --accent: #15645a;
-      --accent-soft: #eef4f2;
-      --focus: #15645a;
-      --shadow: 0 1px 2px rgba(28, 30, 34, .05);
-      --shadow-lift: 0 6px 20px rgba(28, 30, 34, .09);
-      --measure: 62rem;
+      --bg: #e8ecf2;
+      --bg-deep: #dce2ec;
+      --ink: #1b2130;
+      --muted: #4d5668;
+      --line: rgba(27, 33, 48, .13);
+      --line-strong: rgba(27, 33, 48, .26);
+      --surface: rgba(255, 255, 255, .62);
+      --surface-hover: rgba(255, 255, 255, .78);
+      --accent: #1c5f6b;
+      --accent-tint: rgba(28, 95, 107, .10);
+      --wash-1: rgba(92, 128, 210, .34);
+      --wash-2: rgba(72, 172, 158, .30);
+      --wash-3: rgba(190, 136, 172, .26);
+      --dot: rgba(27, 33, 48, .10);
+      --motif: rgba(27, 33, 48, .13);
+      --shadow: 0 2px 10px rgba(24, 32, 54, .06);
+      --shadow-lift: 0 14px 38px rgba(24, 32, 54, .14);
+      --measure: 64rem;
       --serif: "Iowan Old Style", Georgia, "Times New Roman", serif;
       --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     }
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #16181c;
-        --surface: #1d2026;
-        --ink: #e8e9ec;
-        --muted: #a2a8b2;
-        --line: #2c3037;
-        --line-strong: #3d434c;
-        --accent: #6ec3ae;
-        --accent-soft: #1e2a29;
-        --focus: #6ec3ae;
+        --bg: #0d1120;
+        --bg-deep: #080b15;
+        --ink: #e7eaf3;
+        --muted: #99a2b7;
+        --line: rgba(255, 255, 255, .11);
+        --line-strong: rgba(255, 255, 255, .24);
+        --surface: rgba(255, 255, 255, .05);
+        --surface-hover: rgba(255, 255, 255, .085);
+        --accent: #7fd3c0;
+        --accent-tint: rgba(127, 211, 192, .12);
+        --wash-1: rgba(84, 116, 206, .34);
+        --wash-2: rgba(60, 168, 152, .28);
+        --wash-3: rgba(166, 118, 190, .26);
+        --dot: rgba(255, 255, 255, .07);
+        --motif: rgba(255, 255, 255, .12);
         --shadow: none;
-        --shadow-lift: 0 6px 20px rgba(0, 0, 0, .35);
+        --shadow-lift: 0 14px 40px rgba(0, 0, 0, .45);
       }
     }
 
@@ -45,13 +57,62 @@
     body {
       margin: 0;
       color: var(--ink);
-      background: var(--bg);
+      background: linear-gradient(180deg, var(--bg), var(--bg-deep));
       font-family: var(--sans);
       font-size: 16px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ---- atmosphere: slow drifting light behind everything ---- */
+    .atmosphere {
+      position: fixed; inset: 0; z-index: -1;
+      overflow: hidden; pointer-events: none;
+    }
+    .wash {
+      position: absolute; border-radius: 50%;
+      filter: blur(64px); will-change: transform;
+    }
+    .wash--a {
+      top: -18%; left: -12%; width: 46rem; aspect-ratio: 1;
+      background: radial-gradient(circle, var(--wash-1), transparent 68%);
+      animation: drift-a 46s ease-in-out infinite alternate;
+    }
+    .wash--b {
+      top: 12%; right: -16%; width: 40rem; aspect-ratio: 1;
+      background: radial-gradient(circle, var(--wash-2), transparent 68%);
+      animation: drift-b 58s ease-in-out infinite alternate;
+    }
+    .wash--c {
+      bottom: -24%; left: 22%; width: 42rem; aspect-ratio: 1;
+      background: radial-gradient(circle, var(--wash-3), transparent 70%);
+      animation: drift-c 52s ease-in-out infinite alternate;
+    }
+    .atmosphere__dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+      background-size: 26px 26px;
+      -webkit-mask-image: linear-gradient(to bottom, black, transparent 78%);
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+    .motif {
+      position: absolute; top: 4vh; right: -8vw;
+      width: clamp(22rem, 44vw, 36rem); aspect-ratio: 1;
+      color: var(--motif); fill: none; stroke: currentColor; stroke-width: .6;
+      animation: turn 240s linear infinite, breathe 24s ease-in-out infinite;
+    }
+
+    @keyframes drift-a { to { transform: translate3d(6%, 5%, 0) scale(1.12); } }
+    @keyframes drift-b { to { transform: translate3d(-7%, 8%, 0) scale(1.08); } }
+    @keyframes drift-c { to { transform: translate3d(5%, -7%, 0) scale(1.14); } }
+    @keyframes turn { to { transform: rotate(360deg); } }
+    @keyframes breathe { 50% { opacity: .55; } }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* ---- shell ---- */
     .skip-link {
       position: absolute; top: .75rem; left: .75rem; z-index: 10;
       padding: .6rem .9rem; border-radius: .4rem;
@@ -67,54 +128,120 @@
       align-items: baseline; justify-content: space-between;
       padding-block: 1.5rem;
       border-bottom: 1px solid var(--line);
+      animation: rise .8s cubic-bezier(.2, .7, .2, 1) both;
     }
     .wordmark {
-      margin: 0; font-family: var(--serif); font-size: 1.15rem; font-weight: 600; letter-spacing: -.01em;
+      display: inline-flex; align-items: baseline; gap: .55rem; margin: 0;
+      font-family: var(--serif); font-size: 1.2rem; font-weight: 600; letter-spacing: -.01em;
     }
-    .site-header__meta { color: var(--muted); font-size: .85rem; }
+    .wordmark::before {
+      width: .45rem; aspect-ratio: 1; border-radius: 50%;
+      background: var(--accent); content: ""; opacity: .8;
+    }
+    .site-header__meta { margin: 0; color: var(--muted); font-size: .85rem; }
 
-    .intro { padding-block: clamp(2.75rem, 7vw, 4.5rem) clamp(2rem, 5vw, 3rem); }
+    /* ---- intro ---- */
+    .intro { padding-block: clamp(3rem, 8vw, 5rem) clamp(2rem, 5vw, 3rem); }
+    .intro > * { animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
+    .eyebrow {
+      display: flex; align-items: center; gap: .6rem; margin: 0 0 1.1rem;
+      color: var(--accent); font-size: .74rem; font-weight: 650;
+      letter-spacing: .15em; text-transform: uppercase;
+      animation-delay: .04s;
+    }
+    .eyebrow::after {
+      flex: 1; max-width: 7rem; height: 1px; content: "";
+      background: linear-gradient(90deg, currentColor, transparent);
+      opacity: .5;
+    }
     .intro h1 {
-      max-width: 22ch; margin: 0 0 1rem;
+      max-width: 21ch; margin: 0 0 1.1rem;
       font-family: var(--serif); font-weight: 500;
-      font-size: clamp(2rem, 4.5vw, 2.9rem); line-height: 1.15; letter-spacing: -.02em;
+      font-size: clamp(2.1rem, 4.6vw, 3.05rem); line-height: 1.14; letter-spacing: -.02em;
+      animation-delay: .1s;
     }
-    .intro p { max-width: 56ch; margin: 0; color: var(--muted); font-size: 1.05rem; }
+    .intro p {
+      max-width: 54ch; margin: 0 0 1.6rem; color: var(--muted); font-size: 1.05rem;
+      animation-delay: .16s;
+    }
+    .facts {
+      display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none;
+      animation-delay: .22s;
+    }
+    .facts li {
+      padding: .34rem .8rem; border: 1px solid var(--line); border-radius: 100vw;
+      background: var(--surface); color: var(--muted); font-size: .78rem;
+      -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    }
 
-    .group { padding-bottom: clamp(2.25rem, 5vw, 3.25rem); }
+    /* ---- groups ---- */
+    .group {
+      padding-bottom: clamp(2.25rem, 5vw, 3.25rem);
+      animation: rise .8s cubic-bezier(.2, .7, .2, 1) both;
+    }
     .group__heading {
-      margin: 0 0 1rem; padding-bottom: .6rem;
-      border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: .8rem; margin: 0 0 1.1rem;
       color: var(--muted);
-      font-size: .78rem; font-weight: 650; letter-spacing: .09em; text-transform: uppercase;
+      font-size: .76rem; font-weight: 650; letter-spacing: .12em; text-transform: uppercase;
+    }
+    .group__heading::after {
+      flex: 1; height: 1px; content: "";
+      background: linear-gradient(90deg, var(--line-strong), transparent);
     }
 
     .tool-grid {
       display: grid; gap: 1rem; margin: 0; padding: 0; list-style: none;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
     }
-    .tool { display: flex; }
+    .tool {
+      display: flex;
+      animation: rise .7s cubic-bezier(.2, .7, .2, 1) both;
+      animation-delay: calc(.2s + var(--i, 0) * 80ms);
+    }
     .tool__link {
+      position: relative; overflow: hidden;
       display: flex; flex: 1; flex-direction: column; gap: .55rem;
-      padding: 1.35rem;
-      border: 1px solid var(--line); border-radius: .7rem;
+      padding: 1.4rem;
+      border: 1px solid var(--line); border-radius: .85rem;
       background: var(--surface); box-shadow: var(--shadow);
+      -webkit-backdrop-filter: blur(14px) saturate(118%);
+      backdrop-filter: blur(14px) saturate(118%);
       color: inherit; text-decoration: none;
-      transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+      transition: border-color .3s ease, box-shadow .3s ease, transform .3s ease, background-color .3s ease;
+    }
+    /* hairline that lights up along the top edge on hover */
+    .tool__link::after {
+      position: absolute; top: 0; left: 0; right: 0; height: 1px; content: "";
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0; transition: opacity .3s ease;
     }
     .tool__link:hover {
+      transform: translateY(-3px);
       border-color: var(--line-strong);
+      background: var(--surface-hover);
       box-shadow: var(--shadow-lift);
-      transform: translateY(-2px);
     }
-    .tool__link:focus-visible {
-      outline: 2px solid var(--focus); outline-offset: 3px;
+    .tool__link:hover::after { opacity: .75; }
+    .tool__link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .tool__watermark {
+      position: absolute; right: -1.4rem; bottom: -1.6rem; z-index: 0;
+      width: 9rem; color: var(--accent); opacity: .07;
+      transform: rotate(-10deg);
+      transition: opacity .4s ease, transform .5s ease;
     }
+    .tool__watermark svg {
+      width: 100%; fill: none; stroke: currentColor;
+      stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .tool__link:hover .tool__watermark { opacity: .14; transform: rotate(-4deg) scale(1.06); }
 
     .tool__icon {
+      position: relative; z-index: 1;
       display: grid; place-items: center;
-      width: 2.25rem; aspect-ratio: 1; border-radius: .5rem;
-      color: var(--accent); background: var(--accent-soft);
+      width: 2.3rem; aspect-ratio: 1; border-radius: .55rem;
+      border: 1px solid var(--line);
+      color: var(--accent); background: var(--accent-tint);
     }
     .tool__icon svg {
       width: 1.2rem; fill: none; stroke: currentColor;
@@ -122,19 +249,22 @@
     }
 
     .tool__title {
-      margin: .35rem 0 0;
-      font-family: var(--serif); font-weight: 600; font-size: 1.15rem;
+      position: relative; z-index: 1; margin: .4rem 0 0;
+      font-family: var(--serif); font-weight: 600; font-size: 1.18rem;
       line-height: 1.25; letter-spacing: -.01em;
     }
-    .tool__description { margin: 0; color: var(--muted); font-size: .92rem; }
-
-    .tool__action {
-      display: inline-flex; align-items: center; gap: .4rem;
-      margin-top: auto; padding-top: .9rem;
-      color: var(--accent); font-size: .85rem; font-weight: 600;
+    .tool__description {
+      position: relative; z-index: 1; margin: 0;
+      color: var(--muted); font-size: .92rem;
     }
-    .tool__arrow { transition: transform .18s ease; }
-    .tool__link:hover .tool__arrow { transform: translateX(3px); }
+    .tool__action {
+      position: relative; z-index: 1;
+      display: inline-flex; align-items: center; gap: .4rem;
+      margin-top: auto; padding-top: 1rem;
+      color: var(--accent); font-size: .85rem; font-weight: 650;
+    }
+    .tool__arrow { transition: transform .3s ease; }
+    .tool__link:hover .tool__arrow { transform: translateX(4px); }
 
     .site-footer {
       display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; justify-content: space-between;
@@ -155,6 +285,20 @@
   </style>
 </head>
 <body>
+  <div class="atmosphere" aria-hidden="true">
+    <span class="wash wash--a"></span>
+    <span class="wash wash--b"></span>
+    <span class="wash wash--c"></span>
+    <div class="atmosphere__dots"></div>
+    <svg class="motif" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="94"></circle>
+      <circle cx="100" cy="100" r="70" stroke-dasharray="2 6"></circle>
+      <circle cx="84" cy="86" r="42"></circle>
+      <circle cx="118" cy="86" r="42"></circle>
+      <circle cx="101" cy="118" r="42"></circle>
+    </svg>
+  </div>
+
   <a class="skip-link" href="#tools">Skip to tools</a>
 
   <header class="site-header wrap">
@@ -164,8 +308,14 @@
 
   <main class="wrap" id="tools">
     <div class="intro">
+      <p class="eyebrow">Theory of Knowledge</p>
       <h1>Tools for planning and assessing Theory of Knowledge work.</h1>
-      <p>{{TOOL_COUNT}} tools, free to use and open in this tab. Nothing is uploaded &mdash; your work stays in your browser.</p>
+      <p>Built for the classroom, free to use, and open in this tab. Nothing is uploaded &mdash; your work stays in your browser.</p>
+      <ul class="facts">
+        <li>{{TOOL_COUNT}} tools</li>
+        <li>No sign-in</li>
+        <li>Works offline once loaded</li>
+      </ul>
     </div>
 
 {{TOOL_SECTIONS}}
@@ -173,7 +323,7 @@
 
   <footer class="site-footer wrap">
     <span>Built for classroom use.</span>
-    <span>Works offline once loaded.</span>
+    <span>Your work stays on your device.</span>
   </footer>
 </body>
 </html>
