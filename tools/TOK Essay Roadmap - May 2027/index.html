@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Student roadmap and examiner-informed guidance for the IB DP Theory of Knowledge essay, Class of May 2027.">
+<title>IB DP TOK Essay Roadmap | Class of May 2027</title>
+<style>
+:root{
+  --navy:#082a43;
+  --navy-2:#0d3b5e;
+  --blue:#176ea6;
+  --blue-soft:#eaf4fb;
+  --teal:#147d86;
+  --teal-soft:#eaf7f6;
+  --ink:#26333d;
+  --muted:#667681;
+  --paper:#ffffff;
+  --page:#f3f6f8;
+  --line:#dce5ea;
+  --line-dark:#c6d2da;
+  --red:#b6413e;
+  --red-soft:#fff1ef;
+  --amber:#9a6400;
+  --amber-soft:#fff7e5;
+  --green:#27704b;
+  --green-soft:#edf8f2;
+  --violet:#6657a8;
+  --violet-soft:#f3f0ff;
+  --shadow:0 18px 50px rgba(13,48,72,.08);
+  --shadow-sm:0 8px 24px rgba(13,48,72,.07);
+  --radius:18px;
+  --radius-sm:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:92px}
+body{
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.67;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 8% 0%,rgba(23,110,166,.08),transparent 27rem),
+    linear-gradient(180deg,#f8fafb 0,var(--page) 32rem);
+}
+a{color:var(--blue);text-underline-offset:3px}
+a:hover{color:var(--navy)}
+strong{color:var(--navy)}
+.container{width:min(1120px,calc(100% - 32px));margin:0 auto}
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--teal));z-index:1000;transition:width .08s linear}
+
+.site-header{
+  position:sticky;top:0;z-index:90;
+  background:rgba(248,250,251,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(198,210,218,.8);
+}
+.nav-row{min-height:70px;display:flex;align-items:center;gap:20px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--navy);font-weight:800;letter-spacing:-.02em}
+.brand-mark{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,var(--navy),var(--blue));color:white;font-size:.8rem;box-shadow:0 6px 16px rgba(23,110,166,.2)}
+.quick-nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.quick-nav a{padding:7px 10px;border-radius:999px;text-decoration:none;color:#425562;font-size:.84rem;font-weight:700;transition:.18s ease}
+.quick-nav a:hover,.quick-nav a:focus{background:#e7f0f5;color:var(--navy);outline:none}
+
+.hero{padding:58px 0 34px}
+.hero-shell{position:relative;overflow:hidden;border:1px solid #cbdbe5;border-radius:26px;background:linear-gradient(135deg,#f9fcfe 0%,#edf6fb 58%,#eef8f6 100%);box-shadow:var(--shadow);padding:46px 48px}
+.hero-shell::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;right:-120px;top:-150px;background:radial-gradient(circle,rgba(23,110,166,.13),rgba(23,110,166,0) 68%)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #bfd4e1;border-radius:999px;background:rgba(255,255,255,.72);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}
+h1{font-size:clamp(2.35rem,5vw,4.3rem);line-height:1.04;letter-spacing:-.045em;color:var(--navy);margin:18px 0 14px;max-width:850px}
+.hero p{font-size:1.08rem;color:#536875;max-width:790px;margin:0 0 25px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;border-radius:10px;padding:10px 14px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+.btn-primary{background:var(--navy);color:white;box-shadow:0 8px 20px rgba(8,42,67,.16)}
+.btn-primary:hover{color:white;background:#061f32;transform:translateY(-1px)}
+.btn-secondary{background:white;color:var(--navy);border:1px solid #c8d8e2}
+.btn-secondary:hover{background:#f5fafc;transform:translateY(-1px)}
+
+.fact-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px}
+.fact{background:rgba(255,255,255,.82);border:1px solid #cfdee7;border-radius:14px;padding:15px 16px;box-shadow:0 4px 14px rgba(13,48,72,.04)}
+.fact-number{display:block;font-size:1.45rem;font-weight:850;color:var(--navy);line-height:1.1}
+.fact-label{display:block;margin-top:5px;color:var(--muted);font-size:.86rem;font-weight:650}
+
+main{padding:18px 0 64px}
+.section{margin:24px 0;border:1px solid var(--line);background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden}
+.section-head{padding:27px 30px 20px;border-bottom:1px solid #e8eef2;background:linear-gradient(180deg,#fff,#fbfcfd)}
+.section-kicker{font-size:.75rem;letter-spacing:.095em;text-transform:uppercase;font-weight:850;color:var(--teal);margin-bottom:5px}
+h2{font-size:clamp(1.55rem,2.6vw,2.1rem);line-height:1.18;letter-spacing:-.025em;color:var(--navy);margin:0 0 8px}
+.section-head p{margin:0;color:var(--muted);max-width:870px}
+.section-body{padding:27px 30px 30px}
+.section-body>p,.detail-body>p{max-width:78ch}
+h3{color:var(--navy);font-size:1.16rem;margin:1.3em 0 .55em}
+h4{color:var(--navy-2);font-size:1rem;margin:1em 0 .45em}
+p{margin:.5em 0 1em}
+ul,ol{padding-left:22px}
+li{margin:.42em 0}
+
+.callout{border:1px solid #c9dce8;border-left:5px solid var(--blue);background:#f3f9fc;border-radius:12px;padding:15px 17px;margin:16px 0}
+.callout.success{border-color:#cce4d6;border-left-color:var(--green);background:var(--green-soft)}
+.callout.warning{border-color:#ecd9b2;border-left-color:var(--amber);background:var(--amber-soft)}
+.callout.danger{border-color:#ecc8c6;border-left-color:var(--red);background:var(--red-soft)}
+.callout p:last-child{margin-bottom:0}
+
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{border:1px solid var(--line);border-radius:14px;padding:18px;background:#fff;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(13,48,72,.08);border-color:#c7d6df}
+.card-number{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;font-weight:850;margin-bottom:11px}
+.card h3{margin:.1em 0 .45em}
+.card p{font-size:.94rem;color:#536571;margin-bottom:.2em}
+
+.phase-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.phase-chip{padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:#f9fbfc}
+.phase-chip b{display:block;color:var(--navy);font-size:.9rem}
+.phase-chip span{display:block;color:var(--muted);font-size:.79rem;margin-top:2px}
+
+.timeline{position:relative;margin:6px 0 0 10px;padding-left:29px}
+.timeline::before{content:"";position:absolute;left:7px;top:9px;bottom:9px;width:2px;background:linear-gradient(var(--blue),#b5d3e4 65%,#c6d8d2)}
+.milestone{position:relative;margin:0 0 13px;border:1px solid var(--line);border-radius:13px;background:#fff;padding:15px 17px;transition:.2s ease}
+.milestone::before{content:"";position:absolute;left:-29px;top:21px;width:12px;height:12px;border-radius:50%;background:white;border:3px solid var(--blue);box-shadow:0 0 0 4px var(--paper)}
+.milestone:hover{border-color:#c2d6e2;box-shadow:0 8px 22px rgba(13,48,72,.06);transform:translateX(2px)}
+.milestone.deadline{background:#fff8f7;border-color:#efd4d1}
+.milestone.deadline::before{border-color:var(--red)}
+.milestone.break{background:var(--green-soft);border-color:#d3e9dc}
+.milestone.break::before{border-color:var(--green)}
+.milestone.phase{background:#f1f7fb;border-color:#d4e5ef;padding:11px 17px;font-size:.83rem;text-transform:uppercase;letter-spacing:.07em;font-weight:850;color:var(--navy)}
+.milestone.phase::before{width:9px;height:9px;left:-27.5px;top:17px;background:var(--blue);border-color:var(--blue)}
+.milestone-top{display:flex;gap:14px;justify-content:space-between;align-items:flex-start}
+.when{min-width:108px;text-align:right;color:var(--blue);white-space:nowrap;padding-top:1px}.when .month{display:block;font-size:.68rem;font-weight:850;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}.when .week{display:block;font-size:.82rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase}.when .date{display:block;font-size:.72rem;font-weight:750;letter-spacing:0;text-transform:none;color:var(--muted);margin-top:2px}
+.deadline .when{color:var(--red)}
+.break .when{color:var(--green)}
+.milestone h3{font-size:1.05rem;margin:0 0 4px}
+.milestone p{font-size:.93rem;margin:0;color:#596b77}
+.module-badge{display:inline-flex;align-items:center;gap:5px;margin-top:9px;padding:4px 9px;border-radius:999px;background:#eef3f7;border:1px solid #d5e0e7;color:#4e6270;font-size:.74rem;font-weight:850;letter-spacing:.02em}
+.deadline .module-badge{background:#fff0ee;border-color:#eed1cd;color:#99423f}
+.break .module-badge{display:none}
+
+details.accordion{border:1px solid var(--line);border-radius:13px;background:#fff;margin:10px 0;overflow:hidden;transition:border-color .2s ease,box-shadow .2s ease}
+details.accordion[open]{border-color:#c6dae6;box-shadow:0 8px 24px rgba(13,48,72,.06)}
+details.accordion summary{list-style:none;cursor:pointer;padding:15px 48px 15px 17px;font-weight:800;color:var(--navy);position:relative;background:linear-gradient(180deg,#fff,#fbfcfd);user-select:none}
+details.accordion summary::-webkit-details-marker{display:none}
+details.accordion summary::after{content:"+";position:absolute;right:17px;top:50%;transform:translateY(-50%);width:25px;height:25px;border-radius:8px;display:grid;place-items:center;background:#edf4f8;color:var(--blue);font-size:1.1rem;transition:transform .22s ease,background .22s ease}
+details.accordion[open] summary::after{content:"−";background:#dfeef7;transform:translateY(-50%) rotate(180deg)}
+.detail-body{padding:4px 18px 18px;border-top:1px solid #edf1f4;animation:detailIn .22s ease both}
+.detail-body p:first-child{margin-top:14px}
+@keyframes detailIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.compare-card{border:1px solid var(--line);border-radius:13px;padding:17px;background:#fff}
+.compare-card.good{border-top:4px solid var(--green)}
+.compare-card.avoid{border-top:4px solid var(--red)}
+.compare-card h3{margin:.05em 0 .6em}
+.compare-card ul{margin-bottom:.2em}
+
+.examiner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin:15px 0}
+.examiner-card{border:1px solid var(--line);border-radius:14px;padding:17px;background:linear-gradient(145deg,#fff,#fbfdfe)}
+.examiner-card h3{font-size:1.03rem;margin:0 0 6px}
+.examiner-card p{font-size:.91rem;color:#586a76;margin:.2em 0 .8em}
+
+.rubric-ladder{display:grid;gap:9px;margin-top:14px}
+.band{display:grid;grid-template-columns:105px 1fr;gap:14px;border-radius:13px;padding:14px 15px;border:1px solid var(--line)}
+.band-score{font-weight:900;font-size:1.08rem;color:var(--navy);padding-top:1px}
+.band-desc strong:first-child{display:inline-block;margin-right:3px}
+.band-desc{font-size:.92rem;color:#526571}
+.band-9{background:var(--green-soft);border-color:#cce3d5}
+.band-7{background:var(--blue-soft);border-color:#c8dfed}
+.band-5{background:var(--amber-soft);border-color:#ead8ae}
+.band-3{background:var(--red-soft);border-color:#efd1ce}
+.band-1{background:#f1f3f5}
+.threshold-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.threshold{border:1px solid var(--line);border-radius:13px;padding:15px;background:#fff}
+.threshold .jump{font-weight:900;color:var(--blue);font-size:.92rem;margin-bottom:5px}
+.threshold p{font-size:.88rem;color:#566976;margin:0}
+
+.risk-categories{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.risk{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.risk h4{margin:.1em 0 .4em}
+.risk p{font-size:.88rem;color:#596b76;margin:0}
+
+.check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+.check{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:12px 13px;background:#fff;font-size:.91rem}
+.check::before{content:"✓";display:grid;place-items:center;flex:0 0 23px;height:23px;border-radius:7px;background:var(--green-soft);color:var(--green);font-weight:900}
+
+.sources{font-size:.88rem;color:var(--muted)}
+.sources a{font-weight:700}
+.footer{padding:20px 0 54px;color:#75838d;font-size:.82rem;text-align:center}
+
+.reveal{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+.reveal.visible{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .quick-nav{display:none}.hero-shell{padding:34px 28px}.fact-grid{grid-template-columns:repeat(2,1fr)}
+  .card-grid,.phase-strip,.threshold-grid{grid-template-columns:1fr}.two-col,.examiner-grid,.risk-categories,.check-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .container{width:min(100% - 20px,1120px)}.hero{padding-top:28px}.hero-shell{padding:28px 20px;border-radius:20px}
+  .section-head,.section-body{padding-left:19px;padding-right:19px}.fact-grid{grid-template-columns:1fr 1fr}.fact{padding:12px}
+  .band{grid-template-columns:1fr;gap:4px}.milestone-top{display:block}.when{margin-bottom:6px;white-space:normal}.module-badge{margin-top:8px}.timeline{padding-left:25px}.milestone::before{left:-25px}
+}
+@media print{
+  .site-header,.scroll-progress,.hero-actions{display:none!important}body{background:white}.hero{padding:10px 0}.hero-shell,.section{box-shadow:none}
+  .reveal{opacity:1;transform:none}details.accordion>.detail-body{display:block!important}details.accordion:not([open])>.detail-body{display:block!important}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="container nav-row">
+    <a class="brand" href="#top"><span class="brand-mark">TOK</span><span>Essay Roadmap · Class of May 2027</span></a>
+    <nav class="quick-nav" aria-label="Page navigation">
+      <a href="#roadmap">Roadmap</a><a href="#planner">Planner</a><a href="#examiner-patterns">Examiner advice</a><a href="#assessment">Rubric</a><a href="#examples">Examples</a><a href="#final-check">Final check</a>
+    </nav>
+  </div>
+</header>
+
+<div id="top" class="hero">
+  <div class="container">
+    <div class="hero-shell reveal">
+      <span class="eyebrow">Class of 2027</span>
+      <h1>Build the argument before you write the essay.</h1>
+      <p>A student-facing roadmap for choosing a prescribed title, constructing a defensible line of argument, using the outline planner, responding to feedback and moving toward a clear, coherent and critical TOK essay.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#roadmap">View the timeline</a>
+        <a class="btn btn-secondary" href="https://rktrobinhood.github.io/TOK-Marking-Tools/tools/TOK%20Essay%20Outline%20Planner/index.html" target="_blank" rel="noopener noreferrer">Open outline planner ↗</a>
+      </div>
+      <div class="fact-grid">
+        <div class="fact"><span class="fact-number">1,600</span><span class="fact-label">maximum words</span></div>
+        <div class="fact"><span class="fact-number">6</span><span class="fact-label">prescribed titles</span></div>
+        <div class="fact"><span class="fact-number">3</span><span class="fact-label">formal interactions</span></div>
+        <div class="fact"><span class="fact-number">10</span><span class="fact-label">marks available</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="container">
+<section class="section reveal" id="overview">
+  <div class="section-head">
+    <div class="section-kicker">The task</div>
+    <h2>What the TOK essay is actually asking you to do</h2>
+    <p>The essay is a sustained response to one prescribed title. It is not a test of how many TOK terms you can mention; it is an assessment of the quality of your exploration of the title.</p>
+  </div>
+  <div class="section-body">
+    <div class="callout success"><strong>Keep one test in view:</strong> does this paragraph help produce a clear, coherent and critical exploration of the prescribed title?</div>
+    <details class="accordion">
+      <summary>Strong essay / weak essay — quick contrast</summary>
+      <div class="detail-body">
+        <div class="two-col">
+          <div class="compare-card good"><h3>Strong essays</h3><ul><li>Answer the exact title.</li><li>Use examples to test reasoning.</li><li>Evaluate competing positions.</li><li>Compare AOKs for a reason.</li><li>Draw implications from major arguments.</li></ul></div>
+          <div class="compare-card avoid"><h3>Weak essays</h3><ul><li>Answer a simpler version of the title.</li><li>Describe famous examples at length.</li><li>Repeat claim/counterclaim mechanically.</li><li>Name TOK concepts without using them.</li><li>Summarise without making a judgement.</li></ul></div>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="section reveal" id="interactions">
+  <div class="section-head">
+    <div class="section-kicker">Required process</div>
+    <h2>The three teacher–student interactions</h2>
+    <p>These are structured checkpoints for your thinking. Your teacher can question, advise and identify areas to improve; the intellectual decisions and final writing remain yours.</p>
+  </div>
+  <div class="section-body">
+    <div class="card-grid">
+      <article class="card"><div class="card-number">1</div><h3>Explore the titles</h3><p>Unpack the six prescribed titles, test interpretations, identify assumptions and decide which title gives you the strongest route to an argument.</p></article>
+      <article class="card"><div class="card-number">2</div><h3>Discuss the initial exploration</h3><p>Share a written outline or mind map. Use the conversation to identify gaps, weak links, unproductive AOK choices and places where the argument needs greater precision.</p></article>
+      <article class="card"><div class="card-number">3</div><h3>Feedback on one full draft</h3><p>Receive written or oral advice on one complete draft. Your teacher can indicate how the work could improve, but cannot edit or rewrite the essay for you.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="roadmap">
+  <div class="section-head">
+    <div class="section-kicker">Calendar</div>
+    <h2>Student roadmap</h2>
+    <p>The timeline shows the milestones you need to act on, expected class time where it is specified, and holidays/trips as anchors. Teacher-only scheduling is omitted.</p>
+  </div>
+  <div class="section-body">
+    <div class="phase-strip">
+      <div class="phase-chip"><b>Phase 1 · Choose & plan</b><span>Understand the title and make the reasoning visible.</span></div>
+      <div class="phase-chip"><b>Phase 2 · Draft & test</b><span>Turn the outline into sustained analysis.</span></div>
+      <div class="phase-chip"><b>Phase 3 · Revise & submit</b><span>Use feedback to sharpen—not replace—your thinking.</span></div>
+    </div>
+    <div class="timeline">
+      <article class="milestone"><div class="milestone-top"><div><h3>Essay introduction</h3><p>Learn the task, assessment instrument and the difference between description, argument, evaluation and implication.</p><span class="module-badge">1 module</span></div><div class="when"><span class="month">August</span><span class="week">Week 33</span></div></div></article>
+      <article class="milestone"><div class="milestone-top"><div><h3>Scheduled TOK class</h3><p>No submission milestone is listed for this week; use the class time to prepare for title exploration.</p><span class="module-badge">1 module</span></div><div class="when"><span class="month">Aug / Sept</span><span class="week">Week 36</span></div></div></article>
+      <div class="milestone phase">Phase 1 — Choose, unpack and plan</div>
+      <article class="milestone"><div class="milestone-top"><div><h3>1st interaction · Explore the six titles</h3><p>Work with every important word in the titles. Test what each title requires you to judge and which AOK combinations create useful contrast.</p><span class="module-badge">3 modules in Week 37 + 3 in Week 38</span></div><div class="when"><span class="month">September</span><span class="week">Weeks 37–38</span></div></div></article>
+      <article class="milestone deadline"><div class="milestone-top"><div><h3>Initial essay plan due</h3><p>Submit the first plan and use the individual meeting to pressure-test the line of argument.</p><span class="module-badge">~3 modules expected</span></div><div class="when"><span class="month">September</span><span class="week">Week 39</span><span class="date">Mon 21 Sept</span></div></div></article>
+      <article class="milestone deadline"><div class="milestone-top"><div><h3>Improved outline due</h3><p>Submit the improved mind map / outline in Lectio. Use the TOK Essay Outline Planner to make claims, support, evaluation and links to the title visible before full drafting.</p></div><div class="when"><span class="month">Sept / Oct</span><span class="week">Week 40</span><span class="date">Fri 2 Oct</span></div></div></article>
+      <article class="milestone break"><div class="milestone-top"><div><h3>Study trips</h3><p>No TOK milestone. Your improved outline is already submitted.</p></div><div class="when"><span class="month">October</span><span class="week">Week 41</span></div></div></article>
+      <article class="milestone break"><div class="milestone-top"><div><h3>Fall break</h3><p>Use the break as a calendar anchor; formal drafting resumes afterwards.</p></div><div class="when"><span class="month">October</span><span class="week">Week 42</span></div></div></article>
+      <div class="milestone phase">Phase 2 — Test the argument and draft</div>
+      <article class="milestone"><div class="milestone-top"><div><h3>2nd interaction · Feedback on the exploration</h3><p>Use feedback to improve the logic: claims, examples, AOK choices, comparisons, evaluation and the overall answer to the title.</p></div><div class="when"><span class="month">October</span><span class="week">Week 43</span></div></div></article>
+      <article class="milestone deadline"><div class="milestone-top"><div><h3>TOK Writing Day + complete draft due</h3><p>Convert the reasoning map into a complete essay. Submit the full draft in Lectio by 22:00.</p><span class="module-badge">3 modules</span></div><div class="when"><span class="month">November</span><span class="week">Week 45</span></div></div></article>
+      <article class="milestone"><div class="milestone-top"><div><h3>3rd interaction · Draft feedback</h3><p>Read the feedback as a diagnosis. Decide what needs restructuring, clarifying, cutting or developing.</p></div><div class="when"><span class="month">November</span><span class="week">Week 47</span></div></div></article>
+      <article class="milestone"><div class="milestone-top"><div><h3>Optional feedback café</h3><p>Use this to clarify feedback you do not understand before making the final revision.</p><span class="module-badge">1 module</span></div><div class="when"><span class="month">November</span><span class="week">Week 48</span></div></div></article>
+      <div class="milestone phase">Phase 3 — Polish and submit</div>
+      <article class="milestone deadline"><div class="milestone-top"><div><h3>Final TOK essay due</h3><p>Submit the polished final version in Lectio. Confirm the current deadline and file before submission.</p></div><div class="when"><span class="month">Nov / Dec</span><span class="week">Week 49</span><span class="date">1 Dec 2026</span></div></div></article>
+      <article class="milestone break"><div class="milestone-top"><div><h3>Christmas break</h3><p>The TOK essay process is complete.</p></div><div class="when"><span class="month">December</span><span class="week">Week 52</span></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="planner">
+  <div class="section-head">
+    <div class="section-kicker">In-house tool</div>
+    <h2>Use the TOK Essay Outline Planner as a reasoning workspace</h2>
+    <p>Use the planner to make the argument visible before you commit to full prose.</p>
+  </div>
+  <div class="section-body">
+    <div class="callout success"><strong>Core principle:</strong> build the reasoning before the prose. Your outline should show the claim, support, challenge, judgement and link back to the title.</div>
+    <div class="two-col">
+      <div class="compare-card good"><h3>Use it to...</h3><ul><li>Work in concise notes rather than draft paragraphs.</li><li>Show which reasoning supports which claim.</li><li>Experiment with AOK combinations before committing.</li><li>Reorder ideas until the logic works.</li><li>Make evaluation and implications visible before drafting.</li></ul></div>
+      <div class="compare-card avoid"><h3>Do not use it to...</h3><ul><li>Force every essay into an identical structure.</li><li>Treat reasoning moves as a checklist to fill.</li><li>Ask AI to write arguments or paragraphs for you.</li><li>Assume a full-looking outline is automatically a good one.</li><li>Replace your own judgement with a template.</li></ul></div>
+    </div>
+    <details class="accordion">
+      <summary>Recommended planner workflow</summary>
+      <div class="detail-body">
+        <ol><li>Add the prescribed title and candidate AOKs.</li><li>Build claims as reasoning moves, not paragraph headings.</li><li>Place examples underneath the claim they actually support.</li><li>Add serious alternative points of view and limitations.</li><li>Evaluate: decide which argument works better, when, and why.</li><li>Add implications: ask what follows if the judgement is accepted.</li><li>Export or save a fresh working copy after each session.</li></ol>
+      </div>
+    </details>
+    <details class="accordion">
+      <summary>A quick test before you start writing prose</summary>
+      <div class="detail-body">
+        <ul><li>Can you explain your provisional answer to the title in two sentences?</li><li>Does every major claim depend on the wording of the title?</li><li>Does each example allow you to make a knowledge argument rather than merely tell a story?</li><li>Can you identify a genuine limitation or competing position for each major claim?</li><li>Can you state at least one implication that follows from the comparison between your AOKs?</li></ul>
+      </div>
+    </details>
+    <p><a class="btn btn-primary" href="https://rktrobinhood.github.io/TOK-Marking-Tools/tools/TOK%20Essay%20Outline%20Planner/index.html" target="_blank" rel="noopener noreferrer">Open the TOK Essay Outline Planner ↗</a></p>
+  </div>
+</section>
+
+<section class="section reveal" id="examiner-patterns">
+  <div class="section-head">
+    <div class="section-kicker">Subject reports</div>
+    <h2>What TOK examiners keep saying</h2>
+    <p>Examiners repeatedly emphasize the same habits in successful essays. Use these as practical checks while planning and revising.</p>
+  </div>
+  <div class="section-body">
+    <div class="callout"><strong>Pattern, not recipe:</strong> use these to diagnose your essay. Do not turn them into a rigid paragraph formula.</div>
+    <div class="examiner-grid">
+      <article class="examiner-card"><h3>1 · Answer the whole title</h3><p>Engage with every significant word and qualifier. Ignore one and you may end up answering a different question.</p></article>
+      <article class="examiner-card"><h3>2 · Let the title drive the essay</h3><p>Let the title organise the essay. A paragraph can be interesting and still be irrelevant if it does not refine your answer.</p></article>
+      <article class="examiner-card"><h3>3 · Evaluate rather than alternate</h3><p>Do not rely on automatic claim/counterclaim. Weigh, qualify and connect different points of view.</p></article>
+      <article class="examiner-card"><h3>4 · Make examples do argumentative work</h3><p>Use specific examples as evidence. Keep context brief and explain what the example lets you establish.</p></article>
+      <article class="examiner-card"><h3>5 · Use TOK concepts, do not display them</h3><p>TOK concepts matter only when they sharpen analysis. Naming them is not the same as using them.</p></article>
+      <article class="examiner-card"><h3>6 · Compare AOKs critically</h3><p>Compare AOKs analytically: ask why different methods, purposes or standards of evidence change the answer.</p></article>
+      <article class="examiner-card"><h3>7 · Draw implications</h3><p>Ask “what follows if this is right?” Strong essays draw implications from the reasoning, not only in the conclusion.</p></article>
+      <article class="examiner-card"><h3>8 · Protect authenticity</h3><p>Research should support your thinking, not replace it. Avoid generic, template-like phrasing and cite the sources you actually use.</p></article>
+    </div>
+
+    <details class="accordion">
+      <summary>What “critical exploration” looks like in practice</summary>
+      <div class="detail-body">
+        <p>A critical paragraph does more than provide a claim and an objection. It makes a judgement about the quality, reach or limits of the competing reasoning.</p>
+        <ol><li><strong>Establish a knowledge argument.</strong> Make a contestable point that answers part of the title.</li><li><strong>Test it with evidence.</strong> Use a specific example because it reveals something about the argument.</li><li><strong>Introduce a serious alternative.</strong> This can qualify the claim rather than simply reverse it.</li><li><strong>Evaluate.</strong> Explain which position is stronger, under what conditions, and according to what standard.</li><li><strong>Draw the implication.</strong> Explain what follows for the title, the AOK, another AOK, or a broader knowledge issue.</li></ol>
+      </div>
+    </details>
+    <details class="accordion">
+      <summary>Examples: what the reports repeatedly reward</summary>
+      <div class="detail-body">
+        <ul><li><strong>Specific rather than generic:</strong> a named study, work, theorem, historical investigation, dataset, method or controversy.</li><li><strong>Non-hypothetical where possible:</strong> real cases are easier to use as evidence.</li><li><strong>Known well enough to analyse:</strong> examples from your DP subjects or genuine interests often work better than internet-famous “TOK examples”.</li><li><strong>Briefly contextualised:</strong> enough factual detail to make the reasoning intelligible, but not a mini research report.</li><li><strong>Explicitly linked:</strong> the reader should see exactly why the example supports, complicates or limits the knowledge argument.</li></ul>
+      </div>
+    </details>
+    <details class="accordion">
+      <summary>Session-specific useful note: History</summary>
+      <div class="detail-body">
+        <p>The May 2023 report summary highlighted a useful distinction for History: focus on the <strong>production of historical knowledge</strong> rather than merely recounting an event. Mature historical examples are often easier to analyse when historians—not only journalists or contemporary commentators—have had time to investigate, interpret and contest the evidence.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="section reveal" id="best-practice">
+  <div class="section-head"><div class="section-kicker">Writing</div><h2>Use a simple reasoning check while drafting</h2><p>You do not need one fixed paragraph formula. You do need each major section to move the argument forward.</p></div>
+  <div class="section-body">
+    <details class="accordion">
+      <summary>Six questions for any major paragraph or section</summary>
+      <div class="detail-body"><ol><li>What am I claiming about the title?</li><li>Why should the reader accept this reasoning?</li><li>What specific example tests it?</li><li>What serious limitation or alternative matters?</li><li>What judgement can I make after weighing them?</li><li>What follows for my answer to the title?</li></ol></div>
+    </details>
+    <details class="accordion">
+      <summary>Common structural traps</summary>
+      <div class="detail-body"><ul><li><strong>Mirror-image AOK sections:</strong> repeating the same point in another subject.</li><li><strong>Automatic counterclaiming:</strong> inventing an opposite because a template expects one.</li><li><strong>Example-led paragraphs:</strong> starting with a famous case and searching afterwards for a TOK point.</li><li><strong>Definition dumping:</strong> definitions that never affect the reasoning.</li><li><strong>Summary conclusions:</strong> repeating the essay instead of resolving its central tension.</li></ul></div>
+    </details>
+  </div>
+</section>
+
+<section class="section reveal" id="assessment">
+  <div class="section-head"><div class="section-kicker">Assessment instrument</div><h2>How the 10-mark rubric changes as an essay improves</h2><p>The essay is marked holistically using best fit. The bands are not a checklist and a single missing phrase does not automatically cap the mark. The value of comparing bands is seeing what becomes more visible as quality rises.</p></div>
+  <div class="section-body">
+    <div class="rubric-ladder">
+      <div class="band band-9"><div class="band-score">9–10</div><div class="band-desc"><strong>Excellent:</strong> sustained focus; effective AOK links; clear, coherent arguments effectively supported by specific examples; clear recognition and evaluation of different points of view; <strong>implications of arguments are considered</strong>.</div></div>
+      <div class="band band-7"><div class="band-score">7–8</div><div class="band-desc"><strong>Good:</strong> focused on the title with effective AOK links; arguments are <strong>clear and coherent</strong> and supported by examples; different points of view receive <strong>some evaluation</strong>.</div></div>
+      <div class="band band-5"><div class="band-score">5–6</div><div class="band-desc"><strong>Satisfactory:</strong> focused on the title with some AOK links; arguments are offered and supported by examples; there is <strong>some awareness</strong> of different points of view.</div></div>
+      <div class="band band-3"><div class="band-score">3–4</div><div class="band-desc"><strong>Basic:</strong> connected to the title, but AOK links tend to be limited or superficial; the response is more descriptive and arguments are limited or unclear.</div></div>
+      <div class="band band-1"><div class="band-score">1–2</div><div class="band-desc"><strong>Rudimentary:</strong> weak connection to the title; AOK references are mainly descriptive; relevant points tend to be unsupported assertions rather than developed arguments.</div></div>
+    </div>
+    <div class="threshold-grid">
+      <div class="threshold"><div class="jump">3–4 → 5–6</div><p>Move from description/assertion to supported argument. The essay becomes focused on the title, not merely related to it.</p></div>
+      <div class="threshold"><div class="jump">5–6 → 7–8</div><p>Arguments become <strong>clear and coherent</strong>; AOK links are effective; points of view are evaluated, not just noticed.</p></div>
+      <div class="threshold"><div class="jump">7–8 → 9–10</div><p>Focus is sustained; examples are specific and effective; evaluation is clear; <strong>implications</strong> are considered.</p></div>
+    </div>
+    <div class="callout success"><strong>Implications are the clearest explicit top-band addition.</strong> The goal is not to write the word “implication”; it is to extend the reasoning and explain what genuinely follows from it.</div>
+    <details class="accordion">
+      <summary>What does “consider implications” actually look like?</summary>
+      <div class="detail-body">
+        <p>After evaluating a claim, ask: <strong>If this is right, what follows?</strong></p>
+        <ul><li>If a method is reliable only under controlled conditions, what follows when that knowledge is applied outside those conditions?</li><li>If historical knowledge depends on surviving evidence, what follows for whose perspectives can become authoritative?</li><li>If mathematical certainty depends on accepted axioms, what follows for the scope and limits of certainty within mathematics?</li><li>If two AOKs use different standards for accepting explanations, what follows for the title's assumption that they can be judged by one common standard?</li></ul>
+        <p>Strong implications grow out of the analysis. Avoid generic endings such as “this has implications for society”.</p>
+      </div>
+    </details>
+    <details class="accordion">
+      <summary>Why “points of view” is better than automatic counterclaims</summary>
+      <div class="detail-body"><p>A counterclaim is one possible point of view, but the rubric is broader than that. A different point of view might change the assumptions, method, standard of evidence, purpose or perspective from which the title is considered. That allows evaluation to be nuanced instead of forcing every discussion into two opposite camps.</p></div>
+    </details>
+  </div>
+</section>
+
+<section class="section reveal" id="examples">
+  <div class="section-head"><div class="section-kicker">Example selection</div><h2>High-risk examples: familiar is not the same as forbidden</h2><p>There are no banned examples. The risk is that familiar cases can lead to familiar, generic arguments. Use this as a warning system, not a blacklist.</p></div>
+  <div class="section-body">
+    <div class="callout warning"><strong>The removal test:</strong> if you can delete the proper noun from your paragraph and the argument stays almost unchanged, the example is probably decorative rather than analytical.</div>
+    <details class="accordion">
+      <summary>Commonly overused examples by AOK</summary>
+      <div class="detail-body">
+        <div class="risk-categories">
+          <div class="risk"><h4>Natural sciences</h4><p>Galileo and the Church; Wegener and continental drift; atomic-model progression; Fleming and penicillin; Semmelweis and handwashing; heliocentrism as a generic “science changes” example.</p></div>
+          <div class="risk"><h4>Human sciences</h4><p>Milgram; Asch; Bandura; Zimbardo; Loftus &amp; Palmer; Maslow; Myers-Briggs used without engaging with methodology, replication, validity or interpretation.</p></div>
+          <div class="risk"><h4>Mathematics</h4><p>Euclidean vs non-Euclidean geometry; imaginary numbers; Euler's identity; Fermat/Wiles used simply to prove that mathematics is certain, beautiful or useful.</p></div>
+          <div class="risk"><h4>History & politics</h4><p>Treaty of Versailles; causes of WWI; standard Cold War schools; textbook bias; historical controversies used only to say “history has perspectives”.</p></div>
+          <div class="risk"><h4>The arts</h4><p><em>Mona Lisa</em>, <em>Guernica</em>, <em>Starry Night</em>, Banksy or Pollock used only to say that art is subjective or open to interpretation.</p></div>
+          <div class="risk"><h4>Technology & ethics</h4><p>Turing/Enigma; Hiroshima vs nuclear power; Fritz Haber; generic AI examples framed as simple “technology can be good or bad” stories.</p></div>
+        </div>
+      </div>
+    </details>
+    <details class="accordion">
+      <summary>How to rescue a familiar example</summary>
+      <div class="detail-body">
+        <ol><li><strong>Make the knowledge claim precise.</strong> It must depend on the wording of your title.</li><li><strong>Use detail that changes the analysis.</strong> Method, limitation, context, evidence, stakeholder, chronology or disciplinary standard should matter.</li><li><strong>Move quickly through the story.</strong> Context is there to support the argument, not become the argument.</li><li><strong>Pressure-test the case.</strong> Ask what a serious alternative interpretation would say.</li><li><strong>Draw a wider implication.</strong> Explain what the case reveals about the AOK or the title beyond that one event.</li></ol>
+        <p><strong>Weak:</strong> “Wegener shows that scientific knowledge changes over time.”</p>
+        <p><strong>Stronger direction:</strong> examine which standards of evidence made continental drift initially unconvincing, then ask whether later acceptance reflects a change in available evidence, explanatory standards, technological tools—or some combination. The example now tests a knowledge issue.</p>
+      </div>
+    </details>
+    <details class="accordion">
+      <summary>What to prefer instead</summary>
+      <div class="detail-body"><ul><li>Cases you already understand from an IB subject.</li><li>Recent or local examples where you can access the original evidence.</li><li>A specific method, model, artwork, study, proof, archival dispute or disciplinary controversy.</li><li>Examples with genuine tension: there should be something to evaluate, not merely something to describe.</li><li>Cases that let your two AOKs behave differently in a way that matters to the title.</li></ul></div>
+    </details>
+  </div>
+</section>
+
+<section class="section reveal" id="final-check">
+  <div class="section-head"><div class="section-kicker">Before submission</div><h2>Final diagnostic check</h2><p>Use this after revision. If several answers are “not really”, return to the argument before polishing sentences.</p></div>
+  <div class="section-body">
+    <div class="check-grid">
+      <div class="check">I answer the <strong>exact prescribed title</strong> throughout, including its difficult qualifiers.</div>
+      <div class="check">My overall position is a defensible judgement, and each AOK adds something distinct.</div>
+      <div class="check">My examples are specific and used as evidence for knowledge arguments.</div>
+      <div class="check">I evaluate competing positions rather than simply presenting both.</div>
+      <div class="check">TOK concepts are used analytically, not displayed as vocabulary.</div>
+      <div class="check">I draw implications from major arguments and comparisons.</div>
+      <div class="check">The conclusion makes the answer more precise rather than only summarising.</div>
+      <div class="check">The essay is within <strong>1,600 words</strong>, referenced, and the correct file is ready for Lectio.</div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="resources">
+  <div class="section-head"><div class="section-kicker">Useful links</div><h2>Resources</h2><p>Use these when you need the official assessment guidance or want to continue working on your outline.</p></div>
+  <div class="section-body sources">
+    <p><a href="https://ibo.org/programmes/diploma-programme/curriculum/dp-core/theory-of-knowledge/" target="_blank" rel="noopener">IB Theory of Knowledge overview ↗</a></p>
+    <p><a href="https://ibo.org/globalassets/new-structure/university-admission/pdfs/subject-guides-documents/examiner-instructions--theory-of-knowledge.pdf" target="_blank" rel="noopener">IB TOK examiner instructions ↗</a></p>
+    <p><a href="https://rktrobinhood.github.io/TOK-Marking-Tools/tools/TOK%20Essay%20Outline%20Planner/index.html" target="_blank" rel="noopener">TOK Essay Outline Planner ↗</a></p>
+  </div>
+</section>
+</main>
+
+<footer class="footer"><div class="container">TOK Essay Roadmap · Class of 2027</div></footer>
+
+<script>
+const progress=document.getElementById('scrollProgress');
+const updateProgress=()=>{
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  progress.style.width=(max>0?(window.scrollY/max)*100:0)+'%';
+};
+window.addEventListener('scroll',updateProgress,{passive:true});
+updateProgress();
+
+const revealObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');revealObserver.unobserve(entry.target);}});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+// Open a collapsed section automatically when a same-page link targets content inside it.
+document.querySelectorAll('a[href^="#"]').forEach(link=>{
+  link.addEventListener('click',()=>{
+    const target=document.querySelector(link.getAttribute('href'));
+    if(!target)return;
+    const parentDetails=target.closest('details');
+    if(parentDetails)parentDetails.open=true;
+  });
+});
+</script>
+</body>
+</html>
