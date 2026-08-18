@@ -1,68 +1,83 @@
 import assert from "node:assert/strict";
-import { access, readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import { generateHub } from "../scripts/generate-hub.mjs";
+import {
+  buildTools,
+  discoverToolFolders,
+  generateHub,
+  renderHub,
+  unmatchedOverrides,
+} from "../scripts/generate-hub.mjs";
 
-test("the generated hub links every configured tool and includes accessible motion", async () => {
+const overrides = JSON.parse(await readFile(new URL("../hub-tools.json", import.meta.url), "utf8"));
+const template = await readFile(new URL("../hub.template.html", import.meta.url), "utf8");
+
+test("every tool folder reaches the hub without being registered by hand", async () => {
+  const folders = await discoverToolFolders();
   const html = await generateHub();
-  const tools = JSON.parse(await readFile(new URL("../hub-tools.json", import.meta.url), "utf8"));
 
-  for (const tool of tools) {
-    assert.match(html, new RegExp(`href=["']${escapeRegExp(tool.href)}["']`));
-    assert.match(html, new RegExp(escapeRegExp(escapeHtml(tool.title))));
-    assert.match(html, new RegExp(escapeRegExp(escapeHtml(tool.description))));
-  }
-
-  assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
-  assert.match(html, /aria-label="Open [^"]+"/);
-  assert.doesNotMatch(html, /\{\{TOOL_CARDS\}\}/);
-});
-
-test("each configured tool points to a real standalone page", async () => {
-  const tools = JSON.parse(await readFile(new URL("../hub-tools.json", import.meta.url), "utf8"));
-
-  for (const tool of tools) {
-    const pageUrl = new URL(`../${decodeURIComponent(tool.href)}`, import.meta.url);
-    const page = await readFile(pageUrl, "utf8");
-    assert.match(page, /<!DOCTYPE html>/i, `${tool.title} should point to an HTML page`);
+  assert.ok(folders.length > 0, "expected at least one tool folder");
+  for (const folder of folders) {
+    const href = `tools/${encodeURIComponent(folder)}/index.html`;
+    assert.ok(html.includes(`href="${href}"`), `${folder} should be linked from the hub`);
   }
 });
 
-test("every standalone tool is represented on the hub", async () => {
-  const tools = JSON.parse(await readFile(new URL("../hub-tools.json", import.meta.url), "utf8"));
-  const configuredFolders = tools
-    .map((tool) => decodeURIComponent(tool.href).replace(/^tools\//, "").replace(/\/index\.html$/, ""))
-    .sort();
-  const entries = await readdir(new URL("../tools/", import.meta.url), { withFileTypes: true });
-  const standaloneFolders = [];
+test("a folder with no hub-tools.json entry still gets a usable card", () => {
+  const [tool] = buildTools(["Brand New Marking Tool"], {});
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue;
-    try {
-      await access(new URL(`../tools/${entry.name}/index.html`, import.meta.url));
-      standaloneFolders.push(entry.name);
-    } catch {
-      // Folders without an index page are not standalone hub tools.
-    }
+  assert.equal(tool.title, "Brand New Marking");
+  assert.equal(tool.href, "tools/Brand%20New%20Marking%20Tool/index.html");
+  assert.equal(tool.audience, "other");
+
+  const html = renderHub(template, [tool]);
+  assert.ok(html.includes("More tools"), "unlabelled tools land in the catch-all group");
+  assert.ok(html.includes("Brand New Marking"));
+  assert.ok(!html.includes("{{"), "no placeholder should survive rendering");
+});
+
+test("hub-tools.json only refines discovered folders", async () => {
+  const folders = await discoverToolFolders();
+
+  assert.deepEqual(unmatchedOverrides(folders, overrides), []);
+});
+
+test("metadata controls the copy and grouping of a discovered tool", async () => {
+  const folders = await discoverToolFolders();
+  const tools = buildTools(folders, overrides);
+
+  for (const [folder, meta] of Object.entries(overrides)) {
+    if (folder.startsWith("_")) continue;
+    const tool = tools.find((candidate) => candidate.folder === folder);
+    assert.ok(tool, `${folder} should be discovered`);
+    assert.equal(tool.title, meta.title);
+    assert.equal(tool.description, meta.description);
+    assert.equal(tool.audience, meta.audience);
   }
-
-  assert.deepEqual(configuredFolders, standaloneFolders.sort());
 });
 
-test("the checked-in homepage matches the generated hub", async () => {
-  const [generated, checkedIn] = await Promise.all([
-    generateHub(),
-    readFile(new URL("../index.html", import.meta.url), "utf8"),
-  ]);
+test("titles and descriptions are escaped into the markup", () => {
+  const html = renderHub(template, buildTools(["Marking & <Feedback> Tool"], {}));
 
-  assert.equal(checkedIn, generated);
+  assert.ok(html.includes("Marking &amp; &lt;Feedback&gt;"), "markup should be escaped");
+  assert.ok(!html.includes("<Feedback>"), "raw markup should never reach the page");
 });
 
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+test("each discovered tool points at a real standalone page", async () => {
+  const folders = await discoverToolFolders();
 
-function escapeHtml(value) {
-  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-}
+  for (const folder of folders) {
+    const page = await readFile(new URL(`../tools/${folder}/index.html`, import.meta.url), "utf8");
+    assert.match(page, /<!DOCTYPE html>/i, `${folder} should be an HTML page`);
+  }
+});
+
+test("the hub stays accessible", async () => {
+  const html = await generateHub();
+
+  assert.ok(html.includes("prefers-reduced-motion: reduce"), "motion should be reducible");
+  assert.ok(html.includes('class="skip-link"'), "keyboard users need a skip link");
+  assert.ok(html.includes('aria-labelledby="group-'), "groups should be labelled");
+  assert.ok(html.includes('<html lang="en">'), "the page needs a language");
+});

@@ -1,34 +1,28 @@
-[
-  {
+{
+  "_comment": "Optional. Tools are discovered from tools/*/index.html; entries here only refine the title, description, audience (teachers | students) and icon kind (essay | exhibition | planner).",
+
+  "Essay Marking & Feedback Tool": {
     "title": "Essay Marking & Feedback",
-    "eyebrow": "For teachers",
-    "description": "Turn rubric decisions and written observations into clear, structured essay feedback for students.",
-    "href": "tools/Essay%20Marking%20%26%20Feedback%20Tool/index.html",
-    "kind": "essay",
-    "accent": "cyan"
+    "audience": "teachers",
+    "description": "Turn rubric decisions and written observations into clear, structured essay feedback.",
+    "kind": "essay"
   },
-  {
+  "Exhibition Marking & Feedback Tool": {
     "title": "Exhibition Marking & Feedback",
-    "eyebrow": "For teachers",
-    "description": "Assess exhibition objects, capture rubric evidence, and prepare focused next steps in one place.",
-    "href": "tools/Exhibition%20Marking%20%26%20Feedback%20Tool/index.html",
-    "kind": "exhibition",
-    "accent": "violet"
+    "audience": "teachers",
+    "description": "Assess exhibition objects, capture rubric evidence, and prepare focused next steps.",
+    "kind": "exhibition"
   },
-  {
-    "title": "TOK Essay Outline Planner",
-    "eyebrow": "For students",
+  "TOK Essay Outline Planner": {
+    "title": "Essay Outline Planner",
+    "audience": "students",
     "description": "Explore AOK combinations, shape claims and counterclaims, and build a coherent essay plan.",
-    "href": "tools/TOK%20Essay%20Outline%20Planner/index.html",
-    "kind": "planner",
-    "accent": "coral"
+    "kind": "planner"
   },
-  {
-    "title": "TOK Essay Roadmap - May 2027",
-    "eyebrow": "For students",
-    "description": "Build a structured roadmap for planning and developing the May 2027 TOK essay.",
-    "href": "tools/TOK%20Essay%20Roadmap%20-%20May%202027/index.html",
-    "kind": "planner",
-    "accent": "cyan"
+  "TOK Essay Roadmap - May 2027": {
+    "title": "Essay Roadmap · May 2027",
+    "audience": "students",
+    "description": "Pace the May 2027 essay from prescribed title to final draft, deadline by deadline.",
+    "kind": "planner"
   }
-]
+}

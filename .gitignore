@@ -1,0 +1,5 @@
+/dist/
+/node_modules/
+
+# The homepage is generated into dist/ at build time, never committed.
+/index.html
