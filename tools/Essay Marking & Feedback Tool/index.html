@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOK Essay Marking Tool - May 2026 (v7 Professional)</title>
+    <title>TOK Essay Marking Tool - May 2027 (v8 Professional)</title>
 <style>
-/* CSS Styling - TOK Essay Version 7 */
+/* CSS Styling - TOK Essay Version 8 */
 :root {
     --nav-width: 220px;
     --primary-color: #2c3e50; /* IB Dark Blue */
@@ -187,7 +187,7 @@ button:hover { background-color: #34495e; }
             </div>
         </div>
 
-        <h1>TOK Essay Marking Tool (May 2026)</h1>
+        <h1>TOK Essay Marking Tool (May 2027)</h1>
 
         <!-- Section 1: Student Info -->
         <section id="student-info-section" class="input-section">
@@ -199,7 +199,7 @@ button:hover { background-color: #34495e; }
         <!-- Section 2: Title Only -->
         <section id="ia-prompt-section" class="input-section">
             <h2>2. Prescribed Title</h2>
-            <label for="title-select">Select May 2026 Prescribed Title:</label>
+            <label for="title-select">Select May 2027 Prescribed Title:</label>
             <select id="title-select">
                 <option value="">-- Select a Title --</option>
             </select>
@@ -324,28 +324,28 @@ button:hover { background-color: #34495e; }
 /* --- DATA CONFIGURATION --- */
 const titlesConfig = {
     "1": { 
-        text: "1. In the production of knowledge, does it matter that observation is an essential but flawed tool? Discuss with reference to the natural sciences and one other area of knowledge.",
-        aok1: "Natural Sciences", aok2: null 
+        text: "1. Do we gain a better appreciation of the human experience from the artist or the historian? Discuss with reference to the arts and history.",
+        aok1: "The Arts", aok2: "History" 
     },
     "2": { 
-        text: "2. To what extent do you agree that doubt is central to the pursuit of knowledge? Answer with reference to two areas of knowledge.",
+        text: "2. If values change over time, how can they, nevertheless, continue to guide the pursuit of knowledge? Discuss with reference to two areas of knowledge.",
         aok1: null, aok2: null 
     },
     "3": { 
-        text: "3. Is the power of knowledge determined by the way in which the knowledge is conveyed? Discuss with reference to mathematics and one other area of knowledge.",
-        aok1: "Mathematics", aok2: null 
+        text: "3. In the production of knowledge, how can knowledge be reliable if it is built on assumptions? Discuss with reference to the human sciences and one other area of knowledge.",
+        aok1: "Human Sciences", aok2: null 
     },
     "4": { 
-        text: "4. In the acquisition of knowledge, can we only understand something to the extent that we understand its context? Discuss with reference to two areas of knowledge.",
-        aok1: null, aok2: null 
+        text: "4. To what extent do you agree with the claim that \"any coincidence is worth noticing; you can throw it away later if it is only a coincidence\" (Agatha Christie). Answer with reference to mathematics and one other area of knowledge.",
+        aok1: "Mathematics", aok2: null 
     },
     "5": { 
-        text: "5. To what extent do you agree with the claim that \"all things are numbers\" (Pythagoras)? Answer with reference to the arts and the human sciences.",
-        aok1: "The Arts", aok2: "Human Sciences" 
+        text: "5. In the production of knowledge, when choosing one explanation over another, to what extent should simplicity be prioritized? Discuss with reference to two areas of knowledge.",
+        aok1: null, aok2: null 
     },
     "6": { 
-        text: "6. To what extent is interpretation a reliable tool in the production of knowledge? Answer with reference to history and one other area of knowledge.",
-        aok1: "History", aok2: null 
+        text: "6. In the pursuit of knowledge, what value is there in exploring the paradoxical or the counterintuitive? Discuss with reference to the natural sciences and one other area of knowledge.",
+        aok1: "Natural Sciences", aok2: null 
     }
 };
 
@@ -415,14 +415,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('reset-form-btn').addEventListener('click', resetForm);
         document.getElementById('restore-yes-btn').addEventListener('click', restoreForm);
         document.getElementById('restore-no-btn').addEventListener('click', () => { 
-            localStorage.removeItem("TOK_Essay_Tool_Final"); 
+            localStorage.removeItem("TOK_Essay_Tool_M27"); 
             document.getElementById('restore-prompt-wrapper').style.display = 'none'; 
         });
     }
 
     function checkStorage() {
         try {
-            if(localStorage.getItem("TOK_Essay_Tool_Final")) {
+            if(localStorage.getItem("TOK_Essay_Tool_M27")) {
                 document.getElementById('restore-prompt-wrapper').style.display = 'block';
             }
         } catch(e) { console.warn("Storage access error", e); }
@@ -509,11 +509,11 @@ document.addEventListener('DOMContentLoaded', () => {
             finalScore: document.getElementById('final-score').value,
             characteristics: Array.from(document.querySelectorAll('#possible-characteristics-checklist input:checked')).map(cb => cb.value)
         };
-        localStorage.setItem("TOK_Essay_Tool_Final", JSON.stringify(data));
+        localStorage.setItem("TOK_Essay_Tool_M27", JSON.stringify(data));
     }
 
     function restoreForm() {
-        const saved = localStorage.getItem("TOK_Essay_Tool_Final");
+        const saved = localStorage.getItem("TOK_Essay_Tool_M27");
         if(!saved) return;
         const data = JSON.parse(saved);
 
@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resetForm() {
         if(!confirm("Are you sure? This will clear all current work and saved data.")) return;
-        localStorage.removeItem("TOK_Essay_Tool_Final");
+        localStorage.removeItem("TOK_Essay_Tool_M27");
         document.querySelectorAll('input, textarea, select').forEach(el => {
             if(el.type === 'checkbox') el.checked = false;
             else el.value = '';
